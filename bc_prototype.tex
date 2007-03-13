@@ -14,10 +14,10 @@
 %\pagestyle{headings}
 \pagestyle{plain}
 
-\frenchspacing % aktivuje pou¾ití nìkterých èeských typografických pravidel
+% \frenchspacing % aktivuje pou¾ití nìkterých èeských typografických pravidel
 
 \usepackage[latin2]{inputenc} % nastavuje pou¾ité kódování, u¾ivatelé Windows zamìní latin2 za cp1250
-\usepackage{czech}
+%\usepackage{czech}
 \usepackage{a4wide} % nastavuje standardní evropský formát stránek A4
 %\usepackage{index} % nutno pou¾ít v pøípadì tvorby rejstøíku balíèkem makeindex
 %\usepackage{fancybox} % umo¾òuje pokroèilé rámeèkování :-)
@@ -27,8 +27,8 @@
 
 %\newindex{default}{idx}{ind}{Rejstøík} % zavádí rejstøík v pøípadì pou¾ití balíku index
 
-\title{Název práce}   % tyto dvì polo¾ky jsou zde v podstatì formálnì, ve skuteènosti nejsou nikde 
-\author{Jméno autora} % dále v dokumentu pou¾ity
+\title{Constraint solvers}   % tyto dvì polo¾ky jsou zde v podstatì formálnì, ve skuteènosti nejsou nikde 
+\author{Michal Tuláèek} % dále v dokumentu pou¾ity
 
 %\date{}
 
@@ -46,12 +46,12 @@
 \vspace{15mm}
 
 \large
-Univerzita Karlova v Praze\\
-Matematicko-fyzikální fakulta\\
+Charles University in Prague\\
+Faculty of Mathematics and Physics\\
 
 \vspace{5mm}
 
-{\Large\bf BAKALÁØSKÁ PRÁCE}
+{\Large\bf BACHELOR THESIS}
 
 \vspace{10mm}
 
@@ -63,28 +63,27 @@ Matematicko-fyzikální fakulta\\
 \vspace{15mm}
 
 %\normalsize
-{\Large Jméno autora}\\ % doplòte va¹e jméno
+{\Large Michal Tuláèek}\\ % doplòte va¹e jméno
 \vspace{5mm}
-{\Large\bf Název práce (pøesnì podle zadání)}\\ % doplòte název práce
+{\Large\bf Constraint solvers}\\ % doplòte název práce
 \vspace{5mm}
-Název katedry èi ústavu\\ % doplòte název katedry èi ústavu
+Department of Theoretical Computer Science and Mathematical Logic\\ % doplòte název katedry èi ústavu
 \end{center}
 \vspace{15mm}
 
 \large
-\noindent Vedoucí bakaláøské práce: Jméno se v¹emi tituly a pracovi¹tì, % doplòte odpovídající údaje
+\noindent Supervisor: Doc. RNDr. Roman Barták, Ph.D. % doplòte odpovídající údaje
 %%% dal¹í øádek mù¾ete ve vìt¹inì pøípadù (tj. pokud údaje uvedené vý¹e nejsou pøíli¹ dlouhé) zru¹it
-\hskip20mm   je-li odli¹né od uvedeného názvu katedry èi ústavu 
+\hskip20mm    
 \vspace{1mm} 
 
-\noindent Studijní program: název studijního programu, název studijního % doplòte odpovídající údaje
+\noindent Study programme: General Informatics % doplòte odpovídající údaje
 %%% dal¹í øádek mù¾ete ve vìt¹inì pøípadù (tj. pokud údaje uvedené vý¹e nejsou pøíli¹ dlouhé) zru¹it
-\hskip20mm oboru (smìru),  pøíp. název studijního plánu
+\hskip20mm 
 
-\vspace{20mm}
 
 \begin{center}
-2006 % doplòte rok vzniku va¹í bakaláøské práce
+2007 % doplòte rok vzniku va¹í bakaláøské práce
 \end{center}
 
 \end{titlepage} % zde konèí úvodní strana
@@ -93,13 +92,17 @@ Název katedry èi ústavu\\ % doplòte název katedry èi ústavu
 \setcounter{page}{2} % nastavení èíslování stránek
 \ \vspace{10mm} 
 
-\noindent Na tomto místì mohou být napsána pøípadná podìkování (vedoucímu práce, konzultantovi, tomu, kdo pùjèil software, literaturu, poskytl data apod.). % doplòte vlastní text
+\noindent Thank you, thank you very much.
 
 \vspace{\fill} % nastavuje dynamické umístìní následujícího textu do spodní èásti stránky
 \noindent Prohla¹uji, ¾e jsem svou bakaláøskou práci napsal(a) samostatnì a výhradnì s pou¾itím citovaných pramenù. Souhlasím se zapùjèováním práce a jejím zveøejòováním.
 
+\vspace{10mm}
+
+\noindent I declare that I wrote my bachelor thesis independently and exclusively with the use of the cited sources. I agree with lending this thesis.
+
 \bigskip
-\noindent V Praze dne \hspace{\fill}Jméno Pøíjmení\\ % doplòte patøièné datum, jméno a pøíjmení
+\noindent In Prague, 24th February 2007 \hspace{\fill}Michal Tuláèek\\ % doplòte patøièné datum, jméno a pøíjmení
 
 %%%   Výtisk pak na tomto míste nezapomeòte PODEPSAT!
 %%%                                         *********
@@ -110,54 +113,56 @@ Název katedry èi ústavu\\ % doplòte název katedry èi ústavu
 
 %%% Následuje strana s abstrakty. Doplòte vlastní údaje.
 \noindent
-Název práce: Název bakaláøské práce\\
-Autor: Jméno autora\\
-Katedra (ústav): Název katedry èi ústavu\\
-Vedoucí bakaláøské práce: Jméno se v¹emi tituly, event. pracovi¹tì\\
-e-mail vedoucího: e-mailová adresa vedoucího\\
+Název práce: Øe¹ièe omezujících podmínek\\
+Autor: Michal Tuláèek\\
+Katedra (ústav): Katedra teoretické informatiky a matematické logiky\\
+Vedoucí bakaláøské práce: Doc. RNDr. Roman Barták, Ph.D.\\
+e-mail vedoucího: bartak@kti.mff.cuni.cz\\
 
-\noindent Abstrakt:  V pøedlo¾ené práci studujeme ... Uvede se abstrakt v rozsahu 80 a¾ 200 slov. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Ut sit amet sem. Mauris nec turpis ac sem mollis pretium. Suspendisse neque massa, suscipit id, dictum in, porta at, quam. Nunc suscipit, pede vel elementum pretium, nisl urna sodales velit, sit amet auctor elit quam id tellus. Nullam sollicitudin. Donec hendrerit. Aliquam ac nibh. Vivamus mi. Sed felis. Proin pretium elit in neque. Pellentesque at turpis. Maecenas convallis. Vestibulum id lectus. Fusce dictum augue ut nibh. Etiam non urna nec mi mattis volutpat. Curabitur in tortor at magna nonummy gravida. Mauris turpis quam, volutpat quis, porttitor ut, condimentum sit amet, felis.\\
+\noindent Abstrakt:  Lorem ipsum dolor sit amet consectetuer at urna et lacinia wisi. Sem leo In nec gravida et et dolor elit neque tempus. Urna lacinia Curabitur egestas consequat tellus in Morbi id Suspendisse nunc. Pellentesque eget id non et turpis morbi semper nulla iaculis hac. Id In metus convallis Nunc lacus tempus pretium orci Phasellus nonummy. Est.\\
 
-\noindent Klíèová slova: klíèová slova (3 a¾ 5)
+\noindent Klíèová slova: et dolor elit neque tempus
 
 \vspace{10mm}
 
 \noindent
-Title: Název bakaláøské práce v angliètinì\\
-Author: Jméno autora\\
-Department: Název katedry èi ústavu v angliètinì\\
-Supervisor: Jméno s tituly jako v èeské verzi, event. pracovi¹tì\\
-Supervisor's e-mail address: e-mailová adresa vedoucího\\
+Title: Constraint solvers\\
+Author: Michal Tuláèek\\
+Department: Department of Theoretical Computer Science and Mathematical Logic\\
+Supervisor: Doc. RNDr. Roman Barták, Ph.D.\\
+Supervisor's e-mail address: bartak@kti.mff.cuni.cz\\
 
-\noindent Abstract: In the present work we study ... Uvede se anglický abstrakt v rozsahu 80 a¾ 200 slov. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Ut sit amet sem. Mauris nec turpis ac sem mollis pretium. Suspendisse neque massa, suscipit id, dictum in, porta at, quam. Nunc suscipit, pede vel elementum pretium, nisl urna sodales velit, sit amet auctor elit quam id tellus. Nullam sollicitudin. Donec hendrerit. Aliquam ac nibh. Vivamus mi. Sed felis. Proin pretium elit in neque. Pellentesque at turpis. Maecenas convallis. Vestibulum id lectus. Fusce dictum augue ut nibh. Etiam non urna nec mi mattis volutpat. Curabitur in tortor at magna nonummy gravida. Mauris turpis quam, volutpat quis, porttitor ut, condimentum sit amet, felis. \\
+\noindent Abstract: In the present work we study it. Lorem ipsum dolor sit amet consectetuer at urna et lacinia wisi. Sem leo In nec gravida et et dolor elit neque tempus. Urna lacinia Curabitur egestas consequat tellus in Morbi id Suspendisse nunc. Pellentesque eget id non et turpis morbi semper nulla iaculis hac. Id In metus convallis Nunc lacus tempus pretium orci Phasellus nonummy. Est. \\
 
-\noindent Keywords: klíèová slova (3 a¾ 5) v angliètinì
+\noindent Keywords: ipsum dolor sit amet consectetuer
 
 \newpage
 
 %%% Následuje text bakaláøské práce èlenìný do kapitol, které se èíslují, oznaèí názvy a graficky oddìlí.
 %%% Nedoporuèuje se pou¾ívat víc ne¾ dvì úrovnì èíslování kapitol, viz pøíklad ní¾e.
 
-\chapter{Název první kapitoly}
+\chapter{Introducion}
 
-\section{Název první podkapitoly v první kapitole}
+\section{When}
 
-\section{Název druhé podkapitoly v první kapitole}
+\section{Why}
 
-\chapter{Název druhé kapitoly}
+\section{Where}
 
-\section{Název první podkapitoly v druhé kapitole}
+\chapter{Testing}
 
-\section{Název druhé podkapitoly v druhé kapitole}
+\section{What}
+
+\section{How}
 
 
-%%% Seznam literatury
+%%% Seznam literatury
 %%%
 %%% Literatura se øadí abecednì. Úvádí se pouze literatura, na kterou se v textu odkazuje.
 %%% Pøi odkazu na knihu se v¾dy uvádìjí èísla stránek.
 
 \begin{thebibliography}{99}
-\addcontentsline{toc}{chapter}{Literatura}
+\addcontentsline{toc}{chapter}{References}
  \bibitem{abraham-marsden}Abraham R., Marsden J. E.: {\em Foundations of Mechanics}, Addison-Wesley, Reading, 1985.
  \bibitem{derbes}Derbes D.: {\em Reinventing the wheel: Hodographic solutions to the Kepler problems}, Am. J. Phys. {\bf 69} (2001) 481--489.
  \bibitem{kvasnica}Kvasnica J.: {\em Teorie elektromagnetického pole}, Academia, Praha, 1985.
