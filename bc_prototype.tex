@@ -177,8 +177,19 @@ one on another.
 
 \section{N queens}
 \section{Random CSP}
-\section{Quasigroup Completion Problem}
 \section{Quasigroup With Holes}
+Quasigroup (or latin square) is table of size $n \times n$ filled with natural numbers
+$\{1,...,n\}$. Every number is unique in row and in column (latin square constraint). 
+The Quasigroup With Holes (QWH) is former fully filled quasigroup where were $p\%$ 
+of values deleted. The empty values are calles holes and the other non-holes. Ballanced 
+QHW has evenly distributed non-holes across rows and columns. QWH can be allways solved.
+
+\section{Quasigroup Completion Problem}
+Quasigroup Completion Problem (QCP) consists of empty table where are then filled
+$p\%$ values which are consistent with the latin square constraint. The task is to 
+fill the table with values so it will form a latin square. QCP does not guarantee 
+the task to be sovable. The larger parameter $p$ is the lesser is probability 
+that there exists solution. 
 
 \chapter{Benchmark results}
 \chapter{Conclusions}
