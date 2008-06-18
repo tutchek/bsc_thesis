@@ -28,6 +28,10 @@
 
 %\newindex{default}{idx}{ind}{Rejstøík} % zavádí rejstøík v pøípadì pou¾ití balíku index
 
+\usepackage{nomencl}
+\makenomenclature  
+
+
 \title{Constraint solvers}   % tyto dvì polo¾ky jsou zde v podstatì formálnì, ve skuteènosti nejsou nikde 
 \author{Michal Tuláèek} % dále v dokumentu pou¾ity
 
@@ -35,6 +39,7 @@
 
 \begin{document}
 
+\newcommand{\zkratka}[2]{{#1}\nomenclature{#1}{#2}}
 %\csprimeson % zapne jednoduché psaní èeských uvozovek pomocí klasických znakù, ale potom pozor 
              % na originální apostrofy, které budou chybnì interpretovány!!!
 
@@ -180,12 +185,12 @@ one on another.
 \section{Quasigroup With Holes}
 Quasigroup (or latin square) is table of size $n \times n$ filled with natural numbers
 $\{1,...,n\}$. Every number is unique in row and in column (latin square constraint). 
-The Quasigroup With Holes (QWH) is former fully filled quasigroup where were $p\%$ 
+\zkratka{QWH}{Quasigroup Qith Holes} is former fully filled quasigroup where were $p\%$ 
 of values deleted. The empty values are calles holes and the other non-holes. Ballanced 
 QHW has evenly distributed non-holes across rows and columns. QWH can be allways solved.
 
 \section{Quasigroup Completion Problem}
-Quasigroup Completion Problem (QCP) consists of empty table where are then filled
+\zkratka{QCP}{Quasigroup Completion Problem} consists of empty table where are then filled
 $p\%$ values which are consistent with the latin square constraint. The task is to 
 fill the table with values so it will form a latin square. QCP does not guarantee 
 the task to be sovable. The larger parameter $p$ is the lesser is probability 
@@ -198,6 +203,7 @@ Since there are no results therefore there are not result. Wait for it.
 \appendix
 \chapter{List of solvers}
 \chapter{SRQ in tested solvers}
+\printnomenclature[2.5cm]
 
 %%% Seznam literatury
 %%%
