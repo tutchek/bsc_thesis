@@ -21,6 +21,7 @@
 \usepackage{a4wide} % nastavuje standardní evropský formát stránek A4
 %\usepackage{index} % nutno pou¾ít v pøípadì tvorby rejstøíku balíèkem makeindex
 %\usepackage{fancybox} % umo¾òuje pokroèilé rámeèkování :-)
+%\usepackage{natbib}
 \usepackage{graphicx} % nezbytné pro standardní vkládání obrázkù do dokumentu
 
 \usepackage[left=4cm]{geometry} % nastavení dané velikosti okrajù
@@ -119,9 +120,9 @@ Katedra (ústav): Katedra teoretické informatiky a matematické logiky\\
 Vedoucí bakaláøské práce: Doc. RNDr. Roman Barták, Ph.D.\\
 e-mail vedoucího: bartak@kti.mff.cuni.cz\\
 
-\noindent Abstrakt:  Lorem ipsum dolor sit amet consectetuer at urna et lacinia wisi. Sem leo In nec gravida et et dolor elit neque tempus. Urna lacinia Curabitur egestas consequat tellus in Morbi id Suspendisse nunc. Pellentesque eget id non et turpis morbi semper nulla iaculis hac. Id In metus convallis Nunc lacus tempus pretium orci Phasellus nonummy. Est.\\
+\noindent Abstrakt: Øe¹iè omezujících podmínek je specializovaný software, urèený k øe¹ení problémù popsaných omezujícími podmínkami. Práce podává pøehled øe¹ièù a vybrané z nich testuje a srovnává. \\
 
-\noindent Klíèová slova: et dolor elit neque tempus
+\noindent Klíèová slova: omezující podmínky, øe¹ièe, benchmarky
 
 \vspace{10mm}
 
@@ -132,9 +133,9 @@ Department: Department of Theoretical Computer Science and Mathematical Logic\\
 Supervisor: Doc. RNDr. Roman Barták, Ph.D.\\
 Supervisor's e-mail address: bartak@kti.mff.cuni.cz\\
 
-\noindent Abstract: In the present work we study it. Lorem ipsum dolor sit amet consectetuer at urna et lacinia wisi. Sem leo In nec gravida et et dolor elit neque tempus. Urna lacinia Curabitur egestas consequat tellus in Morbi id Suspendisse nunc. Pellentesque eget id non et turpis morbi semper nulla iaculis hac. Id In metus convallis Nunc lacus tempus pretium orci Phasellus nonummy. Est. \\
+\noindent Abstract: Constraint solver is specialized software used to solve constraint satisfaction problems. Work lists solvers and some of them tests and compare. \\
 
-\noindent Keywords: ipsum dolor sit amet consectetuer
+\noindent Keywords: constraint satisfaction problems, constraint solvers, benchmark
 
 \newpage
 
@@ -143,19 +144,44 @@ Supervisor's e-mail address: bartak@kti.mff.cuni.cz\\
 
 \chapter{Introducion}
 
-\section{Benchmarks}
+Constraint satistfaction is relatively new field of computer science which 
 
+\chapter{Constraint solvers}
+\chapter{Benchmarks}
 
+In this chapter we will define the benchmark which are used. Several of them were
+used in \cite{fernandez00} and others can be found at CSPLib \cite{csplib}.
 
-\section{Why}
+\section{Self referential quiz}
+This benchmark was used in \cite{fernandez00}. We will use it to show how the solvers
+evolved since year 2000. The quiz consist from ten questions whose answers depends
+one on another.
 
-\section{Where}
+\begin{enumerate}
+	\item\label{q1} The first question whose answer is A is: (A) \ref{q4} (B) \ref{q3} (C) \ref{q2} (D) \ref{q1} (E) none of above
+	\item\label{q2} The only two consecutive questions with identical answers are: (A) \ref{q3} and \ref{q4} (B) \ref{q4} and \ref{q5} (C) \ref{q5} and \ref{q6} (D) \ref{q6} and \ref{q7} (E) \ref{q7} and \ref{q8}
+	\item\label{q3} The next question with answer A is: (A) \ref{q4} (B) \ref{q5} (C) \ref{q6} (D) \ref{q7} (E) \ref{q8}
+	\item\label{q4} The first even numbered question with answer B is: (A) \ref{q2} (B) \ref{4} (C) \ref{q6} (D) \ref{q8} (E) \ref{q10} 
+	\item\label{q5}
+	\item\label{q6}
+	\item\label{q7}
+	\item\label{q8}
+	\item\label{q9}
+	\item\label{q10}
+	
+\end{enumerate} 
 
-\chapter{Testing}
+\section{N queens}
+\section{Random CSP}
+\section{Quasigroup Completion Problem}
+\section{Quasigroup With Holes}
 
-\section{What}
+\chapter{Benchmark results}
+\chapter{Conclusions}
+Since there are no results therefore there are not result. Wait for it. 
 
-\section{How}
+\appendix
+\chapter{List of solvers}
 
 
 %%% Seznam literatury
@@ -163,11 +189,14 @@ Supervisor's e-mail address: bartak@kti.mff.cuni.cz\\
 %%% Literatura se øadí abecednì. Úvádí se pouze literatura, na kterou se v textu odkazuje.
 %%% Pøi odkazu na knihu se v¾dy uvádìjí èísla stránek.
 
-\begin{thebibliography}{99}
-\addcontentsline{toc}{chapter}{References}
- \bibitem{abraham-marsden}Abraham R., Marsden J. E.: {\em Foundations of Mechanics}, Addison-Wesley, Reading, 1985.
- \bibitem{derbes}Derbes D.: {\em Reinventing the wheel: Hodographic solutions to the Kepler problems}, Am. J. Phys. {\bf 69} (2001) 481--489.
- \bibitem{kvasnica}Kvasnica J.: {\em Teorie elektromagnetického pole}, Academia, Praha, 1985.
-\end{thebibliography}
+\bibliographystyle{plain}
+\bibliography{bc_prototype}
+
+
+%%\begin{thebibliography}{99}
+%%\addcontentsline{toc}{chapter}{References}
+%% \bibitem{schulte}SCHULTE, Christian. {\em Programming Constraint Services : High-Level Programming of Standard and New Constraint Services}. Berlin Heidelberg : Springer Verlag, 2002. 176 p. ISBN 3-540-43371-6.
+%% \bibitem{eclipse-manual}AGGOUN, Abderrahamane, et al. {\em ECLiPSe : User Manual}. Release 5.10. [s.l.] : [s.n.], 2007. 263 p. Available at WWW: $<$http://eclipse.crosscoreop.com/doc/userman.pdf$>$.  
+%%\end{thebibliography}
 
 \end{document}
