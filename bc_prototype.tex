@@ -153,9 +153,48 @@ Supervisor's e-mail address: bartak@kti.mff.cuni.cz\\
 
 \chapter{Introducion}
 
-Constraint satistfaction is relatively new field of computer science which \zkratka{CSP}{Constraint Satisfaction Problem} 
+\section{Goal of the thesis}
+Constraint satisfaction is relatively new field of computer science which focus on the problems
+which can be described by some constraints. As an example of constraint one can imagine logical dependencies 
+(A is valid only if B is invalid), arithmetical constraints ($X = 8 + Y + Z$) and lots of more. Real life situations can 
+be as well described with constraints, e.g. worker Smith cannot work with worker Adams, also he can work only 
+on monday and tuesday and cannot work in the night shift. These constraints together defines whole
+complex problem -- a Constraint Satisfaction Problem (\zkratka{CSP}{Constraint Satisfaction Problem}).
+
+There are many techiques how to solve CSP. One can use his own ad hoc created solution. 
+Or there is availability of using some standard constraint solver. This solver expect
+as an input description of problem and returns solution if some exists. There is many 
+of these systems and this thesis pick some of them and test them in various aspects.
+
+The aspects which are studied are modelling capabilities, time and space efficiency, 
+integration with other programming environments, development environment and debugging features. 
+
+\section{Structure of the thesis}
+
+In the second chapter we will study six solvers. All but one are open source solvers. 
+The only commercial system is SICstus Prolog. ECLiPSE and SICstus Prolog are based on Prolog
+programming language, Mozart on Oz language, Choco is a Java library, Gecode is based on C++ and finally 
+minion is based on C language. Minion can be also used as standalone solver - in this 
+case it provides its own language for definition of problems.
+
+In the the third chapter we will define benchmarks and explain what the benchmarks
+should show on the systems.
+
+Fourth chapter contains detailed results of the benchmarks and finally in fifth chapter 
+we will make some conclusions about the results.
 
 \chapter{Constraint solvers}
+
+\section{ECLiPSe}
+
+ECLiPSe affinity
+
+\section{SICStus Prolog}
+\section{Gecode}
+\section{Choco}
+\section{Mozart}
+\section{Minion}
+
 \chapter{Benchmarks}
 
 In this chapter we will define the benchmark which are used. Several of them were
@@ -181,7 +220,32 @@ one on another.
 \end{enumerate} 
 
 \section{N queens}
+
+Problem of the N queens is classic chess excercise. The task is to place n queens 
+on the n $\times$ n chessboard so that none of them can hit any other. 
+
 \section{Random CSP}
+
+%%  Náhodnì generovaný binární problém splòování podmínek.
+%%  Dnes nejbì¾nìj¹í benchmark.
+%%  Problém je charakterizován ètveøicí <n,m,p1,p2>
+%%  – n je poèet promìnných
+%%  – m je velikost domén (v¹echny promìnné mají stejnou doménu)
+%%  – p1 je hustota (density) podmínek
+%%  – p2 je „uta¾enost“ (tightness) podmínek
+%%  Model A
+%%  – mezi dvojící promìnných je podmínka s pravdìpodobností p1
+%%  – dvojice hodnot v podmínce je nekompatibilní s
+%%  pravdìpodobností p2
+%%  Model B
+%%  – je vybráno p1*n*(n-1)/2 náhodných dvojic promìnných mezi
+%%  kterými bude podmínka
+%%  – v ka¾dé podmínce je vybráno p2*m2 náhodných dvojic hodnot,
+%%  které budou oznaèeny jako nekompatibilní
+%%  Model E
+%%  – náhodnì je vybráno p1* p2* m2 *n*(n-1)/2 ètveøic <i,hi,j,hj>, kde i a j
+%%  jsou promìnné a hi a hj je dvojice nekompatibilních hodnot
+
 \section{Quasigroup With Holes}
 Quasigroup (or latin square) is table of size $n \times n$ filled with natural numbers
 $\{1,...,n\}$. Every number is unique in row and in column (latin square constraint). 
