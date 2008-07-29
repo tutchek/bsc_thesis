@@ -24,6 +24,8 @@
 %\usepackage{natbib}
 \usepackage{graphicx} % nezbytné pro standardní vkládání obrázkù do dokumentu
 
+\usepackage{chessboard}
+
 \usepackage{amsmath}
 
 \usepackage[left=4cm]{geometry} % nastavení dané velikosti okrajù
@@ -195,7 +197,7 @@ we will make some conclusions about the results.
 
 \section{ECLiPSe}
 
-\subsection{Short description}
+\subsection{Description}
 
 ECLiPSe is open source constraint satisfaction solving system based on Prolog 
 programming language. It is available for Microsoft Windows NT family, 
@@ -204,8 +206,6 @@ language which is extended bz new predicates and operators. Prolog extensions ar
 more described in "Modelling Capabilities" subsection. In general it can be said that ECLiPSe
 system tends to be SICStus Prolog compatible. ECLiPSe provides grafical interface,
 methods to communicate with hosting operating system or via network. 
-
-\subsection{History}
 
 As stated in \cite{wiki:Eclipse} ECLiPSe is developed until 1995 at the European 
 Computer-Industry Research Centre in Munich and then until 2005 at the Centre for 
@@ -323,13 +323,66 @@ aa
 
 \section{Minion}
 
-\subsection{Short description}
+\subsection{Description}
 
-aa
+Minion is very low level CSP system with strictly limited set of commands. One 
+can describe programming in minion as "constraint satisfaction machine language".
+As an example we can demonstrate in on the 4-queens problem.
 
-\subsection{History}
+Common description is:
 
-aa
+\begin{align}
+\forall i,j, i \neq j & : Q_i \neq Q_j \\
+\forall i,j, i < j & : | Q_i - Q_j | \neq j - i 
+\end{align}
+
+However in minion where has to be twelve auxiliary variables. Minion does not 
+support "sum is equal". If user want to achieve "sum is equal" constraint it has 
+to be modified from
+
+
+Also there is nothing like for or while cycles, whole problem has to be defined in
+the input file, which makes programming in pure minion really difficult and nearly
+impossible to scale because of growing of auxiliary variables.
+
+The 4-queen problem then looks as follows
+
+\begin{equation*}
+\begin{gathered}
+Q_2 - Q_3 \leq a_0 \\
+Q_1 - Q_3 \leq a_2 \\
+Q_1 - Q_2 \leq a_4 \\
+Q_0 - Q_3 \leq a_6 \\
+Q_0 - Q_2 \leq a_8 \\
+Q_0 - Q_1 \leq a_{10}
+\end{gathered} \qquad \begin{gathered}
+Q_2 - Q_3 \geq a_0 \\
+Q_1 - Q_3 \geq a_2 \\
+Q_1 - Q_2 \geq a_4 \\
+Q_0 - Q_3 \geq a_6 \\
+Q_0 - Q_2 \geq a_8 \\
+Q_0 - Q_1 \geq a_{10}
+\end{gathered} \qquad \begin{gathered}
+| a_0 | = a_1 \\
+| a_2 | = a_3 \\
+| a_4 | = a_5 \\
+| a_6 | = a_7 \\
+| a_8 | = a_9 \\
+| a_{10} | = a_{11}
+\end{gathered} \qquad \begin{gathered}
+a_{11} \neq 1 \\
+a_9 \neq 2 \\
+a_7 \neq 3 \\
+a_5 \neq 3 \\
+a_1 \neq 1 \\
+\text{alldifferent}(Q_1,Q_2,Q_3,Q_4)
+\end{gathered}
+\end{equation*}
+
+As one can see, the problem is described strictly for four queens variant. If there is 
+need to extend number of queens whole problem description has to be rewriten.
+
+Fortunately there exists  
 
 \subsection{Modelling capabilities}
 
@@ -438,8 +491,16 @@ Q_1 = 1 &\Leftrightarrow (\forall i < 4)(Q_i \neq 1) \mand (Q_i = 4)
 
 \section{N queens}
 
-Problem of the N queens is classic chess excercise. The task is to place n queens 
-on the n $\times$ n chessboard so that none of them can hit any other. 
+Problem of the $N$ queens is classic chess excercise. The task is to place $N$ queens 
+on the $N \times N$ chessboard so that none of them can hit any other. Queen attacks
+figures in the same column and row as it stands. Also it attacks figures on diagonal fields.
+
+We have to place $N$ queens on chessboard $N \times N$ so there 
+
+\def\mylist{Ke1, qe2, kf3}
+\setchessboard{setpieces=\mylist}
+\def\mylist{qa1, qb5, qc8, qd6, qe3, qf7, qg2, qh4}
+\chessboard  
 
 \section{Random CSP}
 
@@ -478,6 +539,13 @@ the task to be sovable. The larger parameter $p$ is the lesser is probability
 that there exists solution.
 
 \chapter{Benchmark results}
+
+\begin{figure}
+\begin{center}
+\includegraphics[scale=0.1]{images/grafy/100magic.eps}
+\end{center}
+\end{figure} 
+
 \chapter{Conclusions}
 Since there are no results therefore there are not result. Wait for it. 
 
