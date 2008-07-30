@@ -218,107 +218,71 @@ In the time of writing this thesis it is available in version 5.10 which is benc
 
 \subsection{Modelling capabilities}
 
-
-
-\subsection{Efficiency}
-
-aa
+** TO BE WRITTEN **
 
 \subsection{Programming support features}
 
-aa
+** TO BE WRITTEN **
 
 
 \section{SICStus Prolog}
 
 \subsection{Short description}
 
-aa
-
-\subsection{History}
-
-aa
+** TO BE WRITTEN **
 
 \subsection{Modelling capabilities}
 
-aa
-
-\subsection{Efficiency}
-
-aa
+** TO BE WRITTEN **
 
 \subsection{Programming support features}
 
-aa
+** TO BE WRITTEN **
 
 
 \section{Gecode}
 
 \subsection{Short description}
 
-aa
-
-\subsection{History}
-
-aa
+** TO BE WRITTEN **
 
 \subsection{Modelling capabilities}
 
-aa
-
-\subsection{Efficiency}
-
-aa
+** TO BE WRITTEN **
 
 \subsection{Programming support features}
 
-aa
+** TO BE WRITTEN **
 
 
 \section{Choco}
 
 \subsection{Short description}
 
-aa
-
-\subsection{History}
-
-aa
+** TO BE WRITTEN **
 
 \subsection{Modelling capabilities}
 
-aa
-
-\subsection{Efficiency}
-
-aa
+** TO BE WRITTEN **
 
 \subsection{Programming support features}
 
-aa
+** TO BE WRITTEN **
 
 
 \section{Mozart}
 
 \subsection{Short description}
 
-aa
-
-\subsection{History}
-
-aa
+** TO BE WRITTEN **
 
 \subsection{Modelling capabilities}
 
-aa
-
-\subsection{Efficiency}
-
-aa
+** TO BE WRITTEN **
 
 \subsection{Programming support features}
 
-aa
+** TO BE WRITTEN **
 
 
 \section{Minion}
@@ -384,19 +348,54 @@ need to extend number of queens whole problem description has to be rewriten.
 
 Fortunately there exists java program Tailor by Andrea Rendl. Tailor converts program
 written in Essence' programming language to input format of Minion. Essence' is solver
-independent language which can 
+independent language which describe CSP. More information about this programming language
+can be found in \cite{constraints:essence}. Essence' defines syntactic sugar constructions
+like \verb=forall= (abbreviation for $a_1 \mand a_2 \mand a_3 \mand \dots$), 
+\verb=exists= (abbreviation for $a_1 \mor a_2 \mor a_3 \mor \dots$), \verb=sum= and others.
+
+Great advantage compared to standard Minion input is possibility to scale problems
+with given variable. In Minion, the input file can specify for example 4-queens problem 
+but for other number of queens is the file unuseful. Programs in Essence' can be written
+using constants which are substituted during translation to Minion input format.
+As an example of Essence' program we will show 4-queens problem in figure \ref{essence-source-4queens} 
+on page \pageref{essence-source-4queens}.  
+
+\begin{figure}
+\begin{verbatim}
+language ESSENCE' 1.b.a
+
+find queens: matrix indexed by [int(1..n)] of int(1..n)
+
+such that
+
+forall i: int(1..n). forall j: int(i+1..n).
+
+  | queens[i] - queens[j] | != | i - j |,
+
+  alldiff(queens)
+  
+letting n to be 4
+\end{verbatim}
+\caption{\label{essence-source-4queens}Example of 4-queens program in Essence'}
+\end{figure}
+
+During translation Tailor normalize Essence' program then converts it to flat Essence'.
+Flat Essence' is programm in essence which does not contain any syntactic sugar structures.
+This program is then converted to Minion input format.
+
+Tailor is written in Java and is distributed as JAR package. It provides graphic interface
+with editor of Essence' code. User can directly convert program in Essence' to Minion
+and then run it and see the result if any. Tailor can be also used as non-interactive 
+tool which only converts from Essence' to Minion.
 
 \subsection{Modelling capabilities}
 
-aa
+** TO BE WRITTEN **
 
-\subsection{Efficiency}
-
-aa
 
 \subsection{Programming support features}
 
-aa
+** TO BE WRITTEN **
 
 
 \chapter{Benchmarks}
@@ -499,10 +498,13 @@ figures in the same column and row as it stands. Also it attacks figures on diag
 
 We have to place $N$ queens on chessboard $N \times N$ so there 
 
+\begin{figure}
+\caption{\label{solution-8queens-chessboard}One solution of 8-queens problem}
 \def\mylist{Ke1, qe2, kf3}
 \setchessboard{setpieces=\mylist}
 \def\mylist{qa1, qb5, qc8, qd6, qe3, qf7, qg2, qh4}
 \chessboard  
+\end{figure}
 
 \section{Random CSP}
 
@@ -544,17 +546,12 @@ that there exists solution.
 
 \begin{figure}
 \begin{center}
-\includegraphics[scale=0.1]{images/grafy/100magic.eps}
+\includegraphics[width=8cm]{images/grafy/100magic.eps}
 \end{center}
 \end{figure} 
 
 \chapter{Conclusions}
 Since there are no results therefore there are not result. Wait for it. 
-
-\appendix
-\chapter{List of solvers}
-\chapter{SRQ in tested solvers}
-\printnomenclature[2.5cm]
 
 %%% Seznam literatury
 %%%
