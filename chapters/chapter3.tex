@@ -1,0 +1,236 @@
+\chapter{Benchmarks}
+
+In this chapter we will define the benchmark which are used. Several of them were
+used in \cite{fernandez00} and others can be found at CSPLib \cite{csplib}.
+
+\section{Self Referential Quiz}
+\zkratka{SRQ}{Self Referential Quiz} was used in \cite{fernandez00}. More general 
+description of the puzzle and how to solve it can be found in \cite{jios:bubalo}.
+We will use it to show how the solvers evolved since year 2000. The quiz consist 
+from ten questions whose answers depends one on another.
+
+\begin{enumerate}
+	\item\label{q1} The first question whose answer is A is: (A) \ref{q4} (B) \ref{q3} (C) \ref{q2} (D) \ref{q1} (E) none of above
+	\item\label{q2} The only two consecutive questions with identical answers are: (A) \ref{q3} and \ref{q4} (B) \ref{q4} and \ref{q5} (C) \ref{q5} and \ref{q6} (D) \ref{q6} and \ref{q7} (E) \ref{q7} and \ref{q8}
+	\item\label{q3} The next question with answer A is: (A) \ref{q4} (B) \ref{q5} (C) \ref{q6} (D) \ref{q7} (E) \ref{q8}
+	\item\label{q4} The first even numbered question with answer B is: (A) \ref{q2} (B) \ref{q4} (C) \ref{q6} (D) \ref{q8} (E) \ref{q10} 
+	\item\label{q5} The only odd numbered question with answer C is: (A) \ref{q1} (B) \ref{q3} (C) \ref{q5} (D) \ref{q7} (E) \ref{q9}
+	\item\label{q6} A question with answer D: (A) comes before this one, but not after this one (B) comes after this one, but not before this one (C) comes before and after this one (D) does not occur at all (E) none of the above
+	\item\label{q7} The last question whose answer is E is: (A) \ref{q5} (B) \ref{q6} (C) \ref{q7} (D) \ref{q8} (E) \ref{q9}
+	\item\label{q8} The number of questions whose answers are consonants is: (A) 7 (B) 6 (C) 5 (D) 4 (E) 3
+	\item\label{q9} The number of questions whose answers are vowels is: (A) 0 (B) 1 (C) 2 (D) 3 (E) 4
+	\item\label{q10} The answer to this question is: (A) A (B) B (C) C (D) D (E) E
+	
+\end{enumerate} 
+
+This quiz can be represented as fifty boolean variables $Q_{ij}$, $i \in \{1,\dots,10\}$, 
+$j \in \{A,\dots,B\}$ where $Q_{ij}$ is 1 if, and only if question $i$ has answer $j$.
+Otherwise $Q_{ij} = 0$. Representation of the SRQ as Satisfability problem with fifty 
+boolean variables and corresponding program in Oz is shown in \cite{Henz96}. We 
+will demonstrate here only first question.
+
+\begin{align}
+Q_{1A} &\equiv \neg Q_{1A} \mand \neg Q_{2A} \mand \neg Q_{3A} \mand Q_{4A}  \\
+Q_{1B} &\equiv \neg Q_{1A} \mand \neg Q_{2A} \mand Q_{3A}  \\
+Q_{1C} &\equiv \neg Q_{1A} \mand Q_{2A} \\
+Q_{1D} &\equiv Q_{1A}  \\
+Q_{1E} &\equiv \neg Q_{1A} \mand \neg Q_{2A} \mand \neg Q_{3A} \mand \neg Q_{4A}
+\end{align}
+
+And constraint ensuring that there is only one answer to this question.
+
+$$(Q_{1A} \mand \neg Q_{1B} \mand \neg Q_{1C} \mand \neg Q_{1D} \mand \neg Q_{1E}) \mor (\neg Q_{1A} \mand  Q_{1B} \mand \neg Q_{1C} \mand \neg Q_{1D} \mand \neg Q_{1E}) \mor $$
+$$(\neg Q_{1A} \mand \neg Q_{1B} \mand  Q_{1C} \mand \neg Q_{1D} \mand \neg Q_{1E}) \mor (\neg Q_{1A} \mand \neg Q_{1B} \mand \neg Q_{1C} \mand  Q_{1D} \mand \neg Q_{1E}) \mor $$
+$$(\neg Q_{1A} \mand \neg Q_{1B} \mand \neg Q_{1C} \mand \neg Q_{1D} \mand  Q_{1E}) \mor $$
+
+This constraint can be simplified to
+
+$$Q_{1A} + Q_{1B} + Q_{1C} + Q_{1D} + Q_{1E} = 1$$
+
+The SRQ can be also specified as problem with ten variables $Q_i = j$, $i \in \{1,\dots,10\}$, $j \in \{1,\dots,5\}$
+where $Q_i = 1$ means answer to question $i$ is A and so on. First question will
+in that case be:
+
+\begin{align}
+Q_1 = 1 &\Leftrightarrow (\forall i < 4)(Q_i \neq 1) \mand (Q_i = 4)
+\end{align}
+
+\begin{figure}
+\begin{center}
+\begin{tabular}{cc}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline	 &	A	&	B	&	C	&	D & E \\
+\hline 1	 &	0	&	0	&	1	&	0 & 0 \\
+\hline 2	 &	1	&	0	&	0	&	0 & 0 \\
+\hline 3	 &	0	&	1	&	0	&	0 & 0 \\
+\hline 4	 &	0	&	1	&	0	&	0 & 0 \\
+\hline 5	 &	1	&	0	&	0	&	0 & 0 \\
+\hline 6	 &	0	&	1	&	0	&	0 & 0 \\
+\hline 7	 &	0	&	0	&	0	&	0 & 1 \\
+\hline 8	 &	0	&	1	&	0	&	0 & 0 \\
+\hline 9	 &	0	&	0	&	0	&	0 & 1 \\
+\hline 10 &	0	&	0	&	0	&	1 & 0 \\
+\hline
+\end{tabular} & \begin{tabular}{|c|c|c|c|c|c|}
+\hline	   &	Q \\
+\hline 1	 &	3 \\
+\hline 2	 &	1 \\
+\hline 3	 &	2 \\
+\hline 4	 &	2 \\
+\hline 5	 &	1 \\
+\hline 6	 &	2 \\
+\hline 7	 &	5 \\
+\hline 8	 &	2 \\
+\hline 9	 &	5 \\
+\hline 10  &	4 \\
+\hline
+\end{tabular}
+\end{tabular}
+\end{center}
+\caption{Solutions of SRQ represented by 50 boolean or 10 finite domain variables.}
+\label{table.SRQsolution}
+\end{figure}
+
+\section{N queens}
+
+Problem of the $N$ queens is classic chess excercise. The task is to place $N$ queens 
+on the $N \times N$ chessboard so that none of them can hit any other. Example solution
+for eight queens is shown in figure \ref{solution-8queens-chessboard} on page 
+\pageref{solution-8queens-chessboard}. Queen attacks figures in the same column, 
+row and diagonals as the queen is placed.
+
+\begin{figure}
+\caption{\label{solution-8queens-chessboard}One solution of 8-queens problem}
+\begin{center}
+\def\mylist{Ke1, qe2, kf3}
+\setchessboard{setpieces=\mylist,showmover=false}
+\def\mylist{qa1, qb5, qc8, qd6, qe3, qf7, qg2, qh4}
+\chessboard  
+\end{center}
+\end{figure}
+
+Rewritten to constraints, queen on square $[x,y]$ attacks square $[i,j]$ if one of 
+following conditions is satisfied:
+
+\begin{eqnarray}
+\label{cond-queens-row} i & = & x \\ 						% \tag{same row} 
+\label{cond-queens-col} j & = & y \\ 						% \tag{same column} 
+\label{cond-queens-diagonal} |x - i| & = & |y - j| 	% \tag{same diagonal}
+\end{eqnarray} 
+
+For representation of the n-queens problem as CLP problem we will use array $Q=(q_1,\dots,q_n)$,
+$\forall q_i \in \{1,\dots,n\}$. This model enforces breaking of condition (\ref{cond-queens-col}).
+Constraint \verb=alldifferent= on vector $Q$ causes breaking of the condition (\ref{cond-queens-row}).
+Finally for every two queens $i,j$ must be satisfied constraint $|Q_i - Q_j| \neq |i - j|$.
+The Essence' program based on these rules is shown in figure \ref{essence-source-4queens} 
+on page \pageref{essence-source-4queens}. 
+
+Problem can be scaled by increasing $N$. The variable count and number of values grows 
+lineary with $N$. That mean that with given $N$ at least $N$ finite domain variables
+must be declared each with domain that range between 1 and $N$.
+
+
+\section{Magic sequence}
+
+Sequence $S = \left(s_0, s_1, \dots, s_n\right)$ is magic if the magic condition 
+is satisfied
+
+\begin{equation}
+\tag{magic condition}  \forall i \in \{1, \dots, n\}: s_i = \left\| \left\{s_j | j \in \{1,\dots,n\}: s_j = i \right\} \right\|
+\end{equation}
+
+We will demonstrate it on sequence $S = (2,1,2,0,0)$. Sequence $S$ is magic beacuse 
+the magic condition is satisfied -- $s_0 = 2$ and number of zeros is 2, $s_1 = 1$
+and there is only one number one in sequence. Other members of sequence are in similar 
+way consistent with the magic condition.
+
+The magic condition gives us directly representation as CSP. Example implementation 
+in Essence' language in in figure \ref{magic-seqence-essence} on page \pageref{magic-seqence-essence}. 
+
+\begin{figure}
+\caption{\label{magic-seqence-essence}Magic sequence CSP represented in Essence'}
+\begin{verbatim}
+find s : matrix indexed by [int(0..n-1)] of int(0..n)
+such that
+  forall i : int(0..n-1).
+	( s[i] = (sum j : int(0..n-1). (s[j] = i)))
+\end{verbatim}
+\end{figure}
+
+%%  Náhodnì generovaný binární problém splòování podmínek.
+%%  Dnes nejbìžnìjší benchmark.
+%%  Problém je charakterizován ètveøicí <n,m,p1,p2>
+%%  – n je poèet promìnných
+%%  – m je velikost domén (všechny promìnné mají stejnou doménu)
+%%  – p1 je hustota (density) podmínek
+%%  – p2 je „utaženost“ (tightness) podmínek
+%%  Model A
+%%  – mezi dvojící promìnných je podmínka s pravdìpodobností p1
+%%  – dvojice hodnot v podmínce je nekompatibilní s
+%%  pravdìpodobností p2
+%%  Model B
+%%  – je vybráno p1*n*(n-1)/2 náhodných dvojic promìnných mezi
+%%  kterými bude podmínka
+%%  – v každé podmínce je vybráno p2*m2 náhodných dvojic hodnot,
+%%  které budou oznaèeny jako nekompatibilní
+%%  Model E
+%%  – náhodnì je vybráno p1* p2* m2 *n*(n-1)/2 ètveøic <i,hi,j,hj>, kde i a j
+%%  jsou promìnné a hi a hj je dvojice nekompatibilních hodnot
+
+\section{Quasigroup With Holes}
+Quasigroup (or latin square) is table of size $n \times n$ filled with natural numbers
+$\{1,...,n\}$. Every number is unique in row and in column (latin square condition). 
+\zkratka{QWH}{Quasigroup Qith Holes} is quasigroup where is $p\%$ of values deleted. 
+The empty values are calles holes and the other non-holes. Ballanced 
+QHW has evenly distributed non-holes across rows and columns. QWH can be allways solved.
+
+\section{Quasigroup Completion Problem}
+The task is to fill the partialy filled table $N \times N$ so the result will be
+quasigroup with given property. The table is filled with numbers which are consistent 
+with the latin square condition however the problem can still result as unsolvable.
+As an example look at figure \ref{qcp-unsolvable} where any of prefilled values
+breaks the condition but there is no way how to place number 3 in the third row. 
+There is only one suitable place in first column but in first column already one
+number 3 is. The more is the table filled the greater is the probability of failure.
+
+\begin{figure}
+\caption{\label{qcp-unsolvable}Example of QCP which cannot be solved}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline 1 & 2 & 3 \\
+\hline 3 &   &   \\
+\hline   & 1 & 2 \\
+\hline
+\end{tabular}
+\end{center}
+\end{figure}
+
+There can be also additional condition on the quasigroup member values which makes
+the problem more difficult. List of the possible conditions can be found at \cite[prob003]{csplib}.
+We will use condition QG3.m which states that
+
+$$(ab)(ba) = a$$
+
+In this case multiplication is not standard multiplication on integers. Value of
+$ab$ is value in the table in the row $a$ and column $b$.
+
+\begin{figure}
+\caption{Quasigroup Completion Problem written in Essence'}
+\begin{verbatim}
+letting nDomain be domain int(0..n-1)
+
+find qcp : matrix indexed by [nDomain,nDomain] of nDomain
+
+such that
+  forall i : nDomain. alldiff(qcp[i,0..n-1]),
+
+  forall i : nDomain. alldiff(qcp[0..n-1,i]),
+
+  forall i : nDomain. forall j : nDomain. 
+	( i = qcp[ qcp[i,j] , qcp[j,i] ] )
+\end{verbatim}
+\end{figure}
+
+The problem $QCP[p,N]$ is parametrised by two variables -- the percentage of filling of the given
+table $p$ and size of table $N$. We will perform tests with stable N and p going from 0\%
+to 100\%.
