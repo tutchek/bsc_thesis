@@ -205,32 +205,6 @@ number 3 is. The more is the table filled the greater is the probability of fail
 \end{center}
 \end{figure}
 
-There can be also additional condition on the quasigroup member values which makes
-the problem more difficult. List of the possible conditions can be found at \cite[prob003]{csplib}.
-We will use condition QG3.m which states that
-
-$$(ab)(ba) = a$$
-
-In this case multiplication is not standard multiplication on integers. Value of
-$ab$ is value in the table in the row $a$ and column $b$.
-
-\begin{figure}
-\caption{Quasigroup Completion Problem written in Essence'}
-\begin{verbatim}
-letting nDomain be domain int(0..n-1)
-
-find qcp : matrix indexed by [nDomain,nDomain] of nDomain
-
-such that
-  forall i : nDomain. alldiff(qcp[i,0..n-1]),
-
-  forall i : nDomain. alldiff(qcp[0..n-1,i]),
-
-  forall i : nDomain. forall j : nDomain. 
-	( i = qcp[ qcp[i,j] , qcp[j,i] ] )
-\end{verbatim}
-\end{figure}
-
 The problem $QCP[p,N]$ is parametrised by two variables -- the percentage of filling of the given
 table $p$ and size of table $N$. We will perform tests with stable N and p going from 0\%
 to 100\%.
