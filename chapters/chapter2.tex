@@ -1,24 +1,38 @@
 \chapter{Constraint solvers}
 
 In this chapter we will describe various CSP solvers. We will focus on the specific
-properties of each solver.
+properties of each solver. All described solvers support most of following constraints 
+(we will call them basic constraints). 
 
-All described solvers support following constraints (we will call them basic 
-constraints):
-
-\begin{tabular}{|l|p{7cm}|}
+\begin{center}
+\begin{tabular}{|l|p{4cm}|}
 \hline \verb=alldifferent([=$q_0, q_1, \dots$\verb=])= &  $\forall i,j: j \neq i \Rightarrow q_i \neq q_i$ \\
-\hline \verb=eq(=$a$\verb=,= $b$\verb=)= &  $a = |b|$ \\
-\hline \verb=neq(=$a$\verb=,= $b$\verb=)= &  $a \neq |b|$ \\
+\hline \verb=eq(=$a$\verb=,= $b$\verb=)= &  $a = b$ \\
+\hline \verb=neq(=$a$\verb=,= $b$\verb=)= &  $a \neq b$ \\
 \hline \verb=abs(=$a$\verb=,= $b$\verb=)= &  $a = |b|$ \\
-\hline \verb=lt(=$a$\verb=,= $b$\verb=)= &  $a < |b|$ \\
-\hline \verb=gt(=$a$\verb=,= $b$\verb=)= &  $a > |b|$ \\
-\hline \verb=leq(=$a$\verb=,= $b$\verb=)= &  $a \leq |b|$ \\
-\hline \verb=geq(=$a$\verb=,= $b$\verb=)= &  $a \geq |b|$ \\
-\hline \verb=sum([=$q_0, q_1, \dots$\verb=],= $b$\verb=)= &  $\sum{q_i} = b$ \\
+\hline \verb=lt(=$a$\verb=,= $b$\verb=)= &  $a < b$ \\
+\hline \verb=gt(=$a$\verb=,= $b$\verb=)= &  $a > b$ \\
+\hline \verb=leq(=$a$\verb=,= $b$\verb=)= &  $a \leq b$ \\
+\hline \verb=geq(=$a$\verb=,= $b$\verb=)= &  $a \geq b$ \\
+\hline \verb=plus(=$a$\verb=,= $b$\verb=,= $c$\verb=)= &  $a + b = c$ \\
+\hline \verb=minus(=$a$\verb=,= $b$\verb=,= $c$\verb=)= &  $a - b = c$ \\
+\hline \verb=mult(=$a$\verb=,= $b$\verb=,= $c$\verb=)= &  $a \cdot b = c$ \\
+\hline \verb=div(=$a$\verb=,= $b$\verb=,= $c$\verb=)= &  $a  = c \cdot b$ \\
+\hline \verb=mod(=$a$\verb=,= $b$\verb=,= $c$\verb=)= &  $a = bk + c, k | a$ \\
+\hline \verb=sum([=$q_0, q_1, \dots$\verb=],= $s$\verb=)= &  $\sum{q_i} = s$ \\
+\hline \verb=weightsum([=$q_0, q_1, \dots$\verb=],[=$w_0, w_1, \dots$\verb=],= $s$\verb=)= &  $\sum{w_i,q_i} = s$ \\
+\hline \verb=difference(=$a$\verb=,= $b$\verb=,= $c$\verb=)= &  $|a - b| = c$ \\
+\hline \verb=element([=$q_0, q_1, \dots$\verb=],= $i$\verb=,= $e$\verb=)= &  ${q_i} = e$ \\
+\hline \verb=max([=$q_0, q_1, \dots$\verb=],= $a$\verb=)= &  $\max\{q_i\} = a$ \\
+\hline \verb=min([=$q_0, q_1, \dots$\verb=],= $a$\verb=)= &  $\min\{q_i\} = a$ \\
+\hline \verb=reify(=$c$ \verb=,= $r$\verb=)= &  $ c \Leftrightarrow (r = 1) $ \\
+\hline \verb=reimplify(=$c$ \verb=,= $r$\verb=)= &  $ (r = 1) \Rightarrow c $ \\
 \hline
 \end{tabular}
+\end{center}
 
+Name of the constraint may vary between systems however there always exists constraint
+with different name which do the same thing.  
 
 \section{\eclipse}
 
