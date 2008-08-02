@@ -87,7 +87,13 @@ Choco
 
 \subsection{Short description}
 
-** TO BE WRITTEN **
+Mozart is CSP solver implementing programmin language Oz. Oz contains most of the 
+concepts of the major programming paradigms, including logic, functional (both 
+lazy and eager), imperative, object-oriented, constraint, distributed, and 
+concurrent programming. In addition to multi-paradigm programming, the major 
+strengths of Oz are in constraint programming and distributed programming.
+
+Mozart uses as its interface Emacs editor which is customized for oz files.  
 
 \subsection{Modelling capabilities}
 
@@ -95,18 +101,25 @@ Choco
 
 \subsection{Programming support features}
 
+Mozart provides unique tool {\em Mozart Explorer} (screenshot is in figure \ref{mozart-explorer-screenshot}
+
 \begin{figure}
-\caption{\label{srq-mozart-folded}Mozart Explorer -- solution of SRQ in folded version}
+\caption{\label{mozart-explorer-screenshot}Mozart Explorer}
 \begin{center}
-\includegraphics[height=5cm]{images/mozart/srq.oz.color.folded.eps}
+\includegraphics[height=5cm]{images/screenshoty/explorer.eps}
 \end{center}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[b]
+\begin{minipage}[t]{5.0cm}
+\caption{\label{srq-mozart-folded}Mozart Explorer -- solution of SRQ in folded version}
+\includegraphics[height=5cm]{images/mozart/srq.oz.color.folded.eps}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{6.0cm}
 \caption{\label{srq-mozart-unfolded}Mozart Explorer -- solution of SRQ in unfolded version}
-\begin{center}
 \includegraphics[height=8cm]{images/mozart/srq.oz.color.unfolded.eps}
-\end{center}
+\end{minipage}
 \end{figure}
 
 
@@ -215,8 +228,97 @@ tool which only converts from Essence' to Minion.
 
 \subsection{Modelling capabilities}
 
-** TO BE WRITTEN **
+Minion can evaluate constrained variables of types {\em bool}, {\em discrete}, {\em bound} 
+and {\em sparsebound}. Bool variable has $\{0,1\}$ domain with special 
+optimised data structure which provides better performance. Domain of discrete variable is 
+range of integers. Memory usage and worst-case performance of most operations
+is $O(\text{domain size})$. Discrete domain variable can represent any
+subset of domain. Bound variable has domain consisting of range of integer.
+In contrast to discrete variable the variable can be only reduced by 
+changing one of its bounds. Memory and wors-case performance of all 
+operations is $O(1)$   Finally sparsebound variable is identical to 
+bound variable with exception that domain is an arbitrary range of 
+integers. Further description of variable types and performance of 
+their using can be found in \cite{minion-manual}. The variables can
+form matrices, vectors and tensors (matrices with more dimensions).
+Minion provides acces to whole row/column of matrix using syntax 
+\verb=q[5,_]= which means "all values of row 5 of matrix $q$".
+
+Minion does not permit nesting of constraints or array indexes. If user 
+needs constraints in form \verb=eq(abs(a),6= he must introduce new auxiliary
+variable and declare \verb=abs(a, aux) eq(aux,6)=. Also there is no constraint
+stating $\sum{a_i} = b$. One must declare $\sum{a_i} \leq b$, $\sum{a_i} \geq b$.
+These facts makes practical programming in Minion really hard because 
+number of auxiliary variables grows very fast. However user still can 
+use Tailor to generate input file for Minion.
+
+Result can be simply solution of the CSP or maximisation/minimisation of
+some given variable. 
+
+Minion is not suitable for non-integer variables. If 
+there is no possible remapping to integers -- for example set $\{dog, cat, 
+horse\}$ to $\{0,1,2\}$ or range 0.5 to 1.5 in 1 digit precision to range
+5 to 10 even authors of Minion recommends to use different solver (\cite{minion-sf-gentian}).
+
+Minion 
+
+  
 
 \subsection{Programming support features}
 
-** TO BE WRITTEN **
+Minion is low level black-boxed system which means that there is 
+not wide support for user. User can print out log of the 
+parsing process. This log contains detailed information about loading 
+of variables and could help find problem in the input file. Second 
+debugging feature which is built in the minion is possibility of 
+printing whole decision tree. This log contains listing of all nodes 
+and decisions. Following listing is example of decision tree of 
+the 4-queens problem.
+
+{\small
+\begin{verbatim}
+Node: 0,<{1,2,3,4},{1,2,3,4},{1,2,3,4},{1,2,3,4},{-3,-2,-1,0,1,2,3},
+{0,2,3},{-3,-2,-1,0,1,2,3},{0,1,3},{-3,-2,-1,0,1,2,3},{0,2,3},
+{-2,-1,0,1,2},{0,1,2},{-3,-2,-1,0,1,2,3},{0,1,3},{-3,-2,-1,0,1,2,3},
+{0,2,3}>
+
+Node: 1,<{1,2,3,4},{1,2,3,4},{1,2,3,4},{1,2,3,4},{-3,-2,-1,0,1,2,3},
+{0,2,3},{-3,-2,-1,0,1,2,3},{0,1,3},{-3,-2,-1,0,1,2,3},{0,2,3},
+{-2,-1,0,1,2},{0,1,2},{-3,-2,-1,0,1,2,3},{0,1,3},{-3,-2,-1,0,1,2,3},
+{0,2,3}>
+
+SearchAssign:AnyVarRef:LongRange0 = 1
+
+Node: 2,<1,{3,4},{2,3,4},{2,3},{-1,0,1,2},{0,2},{0,1},{0,1},
+{-1,0,1,2},{0,2},{-2,-1},{1,2},{-3,-2,-1},{1,3},{-3,-2},{2,3}>
+
+SearchAssign:AnyVarRef:LongRange1 = 3
+SearchAction:bt
+SearchAssign:AnyVarRef:LongRange1 != 3
+SearchAction:bt
+SearchAssign:AnyVarRef:LongRange0 != 1
+
+Node: 3,<{2,3,4},{1,2,3,4},{1,2,3,4},{1,2,3,4},{-3,-2,-1,0,1,2,3},
+{0,2,3},{-3,-2,-1,0,1,2,3},{0,1,3},{-3,-2,-1,0,1,2,3},{0,2,3},
+{-2,-1,0,1,2},{0,1,2},{-2,-1,0,1,2,3},{0,1,3},{-2,-1,0,1,2,3},
+{0,2,3}>
+
+SearchAssign:AnyVarRef:LongRange0 = 2
+
+Node: 4,<2,{1,3,4},{1,3},{1,3,4},{-3,-2,-1,0,1,2},{0,2,3},
+{-3,-2,-1,0,1,2,3},{0,1,3},{-2,-1,0,1,2,3},{0,2,3},{-2,-1,0,1},
+{0,1,2},{-1,0,1},{0,1},{-2,-1,0,1},
+{0,2}>
+
+SearchAssign:AnyVarRef:LongRange1 = 1
+SearchAction:bt
+SearchAssign:AnyVarRef:LongRange1 != 1
+
+Sol: 2 4 1 3
+\end{verbatim}
+}
+
+Minion does not offer public include headers and library to use the solver
+as CSP subsystem in wider C++ application. However examining of source codes
+revealed, that minion sources could be used in such way. *** UVIDIME 
+VYSLEDEK DOTAZU NA AUTORY ***.
