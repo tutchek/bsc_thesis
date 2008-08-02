@@ -1,5 +1,25 @@
 \chapter{Constraint solvers}
 
+In this chapter we will describe various CSP solvers. We will focus on the specific
+properties of each solver.
+
+All described solvers support following constraints (we will call them basic 
+constraints):
+
+\begin{tabular}{|l|p{7cm}|}
+\hline \verb=alldifferent([=$q_0, q_1, \dots$\verb=])= &  $\forall i,j: j \neq i \Rightarrow q_i \neq q_i$ \\
+\hline \verb=eq(=$a$\verb=,= $b$\verb=)= &  $a = |b|$ \\
+\hline \verb=neq(=$a$\verb=,= $b$\verb=)= &  $a \neq |b|$ \\
+\hline \verb=abs(=$a$\verb=,= $b$\verb=)= &  $a = |b|$ \\
+\hline \verb=lt(=$a$\verb=,= $b$\verb=)= &  $a < |b|$ \\
+\hline \verb=gt(=$a$\verb=,= $b$\verb=)= &  $a > |b|$ \\
+\hline \verb=leq(=$a$\verb=,= $b$\verb=)= &  $a \leq |b|$ \\
+\hline \verb=geq(=$a$\verb=,= $b$\verb=)= &  $a \geq |b|$ \\
+\hline \verb=sum([=$q_0, q_1, \dots$\verb=],= $b$\verb=)= &  $\sum{q_i} = b$ \\
+\hline
+\end{tabular}
+
+
 \section{\eclipse}
 
 \subsection{Description}
@@ -69,19 +89,28 @@ be used in every Java program which allows easily integrate CSP solver to applic
 Project is available at Sourceforge where user can found sources, documentation (in 
 JavaDoc and wiki system with several tutorials) and binaries (compiled jar archive).
 
-Beacuse Choco is is Java library, it does not need its own IDE and compiler. User can
-use for example Eclipse IDE or other java development tool by his preference.
+Beacuse Choco is Java library, it does not need its own IDE and compiler. User can
+use for example Eclipse IDE or other Java development tools by his preference.
 
 Authors are now developing Choco2 which is going to obsolete Choco but in time of 
 writing of this thesis Choco2 is still under development.
 
 \subsection{Modelling capabilities}
 
-Choco 
+Choco can model CSP over finite domain and experimentaly over real domain. All 
+constraints are implemented as member functions of Problem class. User can write his
+own child class of Problem and in this child class redefine constraints or add some
+new constraints which which could better express constraints needed in problem
+description.
+
+S
 
 \subsection{Programming support features}
 
-** TO BE WRITTEN **
+There is no special set of tools specially to use with choco but since the library 
+is written in java user can use various existing tools for debugging. Integrating into third 
+party software is easy because it is idependent CSP solving subsystem. User must 
+only import apropriate packages and declare variables.
 
 \section{Mozart}
 
@@ -99,7 +128,25 @@ User can directly send source to compiler and code is immediately executed.
 
 \subsection{Modelling capabilities}
 
-** TO BE WRITTEN **
+Mozart provides library for finite domain CSP which can user use to solve CSP as 
+well as maximization/minimalization task using objective function. User can choose
+propagation method - first fail, naive, etc. as well as his own propagation method.
+In case of optimising task user can define order function which is used to select
+best solution of all.
+
+*** POPSAT VICE ***
+
+\begin{figure}[ht]
+\begin{minipage}[t]{5.0cm}
+\caption{\label{srq-mozart-folded}Mozart Explorer -- solution of SRQ in folded version}
+\includegraphics[height=5cm]{images/mozart/srq.oz.color.folded.eps}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{6.0cm}
+\caption{\label{srq-mozart-unfolded}Mozart Explorer -- solution of SRQ in unfolded version}
+\includegraphics[height=8cm]{images/mozart/srq.oz.color.unfolded.eps}
+\end{minipage}
+\end{figure}
 
 \subsection{Programming support features}
 
@@ -126,32 +173,26 @@ it to show messages from the program or to inspect nodes in Oz Explorer.
 If the value of inspected variable is updated during inspection the 
 showed value alters to correspond with actual value.
 
-{\em Oz Profiler}
-
-{\em Oz Distribution Panel}
-
-{\em Ozcar}
-
-\begin{figure}[ht]
-\caption{\label{mozart-inspector-screenshot}Mozart Explorer}
+\begin{figure}[hb]
+\caption{\label{mozart-inspector-screenshot}Mozart Inspector}
 \begin{center}
 \includegraphics[height=5cm]{images/screenshoty/inspector.eps}
 \end{center}
 \end{figure}
 
+For debugging Mozart provides tool called {\em Ozcar} where user can step program, 
+set breakpoints and perform other actions which can be expected by debugging tool.
+Using tool user can inspect call stack and also test immediate input, evaluate 
+expression and exec statements. Debugger contains independent utility called
+{\em Oz Profiler} which can be used to find nonefficient parts of code and tune 
+application for maximal efficiency.
 
-\begin{figure}[hb]
-\begin{minipage}[t]{5.0cm}
-\caption{\label{srq-mozart-folded}Mozart Explorer -- solution of SRQ in folded version}
-\includegraphics[height=5cm]{images/mozart/srq.oz.color.folded.eps}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{6.0cm}
-\caption{\label{srq-mozart-unfolded}Mozart Explorer -- solution of SRQ in unfolded version}
-\includegraphics[height=8cm]{images/mozart/srq.oz.color.unfolded.eps}
-\end{minipage}
-\end{figure}
+For interaction with its environment Oz provides easy to use ways how to exchange
+data with foreign applications. Data can be written to file, sent over network or
+sent through pipe to another process.
 
+Mozart provides more features like C/C++ interfacing, distributed programming etc.
+More information can be found in \cite{mozart:documentation}.
 
 \section{Minion}
 
@@ -212,7 +253,7 @@ a_1 \neq 1 \\
 \end{equation*}
 
 As one can see, the problem is described strictly for four queens variant. If there is 
-need to extend number of queens whole problem description has to be rewriten.
+need to extend number of queens whole problem description has to be rewritten.
 
 Fortunately there exists java program Tailor by Andrea Rendl. Tailor converts program
 written in Essence' programming language to input format of Minion. Essence' is solver
@@ -248,7 +289,7 @@ letting n to be 4
 \end{figure}
 
 During translation Tailor normalize Essence' program then converts it to flat Essence'.
-Flat Essence' is programm in essence which does not contain any syntactic sugar structures.
+Flat Essence' is program in essence which does not contain any syntactic sugar structures.
 This program is then converted to Minion input format.
 
 Tailor is written in Java and is distributed as JAR package. It provides graphic interface
@@ -284,13 +325,8 @@ use Tailor to generate input file for Minion.
 
 TODO *** popsat je¹tì nìjaké constrainy ***
 
-Result can be simply solution of the CSP or maximisation/minimisation of
-some given variable. 
-
-Minion is not suitable for non-integer variables. If 
-there is no possible remapping to integers -- for example set $\{dog, cat, 
-horse\}$ to $\{0,1,2\}$ or range 0.5 to 1.5 in 1 digit precision to range
-5 to 10 -- even authors of Minion recommends to use different solver (\cite{minion-sf-gentian}).  
+Result can be simply solution of the CSP or maximation/minimisation of
+some given variable.   
 
 \subsection{Programming support features}
 
