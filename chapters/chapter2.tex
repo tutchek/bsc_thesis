@@ -72,7 +72,7 @@ JavaDoc and wiki system with several tutorials) and binaries (compiled jar archi
 Beacuse Choco is is Java library, it does not need its own IDE and compiler. User can
 use for example Eclipse IDE or other java development tool by his preference.
 
-Authors are now developing Choco2 which is going to supress Choco but in time of 
+Authors are now developing Choco2 which is going to obsolete Choco but in time of 
 writing of this thesis Choco2 is still under development.
 
 \subsection{Modelling capabilities}
@@ -87,13 +87,15 @@ Choco
 
 \subsection{Short description}
 
-Mozart is CSP solver implementing programmin language Oz. Oz contains most of the 
+Mozart is CSP solver implementing programming language Oz. Oz contains most of the 
 concepts of the major programming paradigms, including logic, functional (both 
-lazy and eager), imperative, object-oriented, constraint, distributed, and 
-concurrent programming. In addition to multi-paradigm programming, the major 
+lazy and eager), imperative, object oriented, constraint, distributed, and 
+concurrent programming. In addition to multi paradigm programming, the major 
 strengths of Oz are in constraint programming and distributed programming.
 
-Mozart uses as its interface Emacs editor which is customized for oz files.  
+Mozart uses as its interface Emacs editor which is customized for oz files. 
+User can directly send source to compiler and code is immediately executed.
+ 
 
 \subsection{Modelling capabilities}
 
@@ -101,16 +103,44 @@ Mozart uses as its interface Emacs editor which is customized for oz files.
 
 \subsection{Programming support features}
 
-Mozart provides unique tool {\em Mozart Explorer} (screenshot is in figure \ref{mozart-explorer-screenshot}
+Mozart provides tool {\em Oz Explorer} (screenshot is in figure 
+\ref{mozart-explorer-screenshot}; circle mean choice, square 
+"failure - no solution" and diamond means solution). User can browse 
+solutions and choices and by double clicking inspect state of variables 
+in decision tree nodes. The computing is directed from the explorer. 
+By default the solving is stopped after first solution is found. User 
+then can inspect results and select partial solutions (nodes which does
+not have fully searched all child trees) and start search for next 
+solution in that node. 
 
-\begin{figure}
+\begin{figure}[ht]
 \caption{\label{mozart-explorer-screenshot}Mozart Explorer}
 \begin{center}
 \includegraphics[height=5cm]{images/screenshoty/explorer.eps}
 \end{center}
 \end{figure}
 
-\begin{figure}[b]
+Another tool provided with mozart is {\em Oz Inspector} (screenshot is in
+figure \ref{mozart-inspector-screenshot}). User can call 
+it to show messages from the program or to inspect nodes in Oz Explorer.
+If the value of inspected variable is updated during inspection the 
+showed value alters to correspond with actual value.
+
+{\em Oz Profiler}
+
+{\em Oz Distribution Panel}
+
+{\em Ozcar}
+
+\begin{figure}[ht]
+\caption{\label{mozart-inspector-screenshot}Mozart Explorer}
+\begin{center}
+\includegraphics[height=5cm]{images/screenshoty/inspector.eps}
+\end{center}
+\end{figure}
+
+
+\begin{figure}[hb]
 \begin{minipage}[t]{5.0cm}
 \caption{\label{srq-mozart-folded}Mozart Explorer -- solution of SRQ in folded version}
 \includegraphics[height=5cm]{images/mozart/srq.oz.color.folded.eps}
@@ -198,7 +228,7 @@ using constants which are substituted during translation to Minion input format.
 As an example of Essence' program we will show 4-queens problem in figure \ref{essence-source-4queens} 
 on page \pageref{essence-source-4queens}.  
 
-\begin{figure}
+\begin{figure}[hb]
 \caption{\label{essence-source-4queens}Example of 4-queens program in Essence'}
 \begin{verbatim}
 language ESSENCE' 1.b.a
@@ -247,10 +277,12 @@ Minion provides acces to whole row/column of matrix using syntax
 Minion does not permit nesting of constraints or array indexes. If user 
 needs constraints in form \verb=eq(abs(a),6= he must introduce new auxiliary
 variable and declare \verb=abs(a, aux) eq(aux,6)=. Also there is no constraint
-stating $\sum{a_i} = b$. One must declare $\sum{a_i} \leq b$, $\sum{a_i} \geq b$.
+stating $\sum{a_i} = b$ and user must declare $\sum{a_i} \leq b$, $\sum{a_i} \geq b$.
 These facts makes practical programming in Minion really hard because 
 number of auxiliary variables grows very fast. However user still can 
 use Tailor to generate input file for Minion.
+
+TODO *** popsat je¹tì nìjaké constrainy ***
 
 Result can be simply solution of the CSP or maximisation/minimisation of
 some given variable. 
@@ -258,11 +290,7 @@ some given variable.
 Minion is not suitable for non-integer variables. If 
 there is no possible remapping to integers -- for example set $\{dog, cat, 
 horse\}$ to $\{0,1,2\}$ or range 0.5 to 1.5 in 1 digit precision to range
-5 to 10 even authors of Minion recommends to use different solver (\cite{minion-sf-gentian}).
-
-Minion 
-
-  
+5 to 10 -- even authors of Minion recommends to use different solver (\cite{minion-sf-gentian}).  
 
 \subsection{Programming support features}
 
