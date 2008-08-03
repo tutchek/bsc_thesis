@@ -35,6 +35,56 @@ properties of each solver. All described solvers support most of following const
 Name of the constraint may vary between systems however there always exists constraint
 with different name which do the same thing.  
 
+Since Choco and Gecode are libraries which does not provide user interface and tools
+the section {\em Programming support features} is missing for them.
+
+\section{SICStus Prolog}
+
+\subsection{Short description}
+
+The only one proprietary CSP solver described in this thesis is SICStus Prolog.
+SICStus Prolog is implementation of Prolog developed and sold by SICS AB.
+SICStus Prolog is de facto standard in the constraint satisfaction field.
+That is why there exists \eclipse system (see section \ref{eclipse}) which
+goal is to be as much compatible with SICStus Prolog as possible.
+
+\subsection{Modelling capabilities}
+
+SICStus prolog provides libraries {\em clp(FD)} for modelling problems over finite 
+domain variables and {\em clp(Q)}, {\em clp(R)} for modelling over rational or 
+real domain. The clp(Q) and clp(R) libraries are developed by third party developers
+and SICStus does not provide support for them. However these libraries are distributed 
+with SICStus prolog and are documented in official manual.
+
+SICStus prolog support all basic constraints except difference which can be 
+programmed using existing constraints. User can also define new constraint either
+high level constraint using full power of Prolog or low level constraint.
+High level constraints cannot be reified in opposite of low level which optionally
+could be.
+
+SICStus prolog support both optimising task and solving task.
+
+\subsection{Programming support features}
+
+SICStus prolog provides standard prolog box model of debugging predicates -- call, 
+exit, redo, fail, exception. Predicate is treated as black box with entrances and 
+exits which can be monitored. More information about debugging prolog programs can
+be found in \cite{kryl:prolog} and \cite{sicstus:manual}.
+
+\begin{figure}[ht]
+\caption{\label{prolog-debugging}Prolog box debugging model}
+\begin{center}
+\includegraphics[height=5cm]{images/prolog-debugging.eps}
+\end{center}
+\end{figure}
+
+SICStus Prolog also provide profiler which can be used to tune program for better 
+performance.
+
+Program in SICStus Prolog can be integrated to larger project by using C/C++ interface.
+C/C++ programs can call SICStus Prolog code as well as SICStus Prolog can call C/C++
+procedures.
+
 \section{\eclipse}\label{eclipse}
 
 \subsection{Description}
@@ -65,35 +115,7 @@ In the time of writing this thesis it is available in version 5.10 which is benc
 ** TO BE WRITTEN **
 
 
-\section{SICStus Prolog}
 
-\subsection{Short description}
-
-The only one proprietary CSP solver described in this thesis is SICStus Prolog.
-SICStus Prolog is implementation of Prolog developed and sold by SICS AB.
-SICStus Prolog is de facto standard in the constraint satisfaction field.
-That is why there exists \eclipse system (see section \ref{eclipse}) which
-goal is to be as much compatible with SICStus Prolog as possible.
-
-\subsection{Modelling capabilities}
-
-SICStus prolog provides libraries {\em clp(FD)} for modelling problems over finite 
-domain variables and {\em clp(Q)}, {\em clp(R)} for modelling over rational or 
-real domain. The clp(Q) and clp(R) libraries are developed by third party developers
-and SICStus does not provide support for them. However these libraries are distributed 
-with SICStus prolog and are documented in official manual.
-
-SICStus prolog support all basic constraints except difference which can be 
-programmed using existing constraints. User can also define new constraint either
-high level constraint using full power of Prolog or low level constraint.
-High level constraints cannot be reified in opposite of low level which optionally
-could be.
-
-SICStus prolog support both optimising task and solving task.
-
-\subsection{Programming support features}
-
-** TO BE WRITTEN **
 
 
 \section{Gecode}
@@ -122,9 +144,35 @@ performs search and returns instances of Problem containing solutions.
 
 Following listing shows most important parts of program solving N queens problem.
 
-\lstset{language=C++}
+%\lstset{language=C++}
 
-{\small 
+\lstloadlanguages{C++}
+
+\definecolor{bgcolor}{rgb}{1,1,0.6} % definice barvy
+
+\lstset{         % nastaveni prostredi listings
+  language=C++,
+	basicstyle=\tiny,
+  keywordstyle=\bfseries,
+  identifierstyle=\itshape,
+  stringstyle=\ttfamily,
+  numbers=none,
+  numberstyle=\tiny,
+  numbersep=5pt,
+  frameround=ffff,
+  extendedchars=true,
+  tab=~,
+  tabsize=2,
+  frame=single,
+  captionpos=b,
+  showspaces=false,
+  showstringspaces=false,
+  breaklines=true
+}
+
+
+\begin{figure}[ht]
+\caption{Example of blah blah}
 \begin{lstlisting}
 class Queens : public Space {
 protected:
@@ -167,7 +215,7 @@ int main(int argc, char* argv[]) {
   return 0;
 }
 \end{lstlisting} 
-}
+\end{figure}
 
 \section{Choco}
 
