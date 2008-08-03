@@ -54,7 +54,7 @@ SICStus prolog provides libraries {\em clp(FD)} for modelling problems over fini
 domain variables and {\em clp(Q)}, {\em clp(R)} for modelling over rational or 
 real domain. The clp(Q) and clp(R) libraries are developed by third party developers
 and SICStus does not provide support for them. However these libraries are distributed 
-with SICStus prolog and are documented in official manual.
+with SICStus prolog and are documented in official manual (\cite{sicstus:manual}).
 
 SICStus prolog support all basic constraints except difference which can be 
 programmed using existing constraints. User can also define new constraint either
@@ -62,7 +62,8 @@ high level constraint using full power of Prolog or low level constraint.
 High level constraints cannot be reified in opposite of low level which optionally
 could be.
 
-SICStus prolog support both optimising task and solving task.
+SICStus prolog support both optimising task and solving task and user can choose
+labeling strategy and define his own predicate for selecting variables during labeling.
 
 \subsection{Programming support features}
 
@@ -83,39 +84,35 @@ performance.
 
 Program in SICStus Prolog can be integrated to larger project by using C/C++ interface.
 C/C++ programs can call SICStus Prolog code as well as SICStus Prolog can call C/C++
-procedures.
+procedures. There also exists interface to Java/.NET which can be called over network.
+
+There is support for graphical output of results as well as defining windows to
+interact with users. SICStus Prolog uses for that purpose Tk toolkit. 
+
+SICStus prolog provides lots of built in predicates which can user use to various 
+tasks from sorting lists to communicating over network (\cite[chapter 10]{sicstus:manual}).
 
 \section{\eclipse}\label{eclipse}
 
 \subsection{Description}
 
 \eclipse is open source constraint satisfaction solving system based on Prolog 
-programming language. It is available for Microsoft Windows NT family, 
-Linux 32bit/64bit, MacOS and SunOS Sparc platforms. The system is based on the Prolog programming
-language which is extended bz new predicates and operators. Prolog extensions are 
-more described in "Modelling Capabilities" subsection. In general it can be said that \eclipse
-system tends to be SICStus Prolog compatible. \eclipse provides grafical interface,
-methods to communicate with hosting operating system or via network. 
-
-As stated in \cite{wiki:Eclipse} \eclipse is developed until 1995 at the European 
-Computer-Industry Research Centre in Munich and then until 2005 at the Centre for 
-Planning and Resource Control at Imperial College London. It is currently copyrighted by 
-Cisco Systems. In September 2006, it was released as open source software under 
-the Cisco Systems|Cisco-style MPL, equivalent to the Mozilla Public License.
-
-In the time of writing this thesis it is available in version 5.10 which is benchmarked.
-
+programming language. The system is based on the Prolog programming
+language which is extended with new predicates and operators. Prolog extensions are 
+more described in "Modelling Capabilities" subsection. One of \eclipse system goals 
+is to be as much compatible with SICStus Prolog as possible. 
 
 \subsection{Modelling capabilities}
 
-** TO BE WRITTEN **
+Modelling capabilities are almost the same as in SICStus Prolog. There is only few
+differences, mostly in naming of predicated or their parameters.
 
 \subsection{Programming support features}
 
-** TO BE WRITTEN **
+Just like in modelling capabilities also programming support is similar to SICStus
+Prolog. 
 
-
-
+** NAJIT NEJAKY ROZDIL... LIBOVOLNY ***
 
 
 \section{Gecode}
