@@ -2,9 +2,11 @@
 \thispagestyle{myheadings}\markright{$ $Id$ $}
 
 In this chapter we will describe various CSP solvers. We will focus on the specific
-properties of each solver. All described solvers support most of following constraints 
-(we will call them basic constraints). 
+properties of each solver. All described solvers support most of constraints listed 
+in table \ref{table-basic-constraints} (we will call them basic constraints).
 
+\begin{table}
+\caption{\label{}Basic constraints supported by all tested solvers}
 \begin{center}
 \begin{tabular}{|l|p{4cm}|}
 \hline \verb=alldifferent([=$q_0, q_1, \dots$\verb=])= &  $\forall i,j: j \neq i \Rightarrow q_i \neq q_i$ \\
@@ -31,11 +33,12 @@ properties of each solver. All described solvers support most of following const
 \hline
 \end{tabular}
 \end{center}
+\end{table}
 
 Name of the constraint may vary between systems however there always exists constraint
 with different name which do the same thing.  
 
-Since Choco and Gecode are libraries which does not provide user interface and tools
+Since Choco and Gecode are libraries which does not provide user interface and additional tools
 the section {\em Programming support features} is missing for them.
 
 \section{SICStus Prolog}
@@ -398,17 +401,11 @@ on page \pageref{essence-source-4queens}.
 \caption{\label{essence-source-4queens}Example of 4-queens program in Essence'}
 \begin{verbatim}
 language ESSENCE' 1.b.a
-
 find queens: matrix indexed by [int(1..n)] of int(1..n)
-
 such that
-
 forall i: int(1..n). forall j: int(i+1..n).
-
   | queens[i] - queens[j] | != | i - j |,
-
   alldiff(queens)
-  
 letting n to be 4
 \end{verbatim}
 \end{figure}

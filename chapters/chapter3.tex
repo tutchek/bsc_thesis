@@ -4,11 +4,18 @@
 In this chapter we will define the benchmark which are used. Several of them were
 used in \cite{fernandez00} and others can be found at CSPLib \cite{csplib}.
 
+Listed benchmarks allows us test listed constraint solvers in various aspects. Model
+for self refferential quiz stands on reification. It shows how the system can handle 
+with reification both on boolean and discrete domain variables. N queens and magic 
+sequences are scalable benchmarks which can be used to test the robustness of solvers
+as well as how it behave if the problem grows. Finally quasigroups problems shows
+how the solver can handle with large "close to world" random problem. 
+
 \section{Self Referential Quiz}
 \zkratka{SRQ}{Self Referential Quiz} was used in \cite{fernandez00}. More general 
-description of the puzzle and how to solve it can be found in \cite{jios:bubalo}.
-We will use it to show how the solvers evolved since year 2000. The quiz consist 
-from ten questions whose answers depends one on another.
+description of the puzzle and how to solve it and even how to generate new self referential
+quizes can be found in \cite{jios:bubalo}. The quiz consist from ten questions whose 
+answers depends one on another.
 
 \begin{enumerate}
 	\item\label{q1} The first question whose answer is A is: (A) \ref{q4} (B) \ref{q3} (C) \ref{q2} (D) \ref{q1} (E) none of above
@@ -178,21 +185,15 @@ such that
 %%  – náhodnì je vybráno p1* p2* m2 *n*(n-1)/2 ètveøic <i,hi,j,hj>, kde i a j
 %%  jsou promìnné a hi a hj je dvojice nekompatibilních hodnot
 
-\section{Quasigroup With Holes}
-Quasigroup (or latin square) is table of size $n \times n$ filled with natural numbers
-$\{1,...,n\}$. Every number is unique in row and in column (latin square condition). 
-\zkratka{QWH}{Quasigroup Qith Holes} is quasigroup where is $p\%$ of values deleted. 
-The empty values are calles holes and the other non-holes. Ballanced 
-QHW has evenly distributed non-holes across rows and columns. QWH can be allways solved.
-
 \section{Quasigroup Completion Problem}
 The task is to fill the partialy filled table $N \times N$ so the result will be
-quasigroup with given property. The table is filled with numbers which are consistent 
-with the latin square condition however the problem can still result as unsolvable.
+quasigroup. The table is filled with numbers which are consistent 
+with the latin square condition. By different initial filling we bring into model perturbances which can
+more or less change behaviour of the solving process. However the problem can still result as unsolvable.
 As an example look at figure \ref{qcp-unsolvable} where any of prefilled values
 breaks the condition but there is no way how to place number 3 in the third row. 
 There is only one suitable place in first column but in first column already one
-number 3 is. The more is the table filled the greater is the probability of failure.
+number 3 is. Probability of unsolvable CSP grows with percentage of original filling.
 
 \begin{table}
 \caption{\label{qcp-unsolvable}Example of QCP which cannot be solved}
@@ -207,5 +208,41 @@ number 3 is. The more is the table filled the greater is the probability of fail
 \end{table}
 
 The problem $QCP[p,N]$ is parametrised by two variables -- the percentage of filling of the given
-table $p$ and size of table $N$. We will perform tests with stable N and p going from 0\%
-to 100\%.
+table $p$ and size of table $N$. 
+
+This benchmark allows to perform test closer to real world applications becauce it
+has structure which is not found in random k-SAT and by scaling of the parameter $p$
+we can controll hardness of benchmark. However as stated before, we does not have guarantee
+that problem is solvable. So there exists assignments with same $p$ parameters but
+different search progress -- if solver did not find solution we are unsure if it is
+because of hardness of problem (and solver limitation) or because there is no solution.
+
+Better would be benchmark with properties of QCP but allways solvable, so there
+will not be different ways to achieve results at one $p$ level. The answer is Quasigroup
+With Holes described in following section.  
+
+\section{Quasigroup With Holes}
+Quasigroup (or latin square) is table of size $n \times n$ filled with natural numbers
+$\{1,...,n\}$. Every number is unique in row and in column (latin square condition). 
+\zkratka{QWH}{Quasigroup Qith Holes} is quasigroup where is $p\%$ of values deleted. 
+The empty values are calles holes and the other non-holes. Ballanced 
+QHW has evenly distributed non-holes across rows and columns. In this benchmark 
+we will generate several quasigroups and then "punch" holes to them.
+
+As stated in \cite{Achlioptas00generatingsatisfiable} QWH is a problem generator 
+for satisfiable instances (only):
+
+\begin{itemize}
+\item Easy to tune hardness
+\item Exhibits more realistic structure 
+\item Well-suited for the study of incomplete search methods (as well as complete)
+\item Confirmation of easy-hard-easy pattern in computational cost for local search
+\end{itemize}
+
+The result problem of both Quasigroup problems is the same - to fill the latin 
+square but only QWH warrants that the problem is solvable.
+
+Because of similarity of problems QCP and QWH we will not perform separate benchmarking
+for both of them. Instead we will perform benchmarks on quasigroups testing performance 
+of finding solution of QWH with different percentage of filling and performance of 
+finding that there is not solution on given unsolvable quasigroups.
