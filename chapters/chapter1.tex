@@ -2,50 +2,49 @@
 \thispagestyle{myheadings}\markright{$ $Id$ $}
 
 \section{Motivation}
-Constraint satisfaction is relatively new field of computer science which focus on the problems
-which can be described by some constraints. As an example of constraint one can imagine logical dependencies 
-(A is valid only if B is invalid), arithmetical constraints ($X = 8 + Y + Z$) and lots of more. Real life situations can 
-be as well described with constraints, e.g. worker Smith cannot work with worker Adams, also he can work only 
-on monday and tuesday and cannot work in the night shift. These constraints together defines whole
-complex problem -- a Constraint Satisfaction Problem (\zkratka{CSP}{Constraint Satisfaction Problem}).
-Further examples of CSP can be found in \cite{csplib} and \cite{Apt2003}.
+Constraint programming is programming paradigm which uses constraints to describe solution rather than programming how to achieve such solution. As an example of problem which can be solved using constraint programming we will use Sudoku puzzle. Sudoku is worldwide known logical problem which is easy to explain, its difficulty can be scaled and one does not need previous training to solve Sudoku. It makes this problem easy to understand for many people and therefore it is very popular. Simple rules of Sudoku are: There is given table of size nine times nine. Every field of table contains number in range one to nine. In each column there is no repeating number (this enforces that every column contains all numbers in range one to nine). In each row there are also no repeating numbers. Finally the same rule which applies for columns and rows stands for three times three sized squares which are in the puzzle marked with bolder lines. The Sudoku is prefilled with some values. This values helps with beginning of solving and by its count and placement can be adjusted the difficulty.
 
-In user guide to Choco there is written following fundamental sentence:
+The way how to describe Sudoku puzzle in constraint programming is very straightforward. We will define following constraints:
 
+\begin{enumerate}
+\item	There are 81 variables s which can contain values in range 1 to 9. We will arrange them in two-dimensional array with size $9 \times 9$. (The Sudoku is table sized $9 \times 9$ containing values in range 1..9) \\
+\item	For all $i$ in 1..9 is true: All values of $s_{i\bullet}$ are different (Values in each row are different) \\
+\item	For all $j$ in 1..9 is true: All values of $s_{\bullet j}$ are different (Values in each column are different) \\
+\item\label{sudoku-constraint-square}	For each square is true: For all $k,l$ such that $k,l$ is in square values of $s_{kl}$ are different (Values in each square are different) \\
+\item	For all prefilled values: $s_{mn}$ = V if and only if field with placed in column n and row m is prefilled and contains V.
+\end{enumerate}
+
+These constraints fully describe Sudoku puzzle problem and as reader can see does not differ from the commonly known rules. Person solving Sudoku puzzle can use many techniques starting with randomly filling the table and looking if this is good solution (algorithm using this technique is called GAT - Generate and Test) and ending with generating all possible fillings and repairing the solution if something fails (this algorithm is called backtracking). First approach can miss correct solution. Since second approach systematically searches the possible solutions it has to result in correct solution. However it can last enormous time to complete it (and even on supercomputer). The secret of successful solution is in fact that not all numbers can be filled in specific field. If there is prefilled value 8 at position [6,7] it means that in row 6 and in column 7 cannot be another number 8. And because of constraint (\ref{sudoku-constraint-square}) there cannot be 8 also in right middle square. Person who does these observations usually writes to the destination field all possible values and as examination of the puzzle continues there are less and less possibilities to fill in. In easy Sudoku there is after this examination at least one field which can be filled with only one number. After filling all such fields solving continues in the same way until whole table is filled. Program using constraint programming solves it in the same way. For each variable it remembers the range of possible values (we will call it domain). Before the program start searching of solution it tries to eliminate as much values from domain as possible. It can reveal that problem does not have solution (if there is some variable with empty domain) before backtracking. There is no surprise that in uses guide to Choco system is stated "if you know Sudoku, then you know constraint programming."
+
+\section{Constraint programming}
+Constraint programming of course consists of more techniques but generally it works just like person solving Sudoku described in previous paragraph. Since time complexity of searching in possible solutions can be enormous the most important is to eliminate as many solution candidates as possible before actual search. Unfortunately eliminating values from domain based on given constraints does not guarantee that model can be directly sold. This means we have to search the problem space for possible solution. Standard backtracking does not work efficiently. It does not have memory so it cannot use results which were computed in different branch. It case of fail it also cannot identify problematic evaluation of constraint so it has to search whole subtree of given branch to find that it cannot result in solution. Constraint programming offers techniques backmarking and backjumping which can identify the dead end of current branch and recheck evaluating of that variable instead of useless searching through whole subtree. Algorithms like looking ahead and forward checking can identify future problems so the search algorithm can eliminate bad decisions as soon as possible. Detailed describing of these techniques would fill whole book and this thesis has another purpose. The reader who wants to learn more can found more in (citace Online guide to CSP).
+
+// kde se to jeste pouziva
+
+\section{Constraint solvers}
+Programmer who wants to solve problem using constraint programming can use in his algorithms ideas described in previous paragraphs or use specialized software - a constraint solver. Constraint solver is system which uses constraint programming techniques to solve given problem. There are many solvers available both commercial and freeware. As a short list of available systems we can mention is in table \ref{list-solvers}.
+
+\begin{table}[ht]
+\caption{\label{list-solvers}List of solvers}
 \begin{center}
-\em If you know sudoku, then you know constraint programming.
+\begin{tabular}{|l|l|l|l|}
+\hline Solver &	Used programming language &	Operating system &	Note \\
+\hline ECLIPSE &	Prolog & *nix, Windows & OSS \\
+\hline Minion & Own input language & *nix, Windows & OSS \\
+\hline SICStus Prolog & Prolog & *nix, Windows & Commercial, trial available \\
+\hline Choco &	Java & OS independent, library & OSS \\
+\hline OPL &	Own language & ?	&	Commercial, trial available \\
+\hline Mozart &	Oz &	*nix, Windows &	OSS \\
+\hline Microsoft Excel &	None, see note &	Mac, Windows &	In application dialog which tries find  appropriate values of fields to satisfy wanted result variable. In Excel 2000 available in Tools > Solver menu \\
+\hline Gecode &	C++ &	OS independent, library &	OSS \\
+\hline Disolver &	C++ &	? &	Commercial?, need to contact author \\
+\hline --- provest vyzkum ---	& & & \\
+\hline
+\end{tabular}
 \end{center}
+\end{table}
+		
 
-There are many techiques how to solve CSP. One can use his own ad hoc created solution. 
-Or there is availability of using some standard constraint solver. This solver expect
-as an input description of problem and returns solution if some exists. There is many 
-of these systems and this thesis pick some of them and test them in various aspects.
-More complex list of solvers and other CSP related software is in \cite{bartak:los}.
+\section{Outline of thesis}
+We described our motivation for this thesis and listed some constraint solvers. In the second chapter we will define methodology used to examine some of mentioned solvers. The examination consists of two parts - performance tests and usability tests. In third chapter we will define benchmarks used to performance tests. Fourth chapter describes in details each solver, mentions a little from their history but mainly focus on usability and easiness of learning and using the solver. Fifth chapter will discuss the performance tests and compare the solvers. Finally in sixth chapter we will state conclusion of whole examination process and present decision table "which solver use in which situation".
 
-Constraint solvers can be useful among others in following areas:
-
-\begin{itemize}
-\item scheduling
-\item image recognition
-\item financial modelling
-\item planning
-\item vehicle routing
-\item configuration
-\item networks
-\item bioinformatics
-\end{itemize} 
-
-The aspects which are studied are modelling capabilities, integration with other 
-programming environments, development environment and debugging features. 
-
-\section{Thesis outline}
-
-In the second chapter we will study six solvers. All but one are open source solvers. 
-The only commercial system is SICstus Prolog. ECLiPSE and SICstus Prolog are based on Prolog
-programming language, Mozart on Oz language, Choco is a Java library, Gecode is 
-based on C++ and finally minion is standalone solver which uses its own input format. 
-
-In the the third chapter we will define benchmarks and comment on possible 
-implementation of each benchmark. Fourth chapter contains detailed results of 
-the benchmarks and finally in fifth chapter we will make some conclusions about 
-the results.
