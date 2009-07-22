@@ -1,155 +1,121 @@
 \chapter{Constraint solvers}
 \thispagestyle{myheadings}\markright{$ $Id$ $}
 
-In this chapter we will describe various CSP solvers. We will focus on the specific
-properties of each solver. All described solvers support most of constraints listed 
-in table \ref{table-basic-constraints} (we will call them basic constraints).
+\section{Mozart/Oz}
+Mozart je implementací multiparadigmatického jazyka Oz. Oz je funkcionální jazyk, 
+který má vestavìnou podporu pro vícevláknové aplikace, podporu pro paralelizaci a 
+mimo jiné obsahuje také vestavìnou podporu pro øe¹ené problémù s omezujícími podmínkami. 
+Jak bylo zmínìno døíve, jde o jazyk multiparadigmatický, lze v nìm tedy psát i 
+imperativní programy stejnì jako logické programy (podobné prologu). Dále je mo¾né 
+definovat tøídy vèetnì dìdiènosti a praocvat s od nich odvozenými objekty. Tento 
+jazyk byl navr¾en pro co nejvy¹¹í variabilitu pøi pou¾ití, proto¾e programátor 
+mù¾e vyu¾ít naráz kombinaci funkctionálního, logického i imperativního programování, 
+OOP a dal¹í najednou. Ve standardní distribuci je dodáván jako samostatný pøekladaè, 
+který vytvoøí nativní programy pro daný operacní systém. Mimo toho umí také bì¾et 
+v interaktivním módu, kdy se jednotlivé bloky pøíkazù posílají pøímo kompilátoru. 
+Jako IDE se pou¾ívá bì¾nì systém EMACS, se kterým je Mozart/Oz dodáván. 
 
-\begin{table}
-\caption{\label{}Basic constraints supported by all tested solvers}
-\begin{center}
-\begin{tabular}{|l|p{4cm}|}
-\hline \verb=alldifferent([=$q_0, q_1, \dots$\verb=])= &  $\forall i,j: j \neq i \Rightarrow q_i \neq q_i$ \\
-\hline \verb=eq(=$a$\verb=,= $b$\verb=)= &  $a = b$ \\
-\hline \verb=neq(=$a$\verb=,= $b$\verb=)= &  $a \neq b$ \\
-\hline \verb=abs(=$a$\verb=,= $b$\verb=)= &  $a = |b|$ \\
-\hline \verb=lt(=$a$\verb=,= $b$\verb=)= &  $a < b$ \\
-\hline \verb=gt(=$a$\verb=,= $b$\verb=)= &  $a > b$ \\
-\hline \verb=leq(=$a$\verb=,= $b$\verb=)= &  $a \leq b$ \\
-\hline \verb=geq(=$a$\verb=,= $b$\verb=)= &  $a \geq b$ \\
-\hline \verb=plus(=$a$\verb=,= $b$\verb=,= $c$\verb=)= &  $a + b = c$ \\
-\hline \verb=minus(=$a$\verb=,= $b$\verb=,= $c$\verb=)= &  $a - b = c$ \\
-\hline \verb=mult(=$a$\verb=,= $b$\verb=,= $c$\verb=)= &  $a \cdot b = c$ \\
-\hline \verb=div(=$a$\verb=,= $b$\verb=,= $c$\verb=)= &  $a  = c \cdot b$ \\
-\hline \verb=mod(=$a$\verb=,= $b$\verb=,= $c$\verb=)= &  $a = bk + c, k | a$ \\
-\hline \verb=sum([=$q_0, q_1, \dots$\verb=],= $s$\verb=)= &  $\sum{q_i} = s$ \\
-\hline \verb=weightsum([=$q_0, q_1, \dots$\verb=],[=$w_0, w_1, \dots$\verb=],= $s$\verb=)= &  $\sum{w_i,q_i} = s$ \\
-\hline \verb=difference(=$a$\verb=,= $b$\verb=,= $c$\verb=)= &  $|a - b| = c$ \\
-\hline \verb=element([=$q_0, q_1, \dots$\verb=],= $i$\verb=,= $e$\verb=)= &  ${q_i} = e$ \\
-\hline \verb=max([=$q_0, q_1, \dots$\verb=],= $a$\verb=)= &  $\max\{q_i\} = a$ \\
-\hline \verb=min([=$q_0, q_1, \dots$\verb=],= $a$\verb=)= &  $\min\{q_i\} = a$ \\
-\hline \verb=reify(=$c$ \verb=,= $r$\verb=)= &  $ c \Leftrightarrow (r = 1) $ \\
-\hline \verb=reimplify(=$c$ \verb=,= $r$\verb=)= &  $ (r = 1) \Rightarrow c $ \\
-\hline
-\end{tabular}
-\end{center}
-\end{table}
+Podobnì jako v jiných funkcionálních jazycích je do promìnné mo¾né pøiøadit pouze 
+jednu hodnotu za dobu jejího ¾ivota. Proto má ka¾dá promìnná vedle hodnoty je¹tì 
+stav. V pøípadì, ¾e má dojít k akci nad promìnnou do které není nic pøiøazeno, aè 
+by to pøíkaz vy¾adoval dojde k pozastavení vlákna dokud nebude do promìnné pøiøazeno. 
+To umo¾òuje provést následující program:
 
-Name of the constraint may vary between systems however there always exists constraint
-with different name which do the same thing.  
+\begin{verbatim}
+a = 5
+if a > b then c = 5 else c = 6
+b = 4
+// V c nyní bude hodnota 5
+\end{verbatim}
 
-Since Choco and Gecode are libraries which does not provide user interface and additional tools
-the section {\em Programming support features} is missing for them.
+Jazyk obsahuje vestavìnou podporu pro paralelní výpoèty, tedy na úrovni jazyka 
+je mo¾né vytváøet vlákna a synchronizaèní primitiva. Jazyk navíc podporuje pøedat 
+výpoèet na jiný poèítaè skrze protokol TCP/IP. Lze tedy vyu¾ít cluster poèítaèù 
+pro zrychlení nároèných výpoètù.
 
-\section{SICStus Prolog}
+\subsection{Popis øe¹ièe omezujících podmínek}
+Pøo øe¹ení problémù s omezujícími podmínkami obsahuje vestavìný øe¹iè problémù s 
+koneènou doménou (finite domain). Pro tyto úèely se mno¾inou s koneènou doménou 
+rozumí koneèná mno¾ina pøirozených èísel s nulou. Øe¹iè obsahuje omezení na nejvy¹¹í 
+mo¾nou hodnotu promìnné. Výpoèetní model pro propagaci podmínek se jmenuje prostor 
+(space) a je tvoøen nìkolika propagátory napojenými na constraint store. Constraint 
+store obsahuje konjunkci základních podmínek, tedy podmínek ve tvaru $x=n$ nebo $x \in 
+D$. Tedy mù¾e vypadat napøíklad $x = 6 \& y \in 1 ... 12 \& z = y$. Propagátory 
+obsahují ostatní podmínky, tedy napøíklad $x>y$ nebo $a^2 + b^2 = c^2$. Propagátor 
+pro podmínku $c$ je samostatný výpoèetní agent, který se sna¾í omezit domény promìnných, 
+které jsou obsa¾ené v $c$. Øe¹ením je pak takové pøiøazení hodnot promìnným, které 
+splní v¹echny podmínky dané propagátory.
 
-\subsection{Short description}
+\begin{example} Mìjme promìnné $X$ a $Y$ a následující podmínky: $X \in \{0..9\}$, $Y \in \{0..9\}$, $X+Y = 9$, $2X + 4Y = 24$. 
+\begin{enumerate}
+  \item Constraint store obsahuje: $X \in \{0..9\}$, $Y \in \{0..9\}$. Propagátory: $X+Y = 9$ a $2X + 4Y = 24$.
+  \item	První propagátor nemù¾e udìlat nic, druhý ale mù¾e zmìnit constraint store tak, ¾e obsahuje  $X \in \{0..8\}, Y \in \{2..6\}$.
+  \item	První propagátor nyní mù¾e zmìnit constraint store na $X \in \{3..7\}$, $Y \in \{2..6\}$.
+  \item	Druhý propagátor nyní zmìní constraint strore na $X \in \{4..6\}$, $Y \in 3..4$.
+  \item	První propagátor zmìní constraint store na $X \in \{5..6\}$, $Y \in \{3..4\}$
+  \item	Druhý propagátor nakonec zmìní constraint store, tak ¾e obsahuje $X = 6$, $Y = 3$.
+\end{enumerate}
+\end{example}
 
-The only one proprietary CSP solver described in this thesis is SICStus Prolog.
-SICStus Prolog is implementation of Prolog developed and sold by SICS AB.
-SICStus Prolog is de facto standard in the constraint satisfaction field.
-That is why there exists \eclipse system (see section \ref{eclipse}) which
-goal is to be as much compatible with SICStus Prolog as possible.
+Propagace mù¾e být buï intervalová nebo doménová. Zatímco intervalová propagace 
+pouze mìní okraje domény, doménová také odstraòuje vnitøní hodnoty domény. Pøesto¾e 
+doménová propagace vypadá jako lep¹í techhnika, pou¾ívá se spí¹e intervalová pro její 
+výpoèetní jednoduchost.
 
-\subsection{Modelling capabilities}
+Ji¾ pro jednoduché problémy ale propagace nemusí vést k výsledku. Vezmìme napøíklad 
+problém: $x \neq y$, $x \neq z$, $y \neq z$, $x \in \{0..1\}$, $y \in \{0..1\}$, $z \in \{0..1\}$. 
+Tento problém nelze více propagovat, v¹echny podmínky lze splnit ale ¾ádná promìnné 
+není pøiøazena hodnota. V této chvíli lze pou¾ít distribuci. Problém $P$ je distribuován 
+pomocí podmínky $C$, pokud vyøe¹íme nové problémy $P \cup \{\neg C\}$ a $P\{C\}$. 
+Alespoò v jednom z nových problémù se buï nachází øe¹ení problému $P$ a nebo je 
+problém neøe¹itelný. V na¹í reprezentaci se tohoto faktu dá vyu¾ít pro space. 
+Pokud se systém dostane do stabilního stavu, kdy ¾ádná podmínka není nesplnìna a 
+pøitom není mo¾né pøiøadit ¾ádné promìnné hodnotu, tak vybereme promìnnou $x$ a 
+hodnotu $n$ takovou, ¾e je konzistentní se v¹emi podmínkami nad $x$. Tím získáme 
+dva nové space, jeden $S \cup {x = n}$ a jeden $S \cup {x \neq n}$. Na obou space 
+pak pustíme propagaci. Pokud se dostane opìt do stabilního stavu, znova distribuujeme 
+a takto postupujeme a¾ do vyøe¹ení problému a nebo konstatování, ¾e je problém 
+neøe¹itelný. Tato metoda je úplná, tedy pokud existuje alespoò jedno øe¹ení, 
+pak budou nalezena v¹echna.
 
-SICStus prolog provides libraries {\em clp(FD)} for modelling problems over finite 
-domain variables and {\em clp(Q)}, {\em clp(R)} for modelling over rational or 
-real domain. The clp(Q) and clp(R) libraries are developed by third party developers
-and SICStus does not provide support for them. However these libraries are distributed 
-with SICStus prolog and are documented in official manual (\cite{sicstus:manual}).
+Je mo¾né volit z rùzných distribuèních strategií. Volba správné strategie mù¾e 
+výraznì ovlivnit dobu výpoètu. Pro vìt¹inu problémù je dobré zvolit first-fail 
+strategii, tedy volit promìnnou s nejmen¹í mo¾nou doménou. Pokud ale ¾ádná dodávaná 
+distribuèní strategie nevyhovuje, je mo¾né implementovat své distribuèní strategie, 
+plnì na míru problému.
 
-SICStus prolog support all basic constraints except difference which can be 
-programmed using existing constraints. User can also define new constraint either
-high level constraint using full power of Prolog or low level constraint.
-High level constraints cannot be reified in opposite of low level which optionally
-could be.
+Pro hledání øe¹ení optimalizaèních problémù se dají vyu¾ít dvì techniky. Naivní 
+technika spoèívá v postupném zvy¹ování výsledku objektivní  funkce a následném hledání 
+øe¹ení, které tomuto výsledku bude odpovídat. Pro tento postup existuje v jazyce 
+konstrukce, která pøed splòováním ostatních podmínek postupnì zvy¹uje danou promìnnou. 
+Tento postup v¹ak postrádá obecnost a Mozart nabízí lep¹í postup -- techniku branch and bound. 
+Tato technika vy¾aduje, aby u¾ivatel sestavil porovnávací funkci. Porovnávací funkce 
+jako argumenty pøijímá pøedchozí a aktuální øe¹ení problému. Funkce pak zpravidla 
+zavolá objektivní funkci a porovná její výsledky. Tato technika oproti naivní výraznì 
+zrychlí výpoèet. 
 
-SICStus prolog support both optimising task and solving task and user can choose
-labeling strategy and define his own predicate for selecting variables during labeling.
+\subsection{Nástroje pro podporu modelování}
+Mozart nabízí u¾ivateli interaktivní nástroj Explorer, který umo¾òuje prozkoumat 
+strom øe¹ení vèetnì dílèích rozhodnutí, které øe¹iè bìhem výpoètu uèinil. Explorer 
+je mo¾né pou¾ívat také v interaktivním módu a ruènì urèovat, které vìtve øe¹ení prozkoumat. 
+ 
+Koleèka oznaèují uzly rozhodovacího stromu, ve kterých probìhlo rozhodnutí, kosoètverce 
+oznaèují nalezení úspì¹ného øe¹ení a ètverec vìtev kde není øe¹ení. Svìtlej¹í barvou 
+jsou uvedené uzly, které je mo¾né je¹tì dále expandovat. Na uvedeném obrázku tedy 
+máme jedno øe¹ení, dvì neúspì¹ná øe¹ení a pìt okam¾ikù, kdy do¹lo k rozhodnutí z 
+nich¾ lze je¹tì ve tøech hledat dal¹í øe¹ení. Explorer umo¾òuje také export 
+nakresleného stromu ve formátu PostScript.
 
-\subsection{Programming support features}
+\subsection{Implementace benchmarkù}
+Ka¾dý implemetovaný benchmark je samostatný solver. Po zavolání pøíslu¹ného 
+solveru je vrácena funkce, která je posléze pøedána funkci realizující hledání 
+øe¹ení. Jde buï o funkce SearchOne resp. SearchAll, které naleznou jedno nebo 
+v¹echna øe¹ení problému a vrátí je v seznamu. Pro spu¹tìní exploreru a interaktivní 
+hledání øe¹ení lze pak zavolat ExploreOne resp. ExploreAll.
 
-SICStus prolog provides standard prolog box model of debugging predicates -- call, 
-exit, redo, fail, exception. Predicate is treated as black box with entrances and 
-exits which can be monitored. More information about debugging prolog programs can
-be found in \cite{kryl:prolog} and \cite{sicstus:manual}.
-
-\begin{figure}[ht]
-\caption{\label{prolog-debugging}Prolog box debugging model}
-\begin{center}
-\includegraphics[height=5cm]{images/prolog-debugging.eps}
-\end{center}
-\end{figure}
-
-SICStus Prolog also provide profiler which can be used to tune program for better 
-performance.
-
-Program in SICStus Prolog can be integrated to larger project by using C/C++ interface.
-C/C++ programs can call SICStus Prolog code as well as SICStus Prolog can call C/C++
-procedures. There also exists interface to Java/.NET which can be called over network.
-
-There is support for graphical output of results as well as defining windows to
-interact with users. SICStus Prolog uses for that purpose Tk toolkit. 
-
-SICStus prolog provides lots of built in predicates which can user use to various 
-tasks from sorting lists to communicating over network (\cite[chapter 10]{sicstus:manual}).
-
-\section{\eclipse}\label{eclipse}
-
-\subsection{Description}
-
-\eclipse is open source constraint satisfaction solving system based on Prolog 
-programming language. The system is based on the Prolog programming
-language which is extended with new predicates and operators. Prolog extensions are 
-more described in "Modelling Capabilities" subsection. One of \eclipse system goals 
-is to be as much compatible with SICStus Prolog as possible. 
-
-\subsection{Modelling capabilities}
-
-Modelling capabilities are almost the same as in SICStus Prolog. There is only few
-differences, mostly in naming of predicated or their parameters.
-
-\subsection{Programming support features}
-
-Just like in modelling capabilities also programming support is similar to SICStus
-Prolog. 
-
-** NAJIT NEJAKY ROZDIL... LIBOVOLNY ***
-
-
-\section{Gecode}
-
-\subsection{Short description}
-
-Gecode is C++ CSP library developed at Royal Institute of Technology in Stockholm.
-Just like Choco Gecode does not offer whole IDE but only interface which can be 
-linked into users application to use it as independent solver. Gecode strongly uses
-templating and operator overloading. This fact combined with nonexistence of tutorial
-documentation (there exists only doxygen like documentation) makes learning of 
-using Gecode difficult. However after further studying of system internal user is
-able to use it efficiently. 
-
-\subsection{Modelling capabilities}
-
-Gecode supports all basic constraints and offers ways how to add new ones. Most 
-of the constraints are implemented as overloaded operators which -- as stated before --
-makes finding apropriate constrain in documentation difficult but once user know
-it (or guess it) it is very easy to use.
-
-Typical way how to implement problem starts with declaring of class which 
-is inherited from base class {\em Space} with constructor containing definitions of 
-variables and constraints. Problem object is then sent to search engine which 
-performs search and returns instances of Problem containing solutions.
-
-Following listing shows most important parts of program solving N queens problem.
-
-%\lstset{language=C++}
-
+\subsubsection{Magická sekvence}
 \lstloadlanguages{C++}
-
 \definecolor{bgcolor}{rgb}{1,1,0.6} % definice barvy
-
 \lstset{         % nastaveni prostredi listings
   language=C++,
 	basicstyle=\tiny,
@@ -169,342 +135,141 @@ Following listing shows most important parts of program solving N queens problem
   showstringspaces=false,
   breaklines=true
 }
-
-
 \begin{figure}[ht]
-\caption{Example of blah blah}
+\caption{Implementation of Magic Sequence Problem in Essence}
 \begin{lstlisting}
-class Queens : public Space {
-protected:
-	IntVarArray q;
+fun {MagicSequence Size}
+   proc {$ Sol}
+      {FD.tuple magic Size 0#(Size-1) Sol}
 
-public:
-	Queens( int n ) : q(this, n, 1, n) {
-		
-		for (int i = 0; i<n; i++)
-			for (int j = i+1; j<n; j++) {
-			  post(this, q[i] != q[j]);
-			  post(this, q[i]+i != q[j]+j);
-			  post(this, q[i]-i != q[j]-j);
-			}
+      {For 1 Size 1
+       proc {$ I}
+	  Vector
+       in
+	  {FD.tuple v Size 0#1 Vector}
+	  {For 1 Size 1
+	   proc {$ J}
+	      Vector.J = Sol.J =: I-1
+	   end}
+	  
+	  {FD.reified.card Sol.I V Sol.I 1}
+       end}
 
-		post( this, q[0] < q[n-1] );
-		
-		branch(this, q, INT_VAR_SIZE_MIN, INT_VAL_MIN);
-	}
-
-  Queens(bool share, Queens& s) :  Space(share,s) {
-    q.update(this, share, s.q);
-  }
-  /* ... */
-};
-
-int main(int argc, char* argv[]) {
-  Queens *q = new Queens(8);
-  DFS<Queens> e(q);
-  delete q;
-  
-  while(1) {
-	  Queens* ex = e.next();
-	  if (ex == NULL)
-		break;
-	  ex->print(std::cout);
-	  delete ex;
-  }
-
-  return 0;
-}
+      {FD.distribute ff Sol}
+   end
+end
 \end{lstlisting} 
 \end{figure}
+%$
 
 \section{Choco}
+Choco je øe¹iè omezujících podmínek implementovaný jako knihovna pro programovací 
+jazyk Java. Choco je distribuováno jako balíèek JAR s dokumentací ve formátu Javadoc. 
+Instalace je tedy velmi snadná i pro zaèínajícího programátora v Javì a v bì¾nì 
+pou¾ívaných IDE nezabere více ne¾ pìt minut. Díky programovacímu jazyku Java je 
+solver Choco dostupný na mnoha platformách a operaèních systémech. Proto¾e ale 
+není cílem této práce popisovat vlastnosti hostitelského programovacího jazyka, 
+nebudeme zde dále rozebírat mo¾nosti Javy. Choco je vyvíjeno na Ecole des Mines 
+de Nantes ve Francii a je volnì dostupné na serveru Sourceforge. Aktuální hlavní 
+verze má èíslo 2. Choco dìlí øe¹eí problému na dvì èásti -- model a samotý øe¹iè. 
+Model obsahuje promìnné a podmínky dané zadáním. Øe¹iè pak dostane na vstupu model 
+a pokusí se v nìm najít øe¹ení. Model mù¾e obsahovat jako promìnné celá èísla, 
+reálná èísla a mno¾iny. Øe¹iè je pak schopný k danému modelu najít øe¹ení. U¾ivatel 
+mù¾e od øe¹ièe získat informaci, zda je problém øe¹itelný èi zda neobsahuje spor. 
+Pro samotná øe¹ení poskytuje interface umo¾òující dotázat se na úrvní, následující 
+a nebo na v¹echna øe¹ení. Pokud mu urèíme promìnnou s hodnotou objektivní funkce 
+umo¾òuje øe¹iè tuto promìnnou minimalizovat nebo maximalizovat. Øe¹iè dále podporuje 
+volbu strategií na míru øe¹enému problému. Promìnné modelu a øe¹ièe jsou ve vzájemném 
+vztahu. Pøesto není mo¾é získat øe¹ení pøímo z promìnných modelu ale je nutné je 
+získat pøes odpovídající promìnné øe¹ièe.
 
-\subsection{Short description}
+\subsection{Popis øe¹ièe omezujících podmínek}
+Jak bylo naznaèeno v pøedchozí sekci, je øe¹ení problému rozdìleno na dva 
+úkoly -- nadefinovat model a pøedlo¾it ho správnì nastavenému øe¹ièi. Jak model 
+tak øe¹iè jsou tøídy, které si u¾ivatel instancuje do pøíslu¹ného objektu. 
+Popí¹eme nejprve model a poté øe¹iè.
 
-Choco is java library for solving CSP distributed as jar archive. Therefore it can
-be used in every Java program which allows easily integrate CSP solver to applications.
-Project is available at Sourceforge where user can found sources, documentation (in 
-JavaDoc and wiki system with several tutorials) and binaries (compiled jar archive).
+\subsubsection{Model}
+Model  je tvoøen objektem tøídy CPModel. Promìnné modelu jsou v Choco reprezentovány 
+objekty následujících typù IntegerVariable, RealVariable a SetVariable. Tyto promìnné 
+se standardnì nevytváøení pomocí klíèového slova new, ale choco má pro tento úèel 
+pøipravené tovární metody. Takovéto promìnné je nutné v modelu zaregistrovat pomocí 
+funkce CPModel::addVariable resp. CPModel.addVariables (pro zaregistrování celého 
+pole promìnných). Pøi registraci promìnné do modelu je mo¾né urèit dodateèné vlastnosti 
+promìnných, napøíklad zda jde o decision promìnné, nebo o promìnnou obsahující výsledek 
+objektivní funkce. Tyto vlastnosti není nutné v¾dy zadávat, ale mohou výraznì urychlit 
+výpoèet. Alternativou je definovat si tyto vlastnosti v øe¹ièi. Toto bude popsáno v 
+následující sekci.
 
-Beacuse Choco is Java library, it does not need its own IDE and compiler. User can
-use for example Eclipse IDE or other Java development tools by his preference.
+Po zaregistrování promìnných následuje definice omezujících podmínek. Je mo¾né pou¾ít 
+jak ¹irokou nabídku podmínek dodaných s øe¹ièem, tak si definovat vlastní podmínky. 
+Podmínky dodané s øe¹ièem jsou vypsané v tabulce (tabulka). Lze je rozdìlit na základní 
+podmínky (pravda, nepravda, operátory uspoøádání), a základní výrazy (goniometrické 
+funkce, mocniny, sumy), ostatní podmínky (\texttt{abs}, \texttt{div}, \texttt{max}, ...), reifikované podmínky 
+(\texttt{and}, \texttt{or}, \texttt{ifOnlyIf}) a globální podmínky (\texttt{allDifferent}, \texttt{occurenceMax}, ...). K dispozici 
+jsou také podmínky pro modelování geometricých podmínek, podmínky pro rozvrhování a 
+podmínky pro sekkvenci promìnných, které mù¾e pøijímat koneèný automat.
 
-Authors are now developing Choco2 which is going to obsolete Choco but in time of 
-writing of this thesis Choco2 is still under development.
+Vedle dodaných podmínek je mo¾né definovat podmínky vlastní. Jednou mo¾ností je 
+definovat podmínku $p(x,y)$ jako mno¾inu kompatibilních hodnot $(a,b)$, tedy $p$ platí, 
+pokud $x=a$ a $y=b$, pøípadnì jako mno¾inu nekompatibilních hodnot. Tato mno¾ina je zadaná 
+jako tabulka hodnot. Vedle zadání tabulkou je mo¾né zadat podmínku jako predikát, 
+který musí platit. Podmínka pak je tvoøena objektem typu podìdìného od tøídy BinRelation 
+s implementovanou funkcí checkCouple. Tato funkce dostane jako parametry dvojici 
+hodnot a vrátí bool hodnotu zda byla podmínka splnìna nebo ne. Vedle binárních 
+podmínek je mo¾né specifikovat podmínky podobným stylem na n-ticích.  Pro v¹echny 
+takové podmínky (jak binární tak n-ární) lze pak specifikovat po¾adovaný algoritmus 
+hranové konzistence. K dispozici je AC3, AC2001, AC3rm, AC3 pro binární podmínky a 
+AC32, AC3rm, AC2001 a AC2008 pro n-ární podmínky. Popis jednotlivých algoritmù mù¾ete 
+nalézt v [najít citaci pro algoritmy AC].
 
-\subsection{Modelling capabilities}
+\subsubsection{Øe¹iè}
+Øe¹iè je objekt typu CPSolver, který se na základì modelu popsaného v pøedhoczí 
+sekci pokusí najít øe¹ení. Øe¹iè nejprve pøeète promìnné modelu, které pøevede na 
+promìnné øe¹ièe (IntegerVariable na IntDomainVar, RealVariable na RealVar a SetVariable 
+na SetVar). Poté pøeète podmínky z modelu a vyrobí na jejich základì podmínky øe¹ièe. 
+Øe¹iè poté pou¾ije vyhledávací strategii a hledá øe¹ení. Proto¾e je volba správné 
+strategie klíèovým faktorem pro rychlost øe¹ení, je mo¾né nastavit její rùzné parametry. 
+U¾ivatel si mù¾e zvolit tzv. selektor a iterátor. Selektor vybírá, kterou promìnnou 
+vybrat k pøí¹tímu rozhodnutí solveru. Iterátor pak vybírá jednotlivé mo¾né hodnoty a 
+iteruje pøes nì. Choco ve standardní distribucí nabízí základní selektory jako promìnnou 
+s minimální doménou, promìnnou s maximální doménou apod. Iterátory pak mohou zkou¹et 
+hodnoty v sestupném nebo vzestupném poøadí. Alternativou k iterátoru je selektor hodnoty, 
+který na po¾ádání vrátí dal¹í mo¾nou hodnotu. Pro selektor hodnoty je mo¾né pou¾ít 
+napøíklad minimální hodnotu domény, náhodnou hodnotu domény apod. Pro rùzné skupiny 
+promìnných je mo¾né zvolit vlastní strategie tak, aby co nejlépe vystihovaly zadání 
+problému. V tomto pøípadì se definuje chování øe¹ièe pomocí tzv. cílù. Cíl obsahuje 
+definici strategie tzn. selektor nad danými promìnnými a iterátor nad hodnotami.
 
-Choco can model CSP over finite domain and experimentaly over real domain. All 
-constraints are implemented as member functions of Problem class. User can write his
-own child class of Problem and in this child class redefine constraints or add some
-new constraints which which could better express constraints needed in problem
-description.
+Proto¾e pøi øe¹ení rozsáhlých problémù mù¾e dojít k neúmìrnému èasu výpoètu, 
+spotøebovaných systémových prostøedkù apod, lze definovat omezení na øe¹iè. Øe¹iè 
+je mo¾né omezit èasem, poètem uzlù vyhledávacího stromu, hloubkou backtrackingu, 
+poètem neúspì¹ných øe¹ení a nebo CPU èasem. U¾ivatel si mù¾e vedle tìchto limitù 
+na øe¹ení nastavit vlastní limity.
 
-\section{Mozart}
+Po pøeètení modelu a definici strategií pøichází samotné øe¹ení problému. Øe¹iè 
+poskytuje interface jak pro iterování pøes øe¹ení (solve, nextSolution), tak pro 
+získání v¹ech øe¹ení naráz. Dále øe¹iè umo¾òuje urèit promìnnou, kterou se pokusí 
+minimalizovat/maximalizovat. Øe¹ení je ulo¾eno v promìnných øe¹ièe, ne v promìnných 
+modelu, které byly u¾ivatelem definovány. Je tedy nutné promìnné øe¹ièe z øe¹ièe 
+získat zavoláním funkce CPSolver::getVar která jako parametr pøijme promìnnou modelu 
+a vrátí promìnnou øe¹ièe. 
 
-\subsection{Short description}
+\subsection{Nástroje pro podporu modelování}
+Choco neobsahuje nástroj na grafickou visualisaci vyhledávacího stromu podobnì jako 
+má napøíklad systémk Mozart nebo Gecode. Choco umo¾òuje vypsat log z prùbìhu øe¹ení. 
+Logu se dají nastavit rùzné úrovnì podrobnosti od zcela tichého a¾ po kompletní výpis 
+v¹ech událostí, které choco internì provádí. [Protyp pokud bude odpoved autoru zaporna] 
+Mimo zmínìného logování u¾ivatel nemá k dispozici jiné debugovací nástroje jako napøíklad 
+interaktivní procházení prohledávacího stromu a nebo zmínìnou visualisaci. [/prototyp]
 
-Mozart is CSP solver implementing programming language Oz. Oz contains most of the 
-concepts of the major programming paradigms, including logic, functional (both 
-lazy and eager), imperative, object oriented, constraint, distributed, and 
-concurrent programming. In addition to multi paradigm programming, the major 
-strengths of Oz are in constraint programming and distributed programming.
-
-Mozart uses as its interface Emacs editor which is customized for oz files. 
-User can directly send source to compiler and code is immediately executed.
- 
-
-\subsection{Modelling capabilities}
-
-Mozart provides library for finite domain CSP which can user use to solve CSP as 
-well as maximization/minimalization task using objective function. User can choose
-propagation method - first fail, naive, etc. as well as his own propagation method.
-In case of optimising task user can define order function which is used to select
-best solution of all.
-
-*** POPSAT VICE ***
-
-\begin{figure}[ht]
-\begin{minipage}[t]{5.0cm}
-\caption{\label{srq-mozart-folded}Mozart Explorer -- solution of SRQ in folded version}
-\includegraphics[height=5cm]{images/mozart/srq.oz.color.folded.eps}
-\end{minipage}
-\hfill
-\begin{minipage}[t]{6.0cm}
-\caption{\label{srq-mozart-unfolded}Mozart Explorer -- solution of SRQ in unfolded version}
-\includegraphics[height=8cm]{images/mozart/srq.oz.color.unfolded.eps}
-\end{minipage}
-\end{figure}
-
-\subsection{Programming support features}
-
-Mozart provides tool {\em Oz Explorer} (screenshot is in figure 
-\ref{mozart-explorer-screenshot}; circle mean choice, square 
-"failure - no solution" and diamond means solution). User can browse 
-solutions and choices and by double clicking inspect state of variables 
-in decision tree nodes. The computing is directed from the explorer. 
-By default the solving is stopped after first solution is found. User 
-then can inspect results and select partial solutions (nodes which does
-not have fully searched all child trees) and start search for next 
-solution in that node. 
-
-\begin{figure}[ht]
-\caption{\label{mozart-explorer-screenshot}Mozart Explorer}
-\begin{center}
-\includegraphics[height=5cm]{images/screenshoty/explorer.eps}
-\end{center}
-\end{figure}
-
-Another tool provided with mozart is {\em Oz Inspector} (screenshot is in
-figure \ref{mozart-inspector-screenshot}). User can call 
-it to show messages from the program or to inspect nodes in Oz Explorer.
-If the value of inspected variable is updated during inspection the 
-showed value alters to correspond with actual value.
-
-\begin{figure}[hb]
-\caption{\label{mozart-inspector-screenshot}Mozart Inspector}
-\begin{center}
-\includegraphics[height=5cm]{images/screenshoty/inspector.eps}
-\end{center}
-\end{figure}
-
-For debugging Mozart provides tool called {\em Ozcar} where user can step program, 
-set breakpoints and perform other actions which can be expected by debugging tool.
-Using tool user can inspect call stack and also test immediate input, evaluate 
-expression and exec statements. Debugger contains independent utility called
-{\em Oz Profiler} which can be used to find nonefficient parts of code and tune 
-application for maximal efficiency.
-
-For interaction with its environment Oz provides easy to use ways how to exchange
-data with foreign applications. Data can be written to file, sent over network or
-sent through pipe to another process.
-
-Mozart provides more features like C/C++ interfacing, distributed programming etc.
-More information can be found in \cite{mozart:documentation}.
+\subsection{Subjektivní hodnocení solveru}
+Solver Choco se ukázal jednoduchý na bì¾né pou¾ití. I èlovìk, které pøedtím nemìl zku¹enosti s javou, omezujícími podmínkami ani tímto solverem nemìl problém zaèít pou¾ívat solver a prakticky ho uplatnit. Systém je dobøe zdokumentován, i kdy¾ v dobì psaní této práce je dokumentace lehce nepøehledná. Pøesto v ní peèlivvý ètenáø najde zpravidla v¹e co potøebuje. Programátorská dokumentace je generovaná systémem JavaDoc. Díky tomu je ve vìt¹inì bì¾ných Java IDE u¾ivateli k dispozici ji¾ bìhem výbìru funkce pomocí intellisense, co¾ napomáhá rychlému pochopení øe¹ièe. Vývoj øe¹ièe je provozován na serveru SourceForge, je tedy jednoduchou standardní formou pøístup jak ke zdrojovým kódùm aplikace tak k historii skrze verzovací nástroj subversion. Na serveru sourceforge je také umístìné fórum technické podpory, ve kterém autoøi odpovídají na dotazy u¾ivatelù. Reakèní doba je velmi nízká a úroveò odpovìdí na takové úrovni, ¾e vìt¹ina problémù je rychle vyøe¹ena.
 
 \section{Minion}
-
-\subsection{Description}
-
-Minion is very low level CSP system with strictly limited set of commands. One 
-can describe programming in minion as "constraint satisfaction machine language".
-As an example we can demonstrate in on the 4-queens problem.
-
-Common description is:
-
-\begin{align}
-\forall i,j, i \neq j & : Q_i \neq Q_j \\
-\forall i,j, i < j & : | Q_i - Q_j | \neq j - i 
-\end{align}
-
-However in minion there has to be twelve auxiliary variables. Minion does not 
-support "sum is equal". If user want to achieve "sum is equal" constraint it has 
-to be modified from
-
-
-Also there is nothing like for or while cycles, whole problem has to be defined in
-the input file, which makes programming in pure minion really difficult and nearly
-impossible to scale because of growing of auxiliary variables.
-
-The 4-queen problem then looks as follows
-
-\begin{equation*}
-\begin{gathered}
-Q_2 - Q_3 \leq a_0 \\
-Q_1 - Q_3 \leq a_2 \\
-Q_1 - Q_2 \leq a_4 \\
-Q_0 - Q_3 \leq a_6 \\
-Q_0 - Q_2 \leq a_8 \\
-Q_0 - Q_1 \leq a_{10}
-\end{gathered} \qquad \begin{gathered}
-Q_2 - Q_3 \geq a_0 \\
-Q_1 - Q_3 \geq a_2 \\
-Q_1 - Q_2 \geq a_4 \\
-Q_0 - Q_3 \geq a_6 \\
-Q_0 - Q_2 \geq a_8 \\
-Q_0 - Q_1 \geq a_{10}
-\end{gathered} \qquad \begin{gathered}
-| a_0 | = a_1 \\
-| a_2 | = a_3 \\
-| a_4 | = a_5 \\
-| a_6 | = a_7 \\
-| a_8 | = a_9 \\
-| a_{10} | = a_{11}
-\end{gathered} \qquad \begin{gathered}
-a_{11} \neq 1 \\
-a_9 \neq 2 \\
-a_7 \neq 3 \\
-a_5 \neq 3 \\
-a_1 \neq 1 \\
-\text{alldifferent}(Q_1,Q_2,Q_3,Q_4)
-\end{gathered}
-\end{equation*}
-
-As one can see, the problem is described strictly for four queens variant. If there is 
-need to extend number of queens whole problem description has to be rewritten.
-
-Fortunately there exists java program Tailor by Andrea Rendl. Tailor converts program
-written in Essence' programming language to input format of Minion. Essence' is solver
-independent language which describe CSP. More information about this programming language
-can be found in \cite{constraints:essence}. Essence' defines syntactic sugar constructions
-like \verb=forall= (abbreviation for $a_1 \mand a_2 \mand a_3 \mand \dots$), 
-\verb=exists= (abbreviation for $a_1 \mor a_2 \mor a_3 \mor \dots$), \verb=sum= and others.
-
-Great advantage compared to standard Minion input is possibility to scale problems
-with given variable. In Minion, the input file can specify for example 4-queens problem 
-but for other number of queens is the file unuseful. Programs in Essence' can be written
-using constants which are substituted during translation to Minion input format.
-As an example of Essence' program we will show 4-queens problem in figure \ref{essence-source-4queens} 
-on page \pageref{essence-source-4queens}.  
-
-\begin{figure}[hb]
-\caption{\label{essence-source-4queens}Example of 4-queens program in Essence'}
-\begin{verbatim}
-language ESSENCE' 1.b.a
-find queens: matrix indexed by [int(1..n)] of int(1..n)
-such that
-forall i: int(1..n). forall j: int(i+1..n).
-  | queens[i] - queens[j] | != | i - j |,
-  alldiff(queens)
-letting n to be 4
-\end{verbatim}
-\end{figure}
-
-During translation Tailor normalize Essence' program then converts it to flat Essence'.
-Flat Essence' is program in essence which does not contain any syntactic sugar structures.
-This program is then converted to Minion input format.
-
-Tailor is written in Java and is distributed as JAR package. It provides graphic interface
-with editor of Essence' code. User can directly convert program in Essence' to Minion
-and then run it and see the result if any. Tailor can be also used as non-interactive 
-tool which only converts from Essence' to Minion.
-
-\subsection{Modelling capabilities}
-
-Minion can evaluate constrained variables of types {\em bool}, {\em discrete}, {\em bound} 
-and {\em sparsebound}. Bool variable has $\{0,1\}$ domain with special 
-optimised data structure which provides better performance. Domain of discrete variable is 
-range of integers. Memory usage and worst-case performance of most operations
-is $O(\text{domain size})$. Discrete domain variable can represent any
-subset of domain. Bound variable has domain consisting of range of integer.
-In contrast to discrete variable the variable can be only reduced by 
-changing one of its bounds. Memory and wors-case performance of all 
-operations is $O(1)$   Finally sparsebound variable is identical to 
-bound variable with exception that domain is an arbitrary range of 
-integers. Further description of variable types and performance of 
-their using can be found in \cite{minion-manual}. The variables can
-form matrices, vectors and tensors (matrices with more dimensions).
-Minion provides acces to whole row/column of matrix using syntax 
-\verb=q[5,_]= which means "all values of row 5 of matrix $q$".
-
-Minion does not permit nesting of constraints or array indexes. If user 
-needs constraints in form \verb=eq(abs(a),6= he must introduce new auxiliary
-variable and declare \verb=abs(a, aux) eq(aux,6)=. Also there is no constraint
-stating $\sum{a_i} = b$ and user must declare $\sum{a_i} \leq b$, $\sum{a_i} \geq b$.
-These facts makes practical programming in Minion really hard because 
-number of auxiliary variables grows very fast. However user still can 
-use Tailor to generate input file for Minion.
-
-TODO *** popsat je¹tì nìjaké constrainy ***
-
-Result can be simply solution of the CSP or maximation/minimisation of
-some given variable.   
-
-\subsection{Programming support features}
-
-Minion is low level black-boxed system which means that there is 
-not wide support for user. User can print out log of the 
-parsing process. This log contains detailed information about loading 
-of variables and could help find problem in the input file. Second 
-debugging feature which is built in the minion is possibility of 
-printing whole decision tree. This log contains listing of all nodes 
-and decisions. Following listing is example of decision tree of 
-the 4-queens problem.
-
-{\small
-\begin{verbatim}
-Node: 0,<{1,2,3,4},{1,2,3,4},{1,2,3,4},{1,2,3,4},{-3,-2,-1,0,1,2,3},
-{0,2,3},{-3,-2,-1,0,1,2,3},{0,1,3},{-3,-2,-1,0,1,2,3},{0,2,3},
-{-2,-1,0,1,2},{0,1,2},{-3,-2,-1,0,1,2,3},{0,1,3},{-3,-2,-1,0,1,2,3},
-{0,2,3}>
-
-Node: 1,<{1,2,3,4},{1,2,3,4},{1,2,3,4},{1,2,3,4},{-3,-2,-1,0,1,2,3},
-{0,2,3},{-3,-2,-1,0,1,2,3},{0,1,3},{-3,-2,-1,0,1,2,3},{0,2,3},
-{-2,-1,0,1,2},{0,1,2},{-3,-2,-1,0,1,2,3},{0,1,3},{-3,-2,-1,0,1,2,3},
-{0,2,3}>
-
-SearchAssign:AnyVarRef:LongRange0 = 1
-
-Node: 2,<1,{3,4},{2,3,4},{2,3},{-1,0,1,2},{0,2},{0,1},{0,1},
-{-1,0,1,2},{0,2},{-2,-1},{1,2},{-3,-2,-1},{1,3},{-3,-2},{2,3}>
-
-SearchAssign:AnyVarRef:LongRange1 = 3
-SearchAction:bt
-SearchAssign:AnyVarRef:LongRange1 != 3
-SearchAction:bt
-SearchAssign:AnyVarRef:LongRange0 != 1
-
-Node: 3,<{2,3,4},{1,2,3,4},{1,2,3,4},{1,2,3,4},{-3,-2,-1,0,1,2,3},
-{0,2,3},{-3,-2,-1,0,1,2,3},{0,1,3},{-3,-2,-1,0,1,2,3},{0,2,3},
-{-2,-1,0,1,2},{0,1,2},{-2,-1,0,1,2,3},{0,1,3},{-2,-1,0,1,2,3},
-{0,2,3}>
-
-SearchAssign:AnyVarRef:LongRange0 = 2
-
-Node: 4,<2,{1,3,4},{1,3},{1,3,4},{-3,-2,-1,0,1,2},{0,2,3},
-{-3,-2,-1,0,1,2,3},{0,1,3},{-2,-1,0,1,2,3},{0,2,3},{-2,-1,0,1},
-{0,1,2},{-1,0,1},{0,1},{-2,-1,0,1},
-{0,2}>
-
-SearchAssign:AnyVarRef:LongRange1 = 1
-SearchAction:bt
-SearchAssign:AnyVarRef:LongRange1 != 1
-
-Sol: 2 4 1 3
-\end{verbatim}
-}
-
-Minion does not offer public include headers and library to use the solver
-as CSP subsystem in wider C++ application. However examining of source codes
-revealed, that minion sources could be used in such way. *** UVIDIME 
-VYSLEDEK DOTAZU NA AUTORY ***.
+Minion je øe¹iè omezujících podmínek, který funguje jako samostatná aplikace, která
+na vstupu dostane popis problému a na výstupu vrátí øe¹ení. Oproti ostatním øe¹ièùm, 
+které fungují jako knihovny pro nìjaký programovací jazyk a je mo¾né je pou¾ít jako subsystém
+pro øe¹ení omezujících podmínek pøímo uvnitø programu, Minion pracuje samostatnì. 
+Popis problému dostává ve speciálním datovém souboru, který je rozdìlen na definici promìnných,
+definic podmínek na nich a pøípadnou definici objektivní funkce.  

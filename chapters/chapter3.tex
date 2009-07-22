@@ -1,13 +1,62 @@
-\chapter{Benchmarks}
-\thispagestyle{myheadings}\markright{$ $Id$ $}
+\chapter{Benchmarky}
+
+V této kapitole si definujeme benchmarky, které budou dále pou¾ity k otestování 
+vlastností jednotlivých øe¹ièù. Jedná se o pìt rùzných problémù, které jsou dobøe 
+známy a zdokumentovány. My si na tìchto benchmarcích uká¾eme jak rùzný pøístup 
+øe¹ièù k modelování problému tak budeme mìøit kolik spotøebují strojového èasu a 
+prostøedkù na vyøe¹ení tìchto problémù. A¾ na sebereferenèní kvíz jsou v¹echny 
+benchmarky ¹kálovatelné a dají se pou¾ít také pro testy robustnosti øe¹ièe. My 
+budeme tuto robustnost testovat na magické sekvenci. Budeme mìøit, jak velkou 
+magickou sekvenci je je¹tì systém schopen spoèítat do daného èasového limitu. 
+Poslední benchmark -- umístìní skladù -- je pøíklad optimalizaèní úlohy. 
+Øe¹iè bude muset najít optimální øe¹ení na základì dané objektivní funkce. Ke 
+ka¾dému benchmarku uvedeme jeho struèný popis, model problému s omezujícími 
+podmínkami a ukázkovou implementaci. Pro ukázkovou implementaci pou¾ijeme 
+programovací jazyk Essence. Základy tohoto jazyka popí¹eme v první èásti této kapitoly. 
 
 \section{Essence}
-Essence is constraint language for specifying combinatorial problems. We will use it as common problem implementation tool. Essence language can be directly translated to Gecode program or Minion input file using Taylor tool. Essence is general language which is easy to write and easy to learn and understand. Essence program consists of three parts. First part is definition of the version of the language, second part defines used variables and third part defines the constraints. Supported data types of variables are Booleans, integers and matrices. For example if we want to declare Boolean variable firstVar and integer variable secondVar whose values is within range from 5 to 9 the corresponding Essence statement would be
+Essence je programovací jazyk pro modelování kombinatorických problémù. Umí popsat 
+problém v omezujících podmínkách dostateènì srozumitelnì a pøehlednì, aby i èlovìk, 
+který tento jazyk nikdy nevidìl, byl schopen urèit, co daný program dìlá. Pro pøeklad 
+programù v Essence do jiných jazykù existuje volnì dostupný pøekladaè Taylor. 
+Tento pøekladaè umí pøelo¾it zadaný program na zdrojový kód pro øe¹iè Gecode 
+pøípadnì na vstupní soubor pro øe¹iè Minion. Samotný program v Essence sestává 
+ze tøí èástí. První èást definuje verzi jazyka, druhá èást pou¾ité promìnné a 
+koneènì tøetí omezující podmínky na tìchto promìnných. Pou¾ité promìnné mohou být 
+typu Integer, Boolean a vektor/matice. 
+
+\section{N-královen}
+Tento benchmark vychází z klasické ¹achistické úlohy, rozmístit na ¹achovnici 8 
+královen tak, aby se navzájem neohro¾ovaly. My si tuto úlohu zobecníme pro ¹achovnici 
+o libovolném poètu sloupcù. Cílem tedy je do tabulky o rozmìrech $n \times n$ rozmístit n 
+královen tak, aby se neohro¾ovaly. To znamená, ¾e pro libovolné dvì královny platí, 
+¾e nejsou ve stejném sloupci ani øádku a dokonce ani na stejné diagonále.
+
+Pokud tento problém modelujeme, brzy zjistíme, ¾e je výhodné ho modelovat pomocí 
+pole promìnných délky n, kde ka¾dá promìnná nabývá hodnot od jedné do n. Dle 
+zadání toti¾ nesmí být v jednom sloupci dvì královny a zároveò musí být v ka¾dém 
+sloupci alespoò jedna královna. Staèí tedy pro ka¾dý sloupec urèit, v jakém jeho 
+øádku bude umístìná královna. Zároveò musí platit, ¾e v¹echny hodnoty musí být 
+rùzné, proto¾e nelze umístit dvì královny na jeden øádek. Nakonec musíme vyøe¹it 
+podmínku diagonál. Dvì královny jsou na stejné diagonále, pokud je mezi nimi stejný 
+poèet sloupcù i øádkù. V na¹em modelu to tedy znamená, ¾e nesmí platit vztah: 
+ $\left|Q(i) - Q(j)\right| = \left|i - j\right|$
+
+\subsection{Model CSP}
+\begin{itemize}
+	\item Promìnné a domény: $q_1, ..., q_n \in \left\{1, ..., n \right\}$, $q_i$ odpovídá øádku ve kterém je umístìná královna ve sloupci $i$
+	\item Podmínky:
+    \begin{itemize}
+     \item ®ádné dvì královny nejsou na stejném øádku: $\forall i,j \in \left\{1, ..., n\right\}: q_i \neq q_j$
+	   \item ®ádné dvì královny nejsou na stejné diagonále: $\forall i,j \in \left\{1, ..., n\right\}: |q_i - q_j| \neq |i - j|$
+	   \item Pro omezení symetrie: $q_1 < q_n$
+	  \end{itemize}
+\end{itemize}
+
+\subsection{Implementace v Essence}
 
 \lstloadlanguages{C++}
-
 \definecolor{bgcolor}{rgb}{1,1,0.6} % definice barvy
-
 \lstset{         % nastaveni prostredi listings
   language=C++,
 	basicstyle=\tiny,
@@ -29,29 +78,17 @@ Essence is constraint language for specifying combinatorial problems. We will us
 }
 
 
-
+\begin{figure}[ht]
+\caption{Implementation of N-Queens Problem in Essence}
 \begin{lstlisting}
-find firstVar
+language ESSENCE' 1.b.a
+find queens: matrix indexed by [int(1..n)] of int(1..n)
+such that
+forall i: int(1..n). forall j: int(i+1..n).
+alldiff(queens),  
+| queens[i] - queens[j] | != | i - j |
 \end{lstlisting} 
-
-
-
-\section{N-queens}
-N-queens problem is a classical constraint satisfaction task. The task is to place n queens on an $n \times n$ chessboard such that none of them is able to capture any other using standard chess queen's moves. Since there are n columns on the chessboard there have to be one queen in every column. This results in the simplification of the task. We do not have to specify problem as two-dimensional matrix. We can specify it as an n-dimensional vector Q where nth position of the vector represents the row of nth queen. The constraint "one queen does not attack any other" can be fulfilled by two constraints. The queen attacks all fields in row where it stands. Therefore all queens have to be on different rows and we can specify all values of Q are different. The queen also attacks all fields on diagonals which contains the field where the queen stands. Field $[X ; Y]$ is on the same diagonal with the field $[A ; B]$ if and only if the distance $AX$ is the same as the distance of $BY$ (see figure \ref{4queens-solution}). This gives us second constraint for queen $Q_1$ placed on field $[Q_{1x};Q_{1y}]$ and queen $Q_2$ placed on field $[Q_{2x};Q_{2y}]$ must be true following formula: $|Q_{1x}-Q_{2x}| \neq |Q_{1y} - Q_{2y}|$. There exists symmetric solutions. To avoid most of them we can optionally specify constraint $Q_1 < Q_n$.
-
-\subsection{Formal definition}
-Let have a vector Q of the length n with values in domain 1...n which satisfies following constraints:
-
-\begin{enumerate}
-\item $\forall i,j=1,..,n: i \neq j \Leftrightarrow Q(i) \neq Q(j)$ [all values of Q are different]
-\item $\forall i,j=1,..,n: i \neq j \Leftrightarrow  |i-j| \neq |Q(i) - Q(j)|$  [two queens are not on the same diagonal]
-\item $Q(1) < Q(n)$  [optional constraint to avoid symmetry]
-\end{enumerate}
-
-Any vector Q which satisfies defined constraints is solution of the n-queens problem.
-
-\subsection{Example solutions}
-For n = 4 we have 4-queens problem. The solutions of 4-queens problem are $[2,4,1,3]$, $[3,1,4,2]$. The solution are visualised on the chessboard on the figure \ref{4queens-solution}. For one queen there are shown the fields which are attacked. There are two solutions found but as we can see the solutions are symmetrical.
+\end{figure}
 
 \begin{figure}[ht]
 \caption{\label{4queens-solution}Solutions of 4-queens problem}
@@ -74,64 +111,50 @@ For n = 4 we have 4-queens problem. The solutions of 4-queens problem are $[2,4,
 \end{center}
 \end{figure}
 
+\section{Magická sekvence}
+Magická sekvence je posloupnost èísel, pro kterou platí, ¾e èíslo na pozici $k$ 
+(èíslujeme od nuly) urèuje poèet výskytù èísla $k$ v posloupnosti. Napøíklad 
+posloupnost $(2 1 2 0 0)$ je magickou sekvencí délky pìt, proto¾e platí vý¹e uvedená 
+podmínka -- èíslo nula je v posloupnosti právì dvakrát a proto je na první pozici 
+dvojka, jednièka je právì jedna a proto má posloupnost na pozici jedna právì èíslo 
+jedna a tak dále.
 
-\subsection{Implementation in Essence}
-The implementation of Magic sequence problem can be found in figure \ref{nqueens-essence-implementation}.
-
-\lstloadlanguages{C++}
-
-\definecolor{bgcolor}{rgb}{1,1,0.6} % definice barvy
-
-\lstset{         % nastaveni prostredi listings
-  language=C++,
-	basicstyle=\tiny,
-  keywordstyle=\bfseries,
-  identifierstyle=\itshape,
-  stringstyle=\ttfamily,
-  numbers=none,
-  numberstyle=\tiny,
-  numbersep=5pt,
-  frameround=ffff,
-  extendedchars=true,
-  tab=~,
-  tabsize=2,
-  frame=single,
-  captionpos=b,
-  showspaces=false,
-  showstringspaces=false,
-  breaklines=true
-}
-
-
-\begin{figure}[ht]
-\caption{\label{nqueens-essence-implementation}Implementation of Magic sequence in Essence}
-\begin{lstlisting}
-language ESSENCE' 1.b.a
-find queens: matrix indexed by [int(1..n)] of int(1..n)
-such that
-forall i: int(1..n). forall j: int(i+1..n).
-  | queens[i] - queens[j] | != | i - j |,
-  alldiff(queens)
-\end{lstlisting} 
-\end{figure}
-
-\section{Magic sequence}
-Magic sequence $MS$ is special sequence of the length $n$ which satisfies the constraint that number $x$ is in $MS$ contained exactly $MS(x)$ times (vector values are numbered from 0). It is easy to estimate that the vector values have to be in domain $0,\dots,n-1$. The value cannot be greater than $n$, because in such case it would mean that some number is contained more than $n$ times in sequence of the length $n$. It cannot be greater than $n-1$ either. If there would be some $x$ such that $MS(x) = n$, there must be $MS(n) \geq 1$. But since the vector is indexed starting from 0 it means it has maximal index $n-1$ so index $n$ is out of range.
-
-\subsection{Formal definition}
-Let have a vector $MS$ of length $n$ which satisfies following constraint:
+\subsection{Model CSP}
+Model pro magickou sekvenci délky $k$:
 
 \begin{itemize}
-\item $MS(i)= \sum_{MS(j)=i} 1$
+	\item Promìnné a domény: Prvky magické sekvence: $m_0, ..., m_{k-1} \in 
+        \left\{0, ..., k\right\}$.
+	\item Podmínky:
+	 \begin{itemize}
+      \item Prvek na pozici $i$ odpovídá poètu výskytù $i$ v posloupnosti: $\forall i \in 
+      {0,...,k-1}: m_i = \sum{m_j = 1}{1}$.
+    \end{itemize}
+\end{itemize}
+  
+V pøípadì, ¾e nelze v øe¹ièi pou¾ít podmínku $m_i = \sum{m_j = 1}{1}$, dá se sestavit 
+alternativní model
+
+\begin{itemize}
+	\item Promìnné a domény:
+  \begin{itemize} 
+	 \item Prvky magické sekvence: $m_0, ..., m_{k-1} \in \left\{0, ..., k\right\}$,
+	 \item pomocné promìnné: $\forall i,j \in {0, ..., k-1}: \mathrm{aux}_{ij}$.
+	\end{itemize}
+	\item Podmínky:
+	 \begin{itemize}
+    \item $\mathrm{aux}_ij$ má hodnotu 1 pokud $m_j$ má hodnotu i, jinak má 
+          $\mathrm{aux}_{ij}$ hodnotu 0: $\forall i,j \in \left\{0, ..., k-1\right\}: 
+          (\mathrm{aux}_{ij} = 1) \Leftrightarrow (m_j = i)$,
+	  \item Prvky magické sekvence odpovídají souètu pøíslu¹ných pomocných promìnných: 
+          $\forall i \in \left\{0, ..., k-1\right\}: m_i = \sum_{j=0}^{k-1}{\mathrm{aux}_ij}$.
+    \end{itemize}
 \end{itemize}
 
-\subsection{Implementation in Essence}
-The implementation of Magic sequence problem can be found in figure \ref{ms-essence-implementation}.
+\subsection{Implementace v Essence}
 
 \lstloadlanguages{C++}
-
 \definecolor{bgcolor}{rgb}{1,1,0.6} % definice barvy
-
 \lstset{         % nastaveni prostredi listings
   language=C++,
 	basicstyle=\tiny,
@@ -154,7 +177,7 @@ The implementation of Magic sequence problem can be found in figure \ref{ms-esse
 
 
 \begin{figure}[ht]
-\caption{\label{ms-essence-implementation}Implementation of Magic sequence in Essence}
+\caption{Implementation of Magic Sequence Problem in Essence}
 \begin{lstlisting}
 language ESSENCE' 1.b.a
 find s : matrix indexed by [int(0..n-1)] of int(0..n)
@@ -163,10 +186,16 @@ such that
         ( s[i] = (sum j : int(0..n-1). (s[j] = i)))
 \end{lstlisting} 
 \end{figure}
-        
-\section{Self Referential Quiz}
 
-Self referential quiz is a set of questions whose answers depends one on another. Typical questions in this type of quizzes are "1. First question with answer A is: A) 1, B) 2, C) 3, D) 4, E) 5; 2. Answer to this question is: A) A, B) B, C) C, D) D, E) E.". Reader can find methods to create such quiz in \cite{jios:bubalo}. We will use the same quiz as Fernandez which contains following ten questions:
+\section{Sebereferenèní kvíz}
+
+Sebereferenèní kvíz je kvíz, kde odpovìdi na otázky závisí na odpovìdích na 
+ostatní otázky v takovémto kvízu. Typickými otázkami v takovémto testu jsou napøíklad: 
+"1. První otázkou na kterou je odpovìï A je: A: 1, B: 2, C: 3, D: 4, E: na ¾ádnou 
+otázku není odpovìï A" a "2. Odpovìdí na tuto otázku je: A: A, B: B, C: C, D: D, E: E". 
+Pøi øe¹ení takovýchto kvízù se pou¾ijí zejména reifikované podmínky, tedy podmínky ve tvaru 
+ $(C \Leftrightarrow x) \& x \in \left\{0,1\right\}$. Konstrukce takovýchto kvízù je 
+ popsaná v èlánku \cite{jios:bubalo}. Zadání testu je následující:
 
 \begin{enumerate}
 	\item The first question whose answer is A is:\\
@@ -190,11 +219,13 @@ Self referential quiz is a set of questions whose answers depends one on another
 	\item The answer to this question is: \\
 		(A) A (B) B (C) C (D) D (E) E
 \end{enumerate}
-This quiz can be implemented as table 10 times 5 Boolean variables. Value in the row x and column y is true if and only if answer to question x is y (A=1, B=2, C=3, D=4, E=5). Because there is answer to every question and also every question has only one answer we have to set the constraint that there is only one true value in a row. 
 
-\subsection{Solution}
-There exists only one solution which is shown in table \ref{srq-solution-table}.
-
+Kvíz mù¾eme modelovat jako tabulku s pìti sloupci (A,B,C,D,E) a deseti øádky 
+booleovských promìnných, pro ka¾dou odpovìï v ka¾dé otázce jednu. Hodnota v øádku 
+ $i$ a sloupci $j$ je 1, pokud je odpovìï na otázku $i$ rovna $j$. Proto¾e pro 
+ ka¾dou otázku platí, ¾e je na ní pouze jedna pøípustná odpovìï, pøidáme do modelu 
+ podmínku "v ka¾dém øádku je právì jedna hodnota 1". Tento test má právì jedno øe¹ení:
+ 
 \begin{table}[ht]
 \caption{\label{srq-solution-table}Solution of Self Referential Quiz}
 \begin{center}
@@ -215,13 +246,18 @@ There exists only one solution which is shown in table \ref{srq-solution-table}.
 \end{center}
 \end{table}
 
+\subsection{Model CSP}
+	\begin{itemize}
+  \item Promìnné a domény: $s_{1|A}, s_{1|B}, ..., s_{10|D}, s_{10|E} \in {0, 1}$.
+	\item Podmínky:
+	 \begin{itemize}
+    \item V ka¾dém øádku je právì jedna hodnota rovna 1: $\forall i \in {1, ..., 10}: \left(\sum_{j \in \{A, ..., E\}}{s_{i|j}}\right) = 1$.
+   \end{itemize}
+	\end{itemize}
+	
 \subsection{Implementation in Essence}
-Implementation of Self Referential Quiz can be found in figure \ref{srq-essence-implementation}.
-
 \lstloadlanguages{C++}
-
 \definecolor{bgcolor}{rgb}{1,1,0.6} % definice barvy
-
 \lstset{         % nastaveni prostredi listings
   language=C++,
 	basicstyle=\tiny,
@@ -281,27 +317,51 @@ $ Constraints for question 10 are useless
 \end{lstlisting} 
 \end{figure}
 
+\section{Quasigroup with holes}
+Kvazigrupa neboli latinský ètverec je tabulka o velikosti $n \times n$ vyplnìná 
+èísly v rozsahu $0-n$ tak, ¾e se ¾ádné èíslo v øádku ani ve sloupci neopakuje. 
+Je mo¾né zadat i dodateènou podmínku na prvky kvazigrupy, napøíklad, ¾e prvky 
+na diagonále musí být sudé apod. Úkolem je pak pro danou èásteènì vyplnìnou 
+kvazigrupu najít zbylé prvky tak, aby byla plnì vyplnìna a splòovala v¹echny 
+podmínky na ní kladené. Takovéto zadání se nazývá problém doplnìní 
+kvazigrupy -- quasigroup completion problem (QCP). Bohu¾el toto nemusí vést v¾dy 
+ke stejným výsledkùm. Nìkterá zadání toti¾ není mo¾né splnit, nìkterá jsou pøekvapivì 
+jednoduchá apod. Navíc je úloha zaplnìní latinského ètverce NP-úplná, nemù¾eme si 
+tedy být nikdy jistí, zda je problém pouze moc nároèný pro øe¹iè a nebo zda øe¹iè nedává 
+odpovìï proto, ¾e øe¹ení neexistuje. Proto se místo klasického QCP pou¾ívá jeho 
+modifikace -- kvazigrupa s dírami (QWH). Nejprve si pøedem vygenerujeme kvazigrupu, 
+která splòuje danou podmínku. Pak z této kvazigrupy odstraníme nìkteré hodnoty, 
+které pak necháme dopoèítat solver. Tím máme zaruèeno, ¾e øe¹ení existuje. Generováním 
+vhodných zadání pro QWH se zabýval D. Achlioptas a kol., kteøí ukázali, ¾e tì¾kost 
+problému souvisí s tzv. páteøí \cite{Achlioptas00generatingsatisfiable}. Páteø 
+je mno¾ina prvkù kvazigrupy, které se vyskytují ve v¹ech øe¹eních. Pokud se podíl 
+páteøe blí¾í k $0 \%$, znamená to, ¾e exiustuje mnoho rùzných øe¹ení a tedy øe¹iè 
+mù¾e nìjaké øe¹ení najít "náhodou". Pokud je oproti tomu podíl páteøe blízký 
+ $100 \%$, existuje velmi málo øe¹ení a vedou k nìmu v¹echny podmínky. Dá se tedy 
+ oèekávat, ¾e zajímavé kvazigrupy budou takové, jejich¾ páteø má podíl okolo $50 \%$. 
+ Experimenty pak prokázaly \cite{Achlioptas00generatingsatisfiable}, ¾e nejnároènìj¹í 
+ jsou problémy s podílem páteøe mezi 30 a $35 \%$.
+ 
+My pou¾ijeme kvazigrupy bez dodateèné podmínky na prvky, které si vygenerujeme 
+pomocí programù lsencode od Carly Gomezové [citace? odkaz?] a walksat od Henryho 
+Kautze.
 
-\section{Quasigroup Completion Problem}
-A Quasigroup or Latin square is an $n \times n$ table filled with n different symbols in such a way that each symbol occurs exactly once in each row and exactly once in each column. In Quasigroup Completion Problem (QCP) the task is to complete filling of given partially filled Latin square. Problem with QCP is inequality of difficulty of various initial settings. Filling of Latin square is NP-complete problem which means that for large squares the execution time can be enormous. Therefore we are unable to determine if solver cannot find solution or if there is not any. Even in case that given initial settings can be solved we do not have guarantee that all settings with the same percentage of filling are equally hard. Achlioptas et al. \cite{Achlioptas00generatingsatisfiable} defined a backbone. The backbone of instance is set of fields which are similarly evaluated in all solutions (not counting preassigned fields). There exists correlation between size of backbone and hardness of the given problem. We expect that if the backbone is near 0\% there exist lots of solutions and solver can find some "accidentally". In the opposite if the backbone is near 100\% all constraints leads to one solution. Therefore we expect interesting initial settings with backbone near 50\%. Experiments \cite{Achlioptas00generatingsatisfiable} proved that maximal computational time is with backbone between 30 and 35\%.
+\subsection{Model CSP}
+Model pro kvazigrupu øádu $n$. Pøedvyplnìné hodnoty jsou v poli $\mathrm{data}_{ij}$:
 
-We will avoid the possibility of unsolvable settings by modification of given task. We will first generate complete quasigroup and then leave some of its fields empty. This will assure that given initial settings can be always solved. This modification is called Quasigroup with Holes (QWH) and QCP is its generalization. We will use given set of QWH initial settings.
-
-\subsection{Formal definition}
-Let have table $Q$ of size $n \times n$ whose fields can be filled with numbers in range $1$ to $n$ with following constraints:
-\begin{enumerate}
-	\item $\forall i,j,k \in 1..n : Q(i,j) \neq Q(i,k)$  [In each row all values are different]
-	\item $\forall i,j,k \in 1..n : Q(i,j) \neq Q(k,j)$  [In each column all values are different]
-	\item $Q(i,j)= x \Leftrightarrow$ The initial setting of cell $i$,$j$ $= x$.
-\end{enumerate}
-
-\subsection{Example solutions}
+\begin{itemize}
+	\item Promìnné a domény: $q_{11}, ..., q_{nn} \in \left\{1, ..., n\right\}$.
+	\item Podmínky:
+	 \begin{itemize}
+    	\item Prvky v jednom øádku jsou rùzné: $\forall i \in \left\{1, ..., n\right\}: \forall j,k \in \left\{1, ..., n\right\}: q_{ij} \neq q_{ik}$, 
+    	\item prvky v jednom sloupci jsou rùzné: $\forall i \in {1, ..., n}: \forall j,k \in {1, ..., n}: q_{ji} \neq q_{ki}$ 
+    	\item nìkteré prvky mají hodnotu danou zadáním: $\mathrm{data}_{ij} \textnormal{ definováno } \Leftrightarrow (q_{ij} = \mathrm{data}_{ij})$
+	 \end{itemize}
+\end{itemize}
 
 \subsection{Implementation in Essence}
 \lstloadlanguages{C++}
-
 \definecolor{bgcolor}{rgb}{1,1,0.6} % definice barvy
-
 \lstset{         % nastaveni prostredi listings
   language=C++,
 	basicstyle=\tiny,
@@ -324,23 +384,35 @@ Let have table $Q$ of size $n \times n$ whose fields can be filled with numbers 
 
 
 \begin{figure}[ht]
-\caption{Implementation of Quasigroup Completion Problem in Essence}
+\caption{Implementation of Magic Sequence Problem in Essence}
 \begin{lstlisting}
 language ESSENCE' 1.b.a
-letting nDomain be domain int(0..n-1)
+letting nDomain be domain int(1..n)
 find qcp : matrix indexed by [nDomain,nDomain] of nDomain
 such that
-  forall i : nDomain. alldiff(qcp[i,0..n-1]),
-  forall i : nDomain. alldiff(qcp[0..n-1,i])
+  forall i : nDomain. alldiff(qcp[i, nDomain]),
+  forall i : nDomain. alldiff(qcp[nDomain,i])
 \end{lstlisting} 
 \end{figure}
 
+\section{Výstavba skladù}
+Pøedstavme si, ¾e máme hypotetické obchodní spoleènosti pomoci s rozhodnutím, 
+jaké postavit sklady pro své prodejny. Hlavním kritériem je samozøejmì cena, jakou 
+bude tato výstavba stát. Na¹ím cílem je tedy tuto cenu minimalizovat. Na druhou 
+stranu musíme vyhovìt v¹em omezujícím podmínkám, na problém kladených. Spoleènost 
+má ji¾ postavené prodejny a vytipované lokality pro své sklady. Ka¾dý mo¾ný sklad 
+má definovanou svou maximální kapacitu -- nejvy¹¹í mo¾ný poèet obsluhovaných obchodù. 
+Ka¾dý obchod musí mít pøidìlený právì jeden sklad. Cena za výstavbu skladu je fixní 
+ale náklady na zásobení prodejny z daného skladu je pro ka¾dou takovou dvojici 
+rùzná. Øe¹iè na zaèátku dostane jako zadání poèet prodejen, poèet mo¾ných skladù 
+s jejich kapacitami a matici c, kde prvek cij urèuje cenu za zásobování prodejny
+ $i$ ze skladu $j$.
 
-\section{Locating warehouses}
-We assume hypothetical company which wants to build warehouses which can supply existing stores with minimal costs. Each warehouse has defined number of stores which can supply. Also we know the costs of transporting of goods between planned warehouses and stores. The cost for building of each warehouse is the same. Our task is to select which warehouses have to be built such that all stores will be supplied and the total cost will be minimal. Compared to other benchmarks this benchmark is different. Locating warehouses is optimization task. For other benchmarks all solutions are equally good but here we can compare the solutions and the expected result is the best of them. This benchmark and its implementation in Mozart/Oz is described in \cite{mozart:documentation}.
-
-\subsection{Formal definition}
-Let have $n$ stores $S$ and $m$ warehouses $W$. For each store $s$ and each warehouse $w$ we have defined supply cost $SC(s,w)$. Building cost for every warehouse is $c$. We have to find the minimal evaluation of the objective function 
-
-$$ \text{total cost} = \sum_{w \text{ is open}}\left(c + \sum_{s \text{ is suplied by } w}{SC(s,w)} \right) $$ 
-
+\subsection{Model CSP}
+	\begin{itemize}
+  \item Promìnné a domény: 
+	\item Podmínky:
+  	\begin{itemize}
+  	 \item Objektivní funkce: $\mathrm{totalCost} = \sum_{w \textnormal{ is open}}\left(c+\sum_{s \textnormal{ is suplied by } w} \mathrm{SC}(s,w) \right)$
+    \end{itemize}
+  \end{itemize} 
