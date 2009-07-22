@@ -1,0 +1,152 @@
+\chapter{Implementation of benchmarks}
+
+\lstset{frame=none}
+
+\section{Mozart/Oz}
+
+\subsection{Magic Sequence}
+\begin{lstlisting}[language=Oz]
+fun {MagicSequence Size}
+   proc {$ Sol}
+      {FD.tuple magic Size 0#(Size-1) Sol}
+
+      {For 1 Size 1
+       proc {$ I}
+	  Vector
+       in
+	  {FD.tuple v Size 0#1 Vector}
+	  {For 1 Size 1
+	   proc {$ J}
+	      Vector.J = Sol.J =: I-1
+	   end}
+	  
+	  {FD.reified.card Sol.I V Sol.I 1}
+       end}
+
+      {FD.distribute ff Sol}
+   end
+end
+\end{lstlisting}
+%$
+
+\subsection{N-Queens}
+\begin{lstlisting}[language=Oz]
+fun {Queens N}
+   proc {$ Sol}
+      {FD.tuple queens N 1#N Sol}
+      {FD.distinct Sol}
+
+      {For 1 N 1
+       proc {$ I}
+	  {For (I+1) N 1
+	   proc {$ J}
+	      Sol.I - Sol.J \=: I - J
+	      Sol.J - Sol.I \=: I - J
+	   end}
+       end}
+      
+      {FD.distribute ff Sol}
+   end
+end
+\end{lstlisting}
+%$
+
+\subsection{Quasigroup With Holes}
+\begin{lstlisting}[language=Oz]
+fun {QWH Size Data}
+   NN = Size*Size
+in
+   proc {$ Sol}
+      {FD.tuple quasigroup NN 1#Size Sol}
+
+      %% Symetrie
+      Sol.1 <: Sol.Size
+      Sol.1 <: Sol.(Size * (Size - 1))
+      
+      {For 1 Size 1
+       proc {$ I}
+	  V
+       in
+	  {FD.tuple v Size 1#Size V}
+	  {For 1 Size 1
+	   proc {$ J}
+	      V.J = Sol.((I - 1)*Size + J)
+	   end}
+	  {FD.distinct V}
+       end}
+
+      {For 1 Size 1
+       proc {$ I}
+	  V
+       in
+	  {FD.tuple v Size 1#Size V}
+	  {For 1 Size 1
+	   proc {$ J}
+	      V.J = Sol.((J - 1)*Size + I)
+	   end}
+	  {FD.distinct V}
+       end}
+      
+      
+      {FD.distribute ff Sol}
+   end
+end
+\end{lstlisting}
+%$
+
+\subsection{Locating Warehouses}
+\begin{lstlisting}[language=Oz]
+fun {Warehouses Data}
+   
+   fun {Regret X}
+      M = {FD.reflect.min X}
+   in
+      {FD.reflect.nextLarger X M} - M
+   end
+
+   NbStores = {Width Data.costs}
+   NbWarehouses = {Width Data.capacity}
+   Capacity = Data.capacity
+   WarehouseCost = Data.warehouseCost
+   CostMatrix = Data.costs
+   
+in
+   proc {$ Sol}
+      TotalCost = {FD.decl}
+      Open = {FD.tuple warehouse 5 0#1}
+      Supplier = {FD.tuple supplier NbStores 1#NbWarehouses}
+
+      Cost = {FD.tuple store NbStores 0#FD.sup}
+      SumCost = {FD.decl} = {FD.sum Cost '=:'}
+
+      Stores = {List.number 1 NbStores 1}
+
+      NbOpen = {FD.decl} = {FD.sum Open '=:'}
+   in
+      Sol = plan(totalCost:TotalCost open:Open supplier:Supplier)
+
+      TotalCost =: SumCost + NbOpen * WarehouseCost
+
+      {For 1 NbStores 1
+       proc {$ Store}
+	  Cost.Store :: {Record.toList CostMatrix.Store}
+	  {FD.element Supplier.Store CostMatrix.Store Cost.Store}
+       end}
+
+      {For 1 NbWarehouses 1
+       proc {$ Warehouse}
+	  {FD.atMost Capacity.Warehouse Supplier Warehouse}
+	  Open.Warehouse = {FD.reified.sum {Map Stores fun {$ Store} Supplier.Store =: Warehouse end} '>:' 0}
+       end}
+      
+      {FD.distribute ff Supplier}
+   end
+end
+
+proc {Order Old New}
+   Old.totalCost >: New.totalCost
+end
+\end{lstlisting}
+%$
+
+\section{Choco}

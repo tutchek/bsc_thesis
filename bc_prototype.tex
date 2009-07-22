@@ -26,6 +26,7 @@
 \usepackage{graphicx} % nezbytné pro standardní vkládání obrázkù do dokumentu
 \usepackage{listings}
 
+
 \usepackage{chessboard}
 
 \usepackage{amsmath}
@@ -46,11 +47,33 @@
 
 \begin{document}
 
+\lstloadlanguages{Oz}
+\lstloadlanguages{C++}
+\definecolor{bgcolor}{rgb}{1,1,0.6} % definice barvy
+\lstset{         % nastaveni prostredi listings
+  language=C++,
+  keywordstyle=\bfseries,
+  identifierstyle=\itshape,
+  stringstyle=\ttfamily,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=5pt,
+  frame=none,
+  extendedchars=true,
+  tab=~,
+  tabsize=2,
+  frame=tb,
+  captionpos=b,
+  showspaces=false,
+  showstringspaces=false,
+  breaklines=true
+}
+
 \newcommand{\zkratka}[2]{{#1}\nomenclature{#1}{#2}}
 
 \newcommand{\mand}{\wedge}
 \newcommand{\mor}{\vee}
-\newcommand{\eclipse}{$ECL^iPS^e$}
+\newcommand{\eclipse}{ECL$^i$PS$^e$ }
 \newtheorem{example}{Example}
 
 %\csprimeson % zapne jednoduché psaní èeských uvozovek pomocí klasických znakù, ale potom pozor 
@@ -129,7 +152,7 @@ zveøejòováním.
 with the use of the cited sources. I agree with lending this thesis.
 
 \bigskip
-\noindent In Prague, 1st August 2008 \hspace{\fill}Michal Tuláèek\\ % doplòte patøièné datum, jméno a pøíjmení
+\noindent In Prague,  \hspace{\fill}Michal Tuláèek\\ % doplòte patøièné datum, jméno a pøíjmení
 
 %%%   Výtisk pak na tomto míste nezapomeòte PODEPSAT!
 %%%                                         *********
@@ -179,6 +202,10 @@ Supervisor's e-mail address: bartak@kti.mff.cuni.cz\\
 \include{chapters/chapter4}
 
 \include{chapters/chapter5}
+
+\appendix
+
+\include{chapters/appendixA}
 
 %%% Seznam literatury
 %%%
