@@ -4,7 +4,7 @@
 In this thesis we will compare several constraint solvers using the point of view 
 of user who is not experienced in constraint programming. We will focus on easiness 
 of learning process of each solver and measure performance using benchmarks which 
-tests various aspects of examined systems. 
+test various aspects of examined systems. 
 
 \section{Motivation}
 Constraint programming is a programming paradigm which uses constraints to a 
@@ -21,8 +21,8 @@ contains number in range one to nine. In each column all numbers are different
 each row there are also all numbers different. Finally the same rule which applies 
 for columns and rows stands for three times three sized squares which are in the 
 puzzle marked with bolder lines. The Sudoku is prefilled with a couple of values. 
-These values help at the beginning of solving and by their count and placement 
-can be adjusted the difficulty.
+These values help at the beginning of solving and the difficulty can be 
+adjusted by their count and placement.
 
 %// vlozit obrazek sudoku
 
@@ -44,13 +44,13 @@ straightforward. We will define following constraints:
 \end{enumerate}
 
 These constraints fully describe Sudoku puzzle problem and as the reader can see 
-does not differ from the commonly known rules. Person solving Sudoku puzzle can 
+do not differ from the commonly known rules. A person solving Sudoku puzzle can 
 use many techniques starting with randomly filling the table and looking if this 
-is good solution (algorithm using this technique is called GAT -- Generate and Test) 
+is a good solution (the algorithm using this technique is called GAT -- Generate and Test) 
 and ending with generating all possible fillings and repairing the solution if 
-something fails (this algorithm is called backtracking). First approach can miss 
-correct solution. Since second approach systematically searches the possible 
-solutions it has to result in correct solution. However it can last enormous 
+something fails (this algorithm is called backtracking). The first approach can miss 
+a correct solution. Since the second approach systematically searches the possible 
+solutions it has to result inthe correct solution. However it can last enormous 
 time to complete it (even on supercomputer). The secret of successful solution 
 is in fact that not all numbers can be filled in specific field. If there is 
 prefilled value 8 at position [6,7] it means that in row 6 and in column 7 
@@ -62,15 +62,19 @@ is after this examination at least one field which can be filled with only one
 number. After filling all such fields solving continues in the same way until 
 whole table is filled. Program using constraint programming solves it in the same 
 way. For each variable it remembers the range of possible values (we will call it 
-domain). Before the program start searching of solution it tries to eliminate as 
-much values from domain as possible. It can reveal that problem does not have 
-solution (if there is some variable with empty domain) before backtracking. There 
-is no surprise that in user guide to Choco system is stated "if you know Sudoku, 
+domain). Before the program starts searching of solution it tries to eliminate as 
+many values from domain as possible. It can reveal that problem does not have a 
+solution (if there is some variable with empty domain) before backtracking. It 
+it is no surprise that in user guide to Choco system is stated "if you know Sudoku, 
 then you know constraint programming."
 
 \section{Constraint programming}
 Constraint programming of course consists of more techniques but generally it works 
-just like person solving Sudoku described in previous paragraph. Since time complexity 
+just like the person solving Sudoku described in the previous paragraph. 
+
+%% PREPSAT A PRIDAT MAC
+
+Since time complexity 
 of searching in possible solutions can be enormous the most important is to eliminate as 
 many solution candidates as possible before actual search. Unfortunately eliminating values 
 from domain based on given constraints does not guarantee that model can be directly solved. 
@@ -84,7 +88,7 @@ of that variable instead of useless searching through whole subtree. Algorithms
 like looking ahead and forward checking can identify future problems so the search 
 algorithm can eliminate bad decisions as soon as possible. Detailed description 
 of these techniques would fill whole book and this thesis has another purpose. 
-The reader who wants to learn more can found more in (citace Online guide to CSP).
+The reader who wants to learn more can found more in \cite{bartak:ogcp}.
 
 From previous paragraphs reader could think that constraint programming is used 
 only as an academic toy for solving Sudoku and other applications which are useless 
@@ -93,14 +97,14 @@ A few examples of many contains scheduling, image recognition, financial modelin
 planning, vehicle routing, configuration, computer networks and bioinformatics. 
 Constraint programming was also successfully used at NASA in Deep Space 1 experiment. 
 Deep Space 1 was a space probe using 12 cutting-edge technologies which were never 
-tested in space before. One of these technologies was remote agent used to plan 
+tested in space before. One of these technologies was a remote agent used to plan 
 actions of space vehicle while only general commands were sent to agent. Agent 
 used for planning constraint solver \cite{nasa:ds1-ara}.
 
 \section{Constraint solvers}
 Programmer who wants to solve problem using constraint programming can use in his 
 algorithms ideas described in previous paragraphs or use specialized software -- a 
-constraint solver. Constraint solver is system which uses constraint programming 
+constraint solver. Constraint solver is a system which uses constraint programming 
 techniques to solve given problem. There are many solvers available both commercial 
 and freeware. As a short list of available systems can be found in table 1.1.
 
