@@ -33,9 +33,9 @@ straightforward. We will define following constraints:
 \item	There are 81 variables s which can contain values in range 1 to 9. We will 
       arrange them in a two-dimensional array with size 9 $\times$ 9. 
       (The Sudoku is table sized 9 $\times$ 9 containing values in a range $1..9$)
-\item	For all $i$ in 1..9 is true: All values of $s_{i \textbullet}$ are different 
+\item	For all $i$ in 1..9 is true: All values of $s_{i \bullet}$ are different 
       (Values in each row are different)
-\item	For all $j$ in 1..9 is true: All values of $s_{\textbullet j}$ are different 
+\item	For all $j$ in 1..9 is true: All values of $s_{\bullet j}$ are different 
       (Values in each column are different)
 \item	For each square is true: For all $k$, $l$ such that $k$, $l$ is in square values of 
       $s_{kl}$ are different (Values in each square are different)
@@ -72,6 +72,7 @@ then you know constraint programming."
 Constraint programming of course consists of more techniques but generally it works 
 just like the person solving Sudoku described in the previous paragraph. 
 
+\cite{UI:Bartak}
 %% PREPSAT A PRIDAT MAC
 
 Since time complexity 
