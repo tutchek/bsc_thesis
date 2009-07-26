@@ -70,26 +70,56 @@ then you know constraint programming."
 
 \section{Constraint programming}
 Constraint programming of course consists of more techniques but generally it works 
-just like the person solving Sudoku described in the previous paragraph. 
-
-\cite{UI:Bartak}
-%% PREPSAT A PRIDAT MAC
-
-Since time complexity 
-of searching in possible solutions can be enormous the most important is to eliminate as 
-many solution candidates as possible before actual search. Unfortunately eliminating values 
-from domain based on given constraints does not guarantee that model can be directly solved. 
-This means we have to search the problem space for possible solution. Standard backtracking 
-does not work efficiently. It does not have memory so it cannot use results which 
-were computed in different branch. It case of fail it also cannot identify problematic 
-evaluation of constraint so it has to search whole subtree of given branch to find 
-that it cannot result in solution. Constraint programming offers techniques backmarking 
-and backjumping which can identify the dead end of current branch and recheck evaluating 
-of that variable instead of useless searching through whole subtree. Algorithms 
-like looking ahead and forward checking can identify future problems so the search 
-algorithm can eliminate bad decisions as soon as possible. Detailed description 
-of these techniques would fill whole book and this thesis has another purpose. 
-The reader who wants to learn more can found more in \cite{bartak:ogcp}.
+just like the person solving Sudoku described in the previous paragraph.
+All constraint satisfaction problems (CSP) can be transformed in a such way that
+it contains only binary constraints. Common representation of the CSP is the multigraph 
+where nodes are variables and the edges constraints on them. The value of variable's domain
+is {\em supported} if there is not a constraint which collide with such value.
+We can define {\em node consistency} if all values of domain of a node $x$ satisfies
+all constraints $c(x,x)$ (unary constraints). The problem is node consistent (NC) if all
+nodes in problem are node consistent. Similary the edge $e(x,y)$ is arc consistent if
+for all values in $D_x$ exists value of $y$ such that the constraint is satisfied.
+This definition does not assure that if the edge $e(x,y)$ is arc consistent then the
+edge $e(y,x)$ as arc consistent too. CSP is arc consistent (AC) of all edged in both 
+directions are arc consistent. The arc consistency does not guarantee that the problem has
+solution (however if the problem is not arc consistent then it has no solution for sure).
+For example let have variables $X,Y,Z$ with domains $\{0,1\}$ and constraints $X \neq Y$,
+ $Y \neq Z$ and $X \neq Z$. The problem is arc consistent but it has no solution.
+ 
+The general way of solving of CSP is to transform the domains of variables to ensure
+the arc consistency of the problem. After the problem is in stable state -- last iteration of arc 
+consistency algorithm have not changed any domain we test if the problem is solved.
+The problem is solved if each value has one sized domain. If there is empty domain after 
+arc consistency algorithm we declare the problem as cannot be satisfied. This part 
+of algorithm is called {\em propagation}. If we havent found the solution if propagation
+phase we continue with {\em distribution} phase. In distribution phase we add additional
+constraint $c$ to the problem $P$ and rerun the propagation on two new problems, 
+ $P \cup \{ c \}$ and $P \cup \{ \neg c \}$. If there exists solution it has to be
+ contained in at least one of the two new problems. For the usualy used constraint
+ we choose one variable $x$ and value $v$ from its actual domain $D_x$. The constraint 
+ $c$ then can be $x = v$ or $x < v$. The choosing algorithm of the proper variable
+ $x$ is important. Usualy we pick the variable with smallest domain because it leads 
+ to possible failure more quickly. Usually the solver offers choices of the algorithm
+ to suite all needs. This algorithm is called maintained arc consistency or MAC. Its
+ schematic source code is in figure \ref{labelling-bartak}. The code is cited from 
+ \cite{UI:Bartak}. More detailed of algorithms used in CSP solving can be found in \cite{bartak:ogcp}.
+ 
+\begin{figure}
+\caption{\label{labelling-bartak}The MAC algorithm}
+\begin{lstlisting}[language=Pascal]
+procedure labelling(V,D,C)
+  if all variables from V are assigned then return V
+  select not-yet assigned variable x from V
+  for each value v from Dx do
+    (TestOK, D') := consistent(V,d,C + {x=v})
+    if TestOK = true then
+      R := labelling(V, D', C)
+      if R <> fail then return R
+  end for
+  return fail
+end
+\end{lstlisting}
+\end{figure}
 
 From previous paragraphs reader could think that constraint programming is used 
 only as an academic toy for solving Sudoku and other applications which are useless 
@@ -107,7 +137,9 @@ Programmer who wants to solve problem using constraint programming can use in hi
 algorithms ideas described in previous paragraphs or use specialized software -- a 
 constraint solver. Constraint solver is a system which uses constraint programming 
 techniques to solve given problem. There are many solvers available both commercial 
-and freeware. As a short list of available systems can be found in table 1.1.
+and freeware. A short list of available systems can be found in table 
+\ref{constraints-solvers-list}. More detailed list is maintained by Roman Barták in 
+On-line guide to constraints programming at \cite{bartak:los}.
 
 \section{Related work}
 There exists a paper "A Comparative Study of Eight Constraint Programming Languages 
@@ -117,6 +149,24 @@ with the solvers. They compared solvers by their performance on various benchmar
 and discussed implementation of self referential quiz in each solver. We are not 
 benchmarking the same sets of solvers and we do not use similar methodology which 
 means this thesis conclusions cannot replace or update results from \cite{fernandez00}.
+
+Each year there is held the International Constraint Solver Competition where authors
+of solvers can compete. The solvers can be submitted in two categories -- complete 
+and incomplete. Complete solvers can prove that the instance of problem is satisfiable
+or not (or find and prove the optimum). As stated in the rules \cite{csp-competition:rules} 
+for each solver there is a {\em Boolean capability vector}
+which indicates which constraints the solver can handle. Solvers with the same
+capability vector can be naturally compared. Solvers with different capabilities 
+can be compared on instances which belong to the intersection
+of their capabilities, provided it is nonempty. During the competition the solvers
+are run in the sandbox environment on the Linux cluster. The task is to compute solution
+of as many benchmarks as possible in the smallest time amount.
+
+There exists a library \cite{csplib} of the constraint satisfaction problems which can be used in 
+benchmarking and comparing of solver capabilities. The library contains various problems
+in several fields -- optimalisation problems, combinatioral problems etc. We encourage
+the reader to try to implement several problems in the chosen solver as a part of learning of
+modelling in the solver.
 
 \section{Outline of the thesis}
 We described our motivation for this thesis and listed some constraint solvers. 

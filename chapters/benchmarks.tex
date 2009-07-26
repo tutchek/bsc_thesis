@@ -52,10 +52,10 @@ poèet sloupcù i øádkù. V na¹em modelu to tedy znamená, ¾e nesmí platit vztah:
 	   \item Pro omezení symetrie: $q_1 < q_n$
 	  \end{itemize}
 \end{itemize}
+The Essence implementation is in figure \ref{benchmark-essence:nqueens}.
 
-\subsection{Implementace v Essence}
-\begin{figure}[ht]
-\caption{Implementation of N-Queens Problem in Essence}
+\begin{figure}
+\caption{\label{benchmark-essence:nqueens}Implementation of N-Queens Problem in Essence}
 \begin{lstlisting}
 language ESSENCE' 1.b.a
 find queens: matrix indexed by [int(1..n)] of int(1..n)
@@ -90,7 +90,7 @@ alldiff(queens),
 \section{Magická sekvence}
 Magická sekvence je posloupnost èísel, pro kterou platí, ¾e èíslo na pozici $k$ 
 (èíslujeme od nuly) urèuje poèet výskytù èísla $k$ v posloupnosti. Napøíklad 
-posloupnost $(2 1 2 0 0)$ je magickou sekvencí délky pìt, proto¾e platí vý¹e uvedená 
+posloupnost $(2\, 1\, 2\, 0\, 0)$ je magickou sekvencí délky pìt, proto¾e platí vý¹e uvedená 
 podmínka -- èíslo nula je v posloupnosti právì dvakrát a proto je na první pozici 
 dvojka, jednièka je právì jedna a proto má posloupnost na pozici jedna právì èíslo 
 jedna a tak dále.
@@ -104,11 +104,11 @@ Model pro magickou sekvenci délky $k$:
 	\item Podmínky:
 	 \begin{itemize}
       \item Prvek na pozici $i$ odpovídá poètu výskytù $i$ v posloupnosti: $\forall i \in 
-      {0,...,k-1}: m_i = \sum{m_j = 1}{1}$.
+      {0,...,k-1}: m_i = \sum_{m_j = 1}{1}$.
     \end{itemize}
 \end{itemize}
   
-V pøípadì, ¾e nelze v øe¹ièi pou¾ít podmínku $m_i = \sum{m_j = 1}{1}$, dá se sestavit 
+V pøípadì, ¾e nelze v øe¹ièi pou¾ít podmínku $m_i = \sum_{m_j = 1}{1}$, dá se sestavit 
 alternativní model
 
 \begin{itemize}
@@ -126,11 +126,10 @@ alternativní model
           $\forall i \in \left\{0, ..., k-1\right\}: m_i = \sum_{j=0}^{k-1}{\mathrm{aux}_{ij}}$.
     \end{itemize}
 \end{itemize}
+The Essence implementation is in figure \ref{benchmark-essence:mseq}.
 
-\subsection{Implementace v Essence}
-
-\begin{figure}[ht]
-\caption{Implementation of Magic Sequence Problem in Essence}
+\begin{figure}
+\caption{\label{benchmark-essence:mseq}Implementation of Magic Sequence Problem in Essence}
 \begin{lstlisting}
 language ESSENCE' 1.b.a
 find s : matrix indexed by [int(0..n-1)] of int(0..n)
@@ -144,8 +143,12 @@ such that
 
 Sebereferenèní kvíz je kvíz, kde odpovìdi na otázky závisí na odpovìdích na 
 ostatní otázky v takovémto kvízu. Typickými otázkami v takovémto testu jsou napøíklad: 
-"1. První otázkou na kterou je odpovìï A je: A: 1, B: 2, C: 3, D: 4, E: na ¾ádnou 
-otázku není odpovìï A" a "2. Odpovìdí na tuto otázku je: A: A, B: B, C: C, D: D, E: E". 
+
+\begin{enumerate}
+  \item První otázkou na kterou je odpovìï A je: A: 1, B: 2, C: 3, D: 4, E: na ¾ádnou otázku není odpovìï A
+  \item Odpovìdí na tuto otázku je: A: A, B: B, C: C, D: D, E: E
+\end{enumerate}
+ 
 Pøi øe¹ení takovýchto kvízù se pou¾ijí zejména reifikované podmínky, tedy podmínky ve tvaru 
  $(C \Leftrightarrow x) \& x \in \left\{0,1\right\}$. Konstrukce takovýchto kvízù je 
  popsaná v èlánku \cite{jios:bubalo}. Zadání testu je následující:
@@ -207,11 +210,10 @@ booleovských promìnných, pro ka¾dou odpovìï v ka¾dé otázce jednu. Hodnota v øádk
     \item V ka¾dém øádku je právì jedna hodnota rovna 1: $\forall i \in {1, ..., 10}: \left(\sum_{j \in \{A, ..., E\}}{s_{i|j}}\right) = 1$.
    \end{itemize}
 	\end{itemize}
-	
-\subsection{Implementation in Essence}
+The Essence implementation is in figure \ref{benchmark-essence:srq}.
 
-\begin{figure}[ht]
-\caption{\label{srq-essence-implementation}Implementation of Self Referential Quiz in Essence}
+\begin{figure}
+\caption{\label{benchmark-essence:srq}Implementation of Self Referential Quiz in Essence}
 \begin{lstlisting}
 language ESSENCE' 1.b.a
 find s : matrix indexed by [int(1..10), int(1..5)] of bool
@@ -289,11 +291,10 @@ Model pro kvazigrupu øádu $n$. Pøedvyplnìné hodnoty jsou v poli $\mathrm{data}_{
     	\item nìkteré prvky mají hodnotu danou zadáním: $\mathrm{data}_{ij} \textnormal{ definováno } \Leftrightarrow (q_{ij} = \mathrm{data}_{ij})$
 	 \end{itemize}
 \end{itemize}
+The Essence implementation is in figure \ref{benchmark-essence:qwh}.
 
-\subsection{Implementation in Essence}
-
-\begin{figure}[ht]
-\caption{Implementation of Magic Sequence Problem in Essence}
+\begin{figure}
+\caption{\label{benchmark-essence:qwh}Implementation of Quasigroup With Holes Problem in Essence}
 \begin{lstlisting}
 language ESSENCE' 1.b.a
 letting nDomain be domain int(1..n)
@@ -325,3 +326,4 @@ s jejich kapacitami a matici c, kde prvek cij urèuje cenu za zásobování prodejny
   	 \item Objektivní funkce: $\mathrm{totalCost} = \sum_{w \textnormal{ is open}}\left(c+\sum_{s \textnormal{ is suplied by } w} \mathrm{SC}(s,w) \right)$
     \end{itemize}
   \end{itemize} 
+The Essence implementation is in figure \ref{benchmark-essence:lw}.
