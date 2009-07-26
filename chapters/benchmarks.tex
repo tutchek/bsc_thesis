@@ -17,13 +17,17 @@ programovací jazyk Essence. Základy tohoto jazyka popí¹eme v první èásti této ka
 \section{Essence}
 Essence je programovací jazyk pro modelování kombinatorických problémù. Umí popsat 
 problém v omezujících podmínkách dostateènì srozumitelnì a pøehlednì, aby i èlovìk, 
-který tento jazyk nikdy nevidìl, byl schopen urèit, co daný program dìlá. Pro pøeklad 
-programù v Essence do jiných jazykù existuje volnì dostupný pøekladaè Taylor. 
-Tento pøekladaè umí pøelo¾it zadaný program na zdrojový kód pro øe¹iè Gecode 
-pøípadnì na vstupní soubor pro øe¹iè Minion. Samotný program v Essence sestává 
-ze tøí èástí. První èást definuje verzi jazyka, druhá èást pou¾ité promìnné a 
+který tento jazyk nikdy nevidìl, byl schopen urèit, co daný program dìlá. Program 
+v Essence sestává ze tøí èástí. První èást definuje verzi jazyka, druhá èást pou¾ité promìnné a 
 koneènì tøetí omezující podmínky na tìchto promìnných. Pou¾ité promìnné mohou být 
-typu Integer, Boolean a vektor/matice. 
+typu Integer, Boolean a vektor/matice. Jazyk podporuje sum and loop over variable with
+given domain. Program mù¾e být rozdìlen na èást, která definuje model a parametry
+reprezentující konkrétní zadání. V ukázkách v této kapitole je uvedená pouze definice
+modelu. Soubory s definicí parametrù mù¾ete najít na pøilo¾eném CD. Pro pøeklad z 
+jazyka Essence do zadání pro solvery slou¾í nástroj Tailor. Ten umí v aktuální verzi 
+vytvoøit z Essence zdrojový soubor pro øe¹iè Minion, èást zdrojového kódu pro øe¹iè 
+Gecode a zdrojový soubor pro øe¹iè Gecode/FlatZinc. Více o nástroji Tailor je napsáno
+v sekci \ref{tailor}.
 
 \section{N-královen}
 Tento benchmark vychází z klasické ¹achistické úlohy, rozmístit na ¹achovnici 8 
@@ -319,11 +323,71 @@ s jejich kapacitami a matici c, kde prvek cij urèuje cenu za zásobování prodejny
  $i$ ze skladu $j$.
 
 \subsection{Model CSP}
+Máme k dispozici $W$ skladù, pøièem¾ otevøení ka¾dého skladu stojí $\mathrm{openCost}$.
+Dále máme $S$ prodejen. Máme danou maximální kapacitu skladu $w$, kde $w_i$ je 
+maximální poèet prodejen, které mohou odebírat zbo¾í od skladu $i \in \{1,...,W\}$.
+Nakonec máme zadanou cenu $\mathrm{supplyCost}$ dopravy zbo¾í tak, ¾e $\mathrm{supplyCost}_{ij}$ 
+znamená cenu dopravy ze skladu $i$ do prodejny $j$.
+
 	\begin{itemize}
-  \item Promìnné a domény: 
+  \item Promìnné a domény:
+    \begin{itemize}
+      \item Celková cena -- hodnota objektivní funkce: $\mathrm{totalCost} \in \mathbb{N} $,
+      \item poèet otevøených skladù: $\mathrm{numberOpen} \in \{0, W\}$,
+      \item indikace, zda je sklad otevøen: $\mathrm{open}_1, ..., \mathrm{open}_{W} \in \{0, 1\}$,
+      \item indikace který sklad zásobuje kterou prodejnu: $\mathrm{supplier}_1, ..., \mathrm{supplier}_{S} \in \{1, ..., W\}$,
+      \item pomocná promìnná indikující cenu dopravy do prodejny: $\mathrm{cost}_1, ..., \mathrm{cost}_{S} \in \mathbb{N}$,
+      \item celková cena za dopravu: $\mathrm{costSum} \in \mathbb{N}$.
+    \end{itemize} 
 	\item Podmínky:
   	\begin{itemize}
-  	 \item Objektivní funkce: $\mathrm{totalCost} = \sum_{w \textnormal{ is open}}\left(c+\sum_{s \textnormal{ is suplied by } w} \mathrm{SC}(s,w) \right)$
+  	 \item Objektivní funkce: $\mathrm{totalCost} = \mathrm{costSum} + \mathrm{numberOpen} \cdot \mathrm{openCost}$,
+  	 \item celková cena za dopravu: $\mathrm{costSum} = \sum_i{\mathrm{cost}_i}$,
+  	 \item poèet otevøených skladù: $\mathrm{numberOpen} = \sum_i{\mathrm{open}_i}$,
+  	 \item kapacita skladu nesmí být pøekroèena: $\forall i \in \{1,...,W\}: w_i \geq \sum_{\mathrm{supplier}_j = i}{1}$,
+  	 \item pokud sklad dodává do nìjaké prodejny, je otevøený: $\forall i \in \{1,...,W\}: \left(\mathrm{open} = 1\right) \Leftrightarrow \left(\left(\sum_{\mathrm{supplier}_j = i}{1}\right) > 0\right)$,
+  	 \item cena za dopravu ze skladu do prodejny: $\forall i \in {1,...,S}, \forall j \in \{1,...,W\}: \left(\mathrm{supplier}_i = j\right) \Rightarrow \left(\mathrm{cost}_1 = \mathrm{supplyCost}_{ij} \right)$.
+     
+     %$ \sum_{w \textnormal{ is open}}\left(c+\sum_{s \textnormal{ is suplied by } w} \mathrm{SC}(s,w) \right)$
     \end{itemize}
   \end{itemize} 
 The Essence implementation is in figure \ref{benchmark-essence:lw}.
+
+\begin{figure}
+\caption{\label{benchmark-essence:lw}Implementation of Locating Warehouses Problem in Essence}
+\begin{lstlisting}
+language ESSENCE' 1.b.a
+
+given Capacity : matrix indexed by [WarehousesRANGE] of int(0..numberOfStores)
+given StoreWarehouseCost : matrix indexed by [StoresRANGE,WarehousesRANGE] of CostRANGE
+letting CostRANGE be domain int(0..maxCost)
+letting StoresRANGE be domain int(0..numberOfStores-1)
+letting WarehousesRANGE be domain int(0..numberOfWarehouses-1)
+
+find 
+  TotalCost : CostRANGE,
+  Open : matrix indexed by [WarehousesRANGE] of int(0..1),
+  NumberOpen : int(0..numberOfWarehouses),
+  Supplier : matrix indexed by [StoresRANGE] of WarehousesRANGE,
+  Cost : matrix indexed by [StoresRANGE] of CostRANGE,
+  SumCost : CostRANGE
+  
+minimising TotalCost
+
+such that
+  TotalCost = SumCost + NumberOpen * warehouseCost,
+  SumCost = sum j : StoresRANGE. (Cost[j]),
+  NumberOpen = sum j : WarehousesRANGE. (Open[j]),
+
+  forall i : WarehousesRANGE.  
+	(Capacity[i] >= (sum j : StoresRANGE. (Supplier[j] = i))),
+
+  forall i : WarehousesRANGE.  
+	(((sum j : StoresRANGE. (Supplier[j] = i)) > 0) => (Open[i] = 1) ),
+
+  forall i : WarehousesRANGE.  
+	(((sum j : StoresRANGE. (Supplier[j] = i)) = 0) => (Open[i] = 0) ),
+  
+  forall i : StoresRANGE. forall j : WarehousesRANGE. ( (Supplier[i] = j) => (Cost[i] = StoreWarehouseCost[i,j]) )
+\end{lstlisting}
+\end{figure}
