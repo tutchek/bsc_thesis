@@ -34,7 +34,7 @@ factory methods for this purpose. One has to register those variables first by c
 a function CPModel::addVariable, or CPModel::addVariables when adding an array of variables at once.
 While registering variables into a model, we can set additional properties to the variables, 
 for example to set whether it is a decision variable, or a variable containing a result
-of an objective function. It is not necessary to set those properties every time, however;
+of an objective function. It is not necessary to set those properties every time; however,
 they might rapidly improve the computation. Alternatively, we can define those properties
 in the solver, which way is described later in the following section.
 
@@ -47,71 +47,61 @@ reified contraints ((\texttt{and}, \texttt{or}, \texttt{ifOnlyIf}) and global co
 \texttt{occurenceMax}, ...). Furthermore, there are constraints available which might be used for modeling geometric constraints,
 scheduling constraints and constraints for a sequention of variables which is accepted by finite automaton.
 
+Apart from the build-in constraints, is it possible to define our own constraints. The first way is to define 
+a constraint $p(x,y)$ as a set of compatible values $(a,b)$, where $p$ is satisfied
+if $x=a$ and $y=b$, or, eventually, as a set of incompatible values. In that case the
+set is define as a table of value. Besides, we define the constraint as a predicate, which has to
+be satisfied, whereby the constraint is an instance of a class derived from a class BinRelation
+with a method checkCouple having implemented. This function takes two values as params and 
+returns boolean value whether the condition was satisfied or not. Simirarly, we can define 
+constraints over tuples. For all such constraints (either binary or tuple) we can specify 
+desired algorithm for arc consistence. There is AC3, AC2001, AC3rm and AC3 available for binary constraints and
+ AC32, AC3rm, AC2001 and AC2008 tuple constraints. A description of each of the algorithm can be found
+ in [najít citaci pro algoritmy AC].
 
 
-Vedle dodaných podmínek je mo¾né definovat podmínky vlastní. Jednou mo¾ností je 
-definovat podmínku $p(x,y)$ jako mno¾inu kompatibilních hodnot $(a,b)$, tedy $p$ platí, 
-pokud $x=a$ a $y=b$, pøípadnì jako mno¾inu nekompatibilních hodnot. Tato mno¾ina je zadaná 
-jako tabulka hodnot. Vedle zadání tabulkou je mo¾né zadat podmínku jako predikát, 
-který musí platit. Podmínka pak je tvoøena objektem typu podìdìného od tøídy BinRelation 
-s implementovanou funkcí checkCouple. Tato funkce dostane jako parametry dvojici 
-hodnot a vrátí bool hodnotu zda byla podmínka splnìna nebo ne. Vedle binárních 
-podmínek je mo¾né specifikovat podmínky podobným stylem na n-ticích.  Pro v¹echny 
-takové podmínky (jak binární tak n-ární) lze pak specifikovat po¾adovaný algoritmus 
-hranové konzistence. K dispozici je AC3, AC2001, AC3rm, AC3 pro binární podmínky a 
-AC32, AC3rm, AC2001 a AC2008 pro n-ární podmínky. Popis jednotlivých algoritmù mù¾ete 
-nalézt v [najít citaci pro algoritmy AC].
+\subsubsection{Solver}
+A solver is an instance of class CPSolver, which tries to find a solution according to the model
+from the previous section. The solver starts with reading the variables of the model and 
+converting them into variables of the solver (IntegerVariable into IntDomainVar, RealVariable into RealVar and SetVariable into SetVar).
+Afterwards, it reads the constraints of the model and creates constraints of the solver, which are based on previously read constraints.
+Then the solver uses a search strategy and search for solutions. Since the chosen strategy
+is a key factor for the speed of solving, one can configure its various options.
+A user can specify a selector and an iterator. Where the selector specifies which variable
+is about to be taken in next solver's desicion and the iterator chooses each of available values
+and iterates over them. In a standard distribution of Choco there are basic selectors such as 
+{\m variable with minimum domain}, {\m variable with maximum domain} and so on. 
+Whilst the iterators can try values in ascendant or descendant order. An alternative to iterator
+is a value selector, which returns next available value when required. As for value selector,
+we can use, for example, minimal value in a domain, random value in a domain and so on. We can choose
+different user-defined strategies for various group of variables so as to follow the specified problem
+in the best way. In that case we define the solver's behaviour through so-called goals. A goal
+contains a definition of a strategy, that means a selector for certain variables and an iterator over values.
 
-\subsubsection{Øe¹iè}
-Øe¹iè je objekt typu CPSolver, který se na základì modelu popsaného v pøedhoczí 
-sekci pokusí najít øe¹ení. Øe¹iè nejprve pøeète promìnné modelu, které pøevede na 
-promìnné øe¹ièe (IntegerVariable na IntDomainVar, RealVariable na RealVar a SetVariable 
-na SetVar). Poté pøeète podmínky z modelu a vyrobí na jejich základì podmínky øe¹ièe. 
-Øe¹iè poté pou¾ije vyhledávací strategii a hledá øe¹ení. Proto¾e je volba správné 
-strategie klíèovým faktorem pro rychlost øe¹ení, je mo¾né nastavit její rùzné parametry. 
-U¾ivatel si mù¾e zvolit tzv. selektor a iterátor. Selektor vybírá, kterou promìnnou 
-vybrat k pøí¹tímu rozhodnutí solveru. Iterátor pak vybírá jednotlivé mo¾né hodnoty a 
-iteruje pøes nì. Choco ve standardní distribucí nabízí základní selektory jako promìnnou 
-s minimální doménou, promìnnou s maximální doménou apod. Iterátory pak mohou zkou¹et 
-hodnoty v sestupném nebo vzestupném poøadí. Alternativou k iterátoru je selektor hodnoty, 
-který na po¾ádání vrátí dal¹í mo¾nou hodnotu. Pro selektor hodnoty je mo¾né pou¾ít 
-napøíklad minimální hodnotu domény, náhodnou hodnotu domény apod. Pro rùzné skupiny 
-promìnných je mo¾né zvolit vlastní strategie tak, aby co nejlépe vystihovaly zadání 
-problému. V tomto pøípadì se definuje chování øe¹ièe pomocí tzv. cílù. Cíl obsahuje 
-definici strategie tzn. selektor nad danými promìnnými a iterátor nad hodnotami.
+While solving large-scale problems, it might be enormously time demanding, take too much system resources and so on.
+To avoid this we can define solver limits. In the solver we can set a time limit, a limit for a number of nodes, 
+a depth of backtracking, a number of fails or a limit for CPU time. Apart from that, a user can define their own limits. 
 
-Proto¾e pøi øe¹ení rozsáhlých problémù mù¾e dojít k neúmìrnému èasu výpoètu, 
-spotøebovaných systémových prostøedkù apod, lze definovat omezení na øe¹iè. Øe¹iè 
-je mo¾né omezit èasem, poètem uzlù vyhledávacího stromu, hloubkou backtrackingu, 
-poètem neúspì¹ných øe¹ení a nebo CPU èasem. U¾ivatel si mù¾e vedle tìchto limitù 
-na øe¹ení nastavit vlastní limity.
+Once the solver has read the model and the strategies are defined, it starts solving the problem.
+The solver offers an interface for accessing either each solutions (solve, nextSolution), or to get
+all the solutions at once. Moreover, we can specify a variable which the solver tries to minimize or maximize.
+Since the result is held in variables of the solver and not in user-defined variables of the model,
+it is required to resolve the solver's variables by calling a function CPSolver::getVar, which accepts a variable of a model
+and returns a variable of a solver.
 
-Po pøeètení modelu a definici strategií pøichází samotné øe¹ení problému. Øe¹iè 
-poskytuje interface jak pro iterování pøes øe¹ení (solve, nextSolution), tak pro 
-získání v¹ech øe¹ení naráz. Dále øe¹iè umo¾òuje urèit promìnnou, kterou se pokusí 
-minimalizovat/maximalizovat. Øe¹ení je ulo¾eno v promìnných øe¹ièe, ne v promìnných 
-modelu, které byly u¾ivatelem definovány. Je tedy nutné promìnné øe¹ièe z øe¹ièe 
-získat zavoláním funkce CPSolver::getVar která jako parametr pøijme promìnnou modelu 
-a vrátí promìnnou øe¹ièe. 
 
-\subsection{Nástroje pro podporu modelování}
-Choco neobsahuje nástroj na grafickou visualisaci vyhledávacího stromu podobnì jako 
-má napøíklad systémk Mozart nebo Gecode. Choco umo¾òuje vypsat log z prùbìhu øe¹ení. 
-Logu se dají nastavit rùzné úrovnì podrobnosti od zcela tichého a¾ po kompletní výpis 
-v¹ech událostí, které choco internì provádí. [Protyp pokud bude odpoved autoru zaporna] 
-Mimo zmínìného logování u¾ivatel nemá k dispozici jiné debugovací nástroje jako napøíklad 
-interaktivní procházení prohledávacího stromu a nebo zmínìnou visualisaci. [/prototyp]
+\subsection{Debugging support}
+Choco does not include any tools for graphic visualisation of search tree such as systems Mozart or Gecode do;
+however, in Choco it is possible to print out a log of the solving process.
+One can configure several levels how detailed information is logged varying from
+nothing to a complete list of what the Choco does internally. ***ZPRACUJVIS***
 
-\subsection{Subjektivní hodnocení solveru}
-Solver Choco se ukázal jednoduchý na bì¾né pou¾ití. I èlovìk, které pøedtím 
-nemìl zku¹enosti s javou, omezujícími podmínkami ani tímto solverem nemìl problém 
-zaèít pou¾ívat solver a prakticky ho uplatnit. Systém je dobøe zdokumentován, i 
-kdy¾ v dobì psaní této práce je dokumentace lehce nepøehledná. Pøesto v ní peèlivvý 
-ètenáø najde zpravidla v¹e co potøebuje. Programátorská dokumentace je generovaná 
-systémem JavaDoc. Díky tomu je ve vìt¹inì bì¾ných Java IDE u¾ivateli k dispozici 
-ji¾ bìhem výbìru funkce pomocí intellisense, co¾ napomáhá rychlému pochopení øe¹ièe. 
-Vývoj øe¹ièe je provozován na serveru SourceForge, je tedy jednoduchou standardní 
-formou pøístup jak ke zdrojovým kódùm aplikace tak k historii skrze verzovací 
-nástroj subversion. Na serveru sourceforge je také umístìné fórum technické 
-podpory, ve kterém autoøi odpovídají na dotazy u¾ivatelù. Reakèní doba je velmi 
-nízká a úroveò odpovìdí na takové úrovni, ¾e vìt¹ina problémù je rychle vyøe¹ena.
+\subsection{Subjective description}
+The system has a good documentation, although it is quite jumble. Even though an accurate reader
+finds virtually everything they look for. A documentation for developers is generated
+by JavaDoc system. Due to that fact it is available as a hinting tool for many users of common Java IDEs, 
+that definetely helps for better understanding of the solver. Since the development of the solver is
+maintained at SourceForge server, it is quite easy to access source codes as well as a history of versions via
+revision control system Subversion. One can find there also a technical support forum, where the authors
+answers the users' questions. The reaction time is very low and the answers are of high
+quality so most of the problems are quickly fixed.

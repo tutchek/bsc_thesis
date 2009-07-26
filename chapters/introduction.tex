@@ -50,7 +50,7 @@ is a good solution (the algorithm using this technique is called GAT -- Generate
 and ending with generating all possible fillings and correcting the solution if 
 something fails (this algorithm is called backtracking). The first approach can miss 
 a correct solution. Since the second approach systematically searches the possible 
-solutions it has to result into the correct solution, however; it can last enormous 
+solutions it has to result into the correct solution; however, it can last enormous 
 time to complete it (even on supercomputer). The secret of a successful solution 
 is in the fact that not all numbers can be filled in a specific field. If there is 
 prefilled value 8 at position [6,7] it means that in row 6 and in column 7 
@@ -81,8 +81,8 @@ nodes in the problem are node consistent. Similary, the edge $e(x,y)$ is arc con
 for all values in $D_x$ exists a value of $y$ such that the constraint is satisfied.
 This definition does not assure that if the edge $e(x,y)$ is arc consistent then the
 edge $e(y,x)$ is arc consistent too. CSP is arc consistent (AC) if all edges are arc consistent in both 
-directions. The arc consistency does not guarantee that the problem has
-solution, however; if the problem is not arc consistent then it has no solution for sure.
+directions. The arc consistency, however, does not guarantee that the problem has
+solution. If the problem is not arc consistent then it has no solution for sure.
 For example let have variables $X,Y,Z$ with domains $\{0,1\}$ and constraints $X \neq Y$,
  $Y \neq Z$ and $X \neq Z$. The problem is arc consistent but it has no solution.
  
@@ -95,7 +95,7 @@ of algorithm is called {\em propagation}. If we have not found the solution in p
 phase we continue with {\em distribution} phase. In distribution phase we add an additional
 constraint $c$ to the problem $P$ and rerun the propagation on two new problems, 
  $P \cup \{ c \}$ and $P \cup \{ \neg c \}$. If there exists a solution it has to be
- contained in at least one of the two new problems. For the usualy used constraint
+ contained in at least one of the two new problems. For the usually used constraint
  we choose one variable $x$ and value $v$ from its current domain $D_x$. The constraint 
  $c$ then can be $x = v$ or $x < v$. The choosing algorithm of the proper variable
  $x$ is important. Often we pick the variable with the smallest domain because it leads 
@@ -144,7 +144,7 @@ On-line guide to constraints programming at \cite{bartak:los}.
 \section{Related work}
 There exists a paper "A Comparative Study of Eight Constraint Programming Languages 
 Over the Boolean and Finite Domains" by A. Fernandez and others \cite{fernandez00} 
-which covers similar area. However this paper does not focus on the user experience 
+which covers similar area; however, this paper does not focus on the user experience 
 with the solvers. They compared solvers by their performance on various benchmarks 
 and discussed an implementation of self referential quiz in each solver. We are not 
 benchmarking the same sets of solvers and we do not use similar methodology which 
