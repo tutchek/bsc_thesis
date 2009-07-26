@@ -1,11 +1,15 @@
 \section{\eclipse}
 \verb= $Id$ =
 
-\eclipse je open source implementací programovacího jazyka Prolog. \eclipse je dodáván
-s knihovnami pro øe¹ení omezujících podmínek. Je mo¾né øe¹it modely nad celými èísly,
-reálnými èísly a mno¾inami celých èísel. Øe¹iè zde není dodáván jako jedna knihovna, ale 
-jako více specializovaných knihoven. Základem je knihovna {\em ic} -- interval constraints,
-která obsahuje základní aritmetické podmínky. Dále je k dispozici knihovna {\em ic\_global}, pro
-globální podmínky jako \texttt{alldifferent} (tato podmínka je implementovaná i v {\em ic}, 
-ale ve slab¹í podobì). Pro rozvrhovací problémy je pøipravena knihovna {\em ic\_cumulative} a 
-pro koneèné mno¾iny nad celými èísly knihovna {\em ic\_sets}.
+\eclipse is an open source implementation of Prolog programming language. \eclipse
+is provided with libraries for constraint solving. It is possible to solve models 
+over integers, real numbers and finite integer sets. The solver is not just one library
+but there is one general solver and several specialised solvers. Basic solver is
+the {\em ic} library -- interval constraints which contains basic arithmetic constraints.
+For global constraints there is a {\em ic\_global} library. Global constraints are constraints
+which use some more advanced techniques to filter the variable domain, for example 
+the \texttt{alldifferent} constraint implemented as a matching in a bipartite graph.
+The ic library contains the alldifferent constraint too, but the one introduced in
+ic\_global library is stronger. For scheduling problems there is an {\em ic\_cumulative}
+library and for finite integer sets {\em ic\_sets} library.
+
