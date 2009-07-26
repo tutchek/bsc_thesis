@@ -1,53 +1,53 @@
 \section{Choco}
 \verb= $Id$ =
 
-Choco je øe¹iè omezujících podmínek implementovaný jako knihovna pro programovací 
-jazyk Java. Choco je distribuováno jako balíèek JAR s dokumentací ve formátu Javadoc. 
-Instalace je tedy velmi snadná i pro zaèínajícího programátora v Javì a v bì¾nì 
-pou¾ívaných IDE nezabere více ne¾ pìt minut. Díky programovacímu jazyku Java je 
-solver Choco dostupný na mnoha platformách a operaèních systémech. Proto¾e ale 
-není cílem této práce popisovat vlastnosti hostitelského programovacího jazyka, 
-nebudeme zde dále rozebírat mo¾nosti Javy. Choco je vyvíjeno na Ecole des Mines 
-de Nantes ve Francii a je volnì dostupné na serveru Sourceforge. Aktuální hlavní 
-verze má èíslo 2. Choco dìlí øe¹eí problému na dvì èásti -- model a samotý øe¹iè. 
-Model obsahuje promìnné a podmínky dané zadáním. Øe¹iè pak dostane na vstupu model 
-a pokusí se v nìm najít øe¹ení. Model mù¾e obsahovat jako promìnné celá èísla, 
-reálná èísla a mno¾iny. Øe¹iè je pak schopný k danému modelu najít øe¹ení. U¾ivatel 
-mù¾e od øe¹ièe získat informaci, zda je problém øe¹itelný èi zda neobsahuje spor. 
-Pro samotná øe¹ení poskytuje interface umo¾òující dotázat se na úrvní, následující 
-a nebo na v¹echna øe¹ení. Pokud mu urèíme promìnnou s hodnotou objektivní funkce 
-umo¾òuje øe¹iè tuto promìnnou minimalizovat nebo maximalizovat. Øe¹iè dále podporuje 
-volbu strategií na míru øe¹enému problému. Promìnné modelu a øe¹ièe jsou ve vzájemném 
-vztahu. Pøesto není mo¾é získat øe¹ení pøímo z promìnných modelu ale je nutné je 
-získat pøes odpovídající promìnné øe¹ièe.
+Choco is a constraint solver which is implemented as a library in Java programming language.
+It is distributed as a JAR package having a Javadoc documantation included. It is quite easy
+to install it even for a beginners in Java and it lasts about five minutes in commonly used
+IDEs. Since the Java is used, the Choco solver is available for various platforms
+and operating systems. As far as it is not our goal to describe possibilities of host operating
+system, we are not about to further discuss the Java features. Choco is being developed
+at Ecole des Mines de Nantes ve Francii and it is freely available for downloading from 
+SourceForge server. The main number of current version is 2. Choco divides the problem solution
+into two parts -- a model and a solver itself. The model contains variables and constraints given 
+in task. Afterwards, the solver is given the model as an input and it tries to find a solution. 
+Variables in the model can be integers, real numbers or sets. Then the solver is able to
+find a solution for the current model. A user can get information from the solver whether the 
+problem has a solution or it contains a conflict. There is an interface for resolving solutions themselves, 
+whereby one can ask for the first, the following or all existing solutions. If we define a variable
+equal to a value of an objective function, the solver can this variable either minimize, or maximize.
+Furthermore, the solver allow us to choose a strategy which might perfectly fit the given problem.
+The variables of solver depends on the variables of the model and one can resolve values only through
+the variables of the solver.
 
-\subsection{Popis øe¹ièe omezujících podmínek}
-Jak bylo naznaèeno v pøedchozí sekci, je øe¹ení problému rozdìleno na dva 
-úkoly -- nadefinovat model a pøedlo¾it ho správnì nastavenému øe¹ièi. Jak model 
-tak øe¹iè jsou tøídy, které si u¾ivatel instancuje do pøíslu¹ného objektu. 
-Popí¹eme nejprve model a poté øe¹iè.
+\subsection{Solver description}
+As it has been already mentioned in the previous section, the solving of problem is divided
+into two separated tasks -- to define a model and to deploy the model to a well-configured solver.
+The model as well as the solver are classes, both of which are instanced by a user into objects.
+First we describe the model and after that we look at the solver. 
 
 \subsubsection{Model}
-Model  je tvoøen objektem tøídy CPModel. Promìnné modelu jsou v Choco reprezentovány 
-objekty následujících typù IntegerVariable, RealVariable a SetVariable. Tyto promìnné 
-se standardnì nevytváøení pomocí klíèového slova new, ale choco má pro tento úèel 
-pøipravené tovární metody. Takovéto promìnné je nutné v modelu zaregistrovat pomocí 
-funkce CPModel::addVariable resp. CPModel.addVariables (pro zaregistrování celého 
-pole promìnných). Pøi registraci promìnné do modelu je mo¾né urèit dodateèné vlastnosti 
-promìnných, napøíklad zda jde o decision promìnné, nebo o promìnnou obsahující výsledek 
-objektivní funkce. Tyto vlastnosti není nutné v¾dy zadávat, ale mohou výraznì urychlit 
-výpoèet. Alternativou je definovat si tyto vlastnosti v øe¹ièi. Toto bude popsáno v 
-následující sekci.
+The model is a instance of class CPModel. In Choco the variables of the model are represented
+as objects of the following types: IntegerVariable, RealVariable and SetVariable. Those 
+variables, generally, are not created using the keyword new, but in Choco there are
+factory methods for this purpose. One has to register those variables first by calling
+a function CPModel::addVariable, or CPModel::addVariables when adding an array of variables at once.
+While registering variables into a model, we can set additional properties to the variables, 
+for example to set whether it is a decision variable, or a variable containing a result
+of an objective function. It is not necessary to set those properties every time, however;
+they might rapidly improve the computation. Alternatively, we can define those properties
+in the solver, which way is described later in the following section.
 
-Po zaregistrování promìnných následuje definice omezujících podmínek. Je mo¾né pou¾ít 
-jak ¹irokou nabídku podmínek dodaných s øe¹ièem, tak si definovat vlastní podmínky. 
-Podmínky dodané s øe¹ièem jsou vypsané v tabulce (tabulka). Lze je rozdìlit na základní 
-podmínky (pravda, nepravda, operátory uspoøádání), a základní výrazy (goniometrické 
-funkce, mocniny, sumy), ostatní podmínky (\texttt{abs}, \texttt{div}, \texttt{max}, ...), reifikované podmínky 
-(\texttt{and}, \texttt{or}, \texttt{ifOnlyIf}) a globální podmínky (\texttt{allDifferent}, 
-\texttt{occurenceMax}, ...). K dispozici 
-jsou také podmínky pro modelování geometricých podmínek, podmínky pro rozvrhování a 
-podmínky pro sekkvenci promìnných, které mù¾e pøijímat koneèný automat.
+Once we have registered the variables, a definition of constraints follows. It is possible
+either to use a large number of build-in constraints, or to define our own constraints.
+The constraints which are available natively in the solver are listed in the table [ADD TABLE].
+Each of the constraint fits in one the following groups: basic constraints (true, false, relation operators),
+basic expressions (goniometric functions, powers, sums), other constraints (\texttt{abs}, \texttt{div}, \texttt{max}, ...),
+reified contraints ((\texttt{and}, \texttt{or}, \texttt{ifOnlyIf}) and global constraints (\texttt{allDifferent}, 
+\texttt{occurenceMax}, ...). Furthermore, there are constraints available which might be used for modeling geometric constraints,
+scheduling constraints and constraints for a sequention of variables which is accepted by finite automaton.
+
+
 
 Vedle dodaných podmínek je mo¾né definovat podmínky vlastní. Jednou mo¾ností je 
 definovat podmínku $p(x,y)$ jako mno¾inu kompatibilních hodnot $(a,b)$, tedy $p$ platí, 
