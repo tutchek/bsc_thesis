@@ -2,68 +2,65 @@
 \thispagestyle{myheadings}\markright{$ $Id$ $}
 
 In the introduction we explained what constraint solvers are and presented several 
-examples of them. In the rest of the thesis we will focus on seven of them -- ILOG 
-OPL, SICStus Prolog, Mozart, ECLIPSE, Gecode, Choco and Minion. First two are 
-professional commercial solutions the others are freely available open source 
-products. Purpose of this thesis is to help new user with choosing the right solver. 
-Therefore we will study hardness of learning and using of each solver and their 
-performance and abilities. We tested solvers which use various programming languages 
-and paradigms. Imperative paradigm is represented by C++ library Gecode and JAVA 
-library Choco. For users experienced in logical programming might be interesting 
-SICStus Prolog or ECLIPSE. Mozart is implementation of Oz which is multi-paradigm 
-programming language. For these solvers user could use his existing experience and 
-only learn API of the constraint library. The remaining solvers are configured by 
-solver specific problem description language. This fact is advantage and disadvantage 
-at once. As a disadvantage we must accept that user cannot use his experience with 
-existing programming languages and has to learn new concepts. However specialized 
-language for describing constraint problems can be more accessible for users which 
-do not have programming experiences but needs to solve given problem.
+examples of them. In the rest of the thesis we focus on seven of them -- ILOG 
+OPL, SICStus Prolog, Mozart, \eclipse, Gecode, Choco and Minion. The first two of them are 
+professional commercial solutions and the others are freely available open source 
+products. A purpose of this thesis is to help new users with choosing of the right solver. 
+Therefore we study difficulty of learning and using of each solver and their 
+performance and abilities. We test solvers which use various programming languages 
+and paradigms. An imperative paradigm is represented by a C++ library Gecode and a Java 
+library Choco. Users experienced in a logical programming might find interesting 
+SICStus Prolog or \eclipse. Mozart is implementation of Oz, a multi-paradigm 
+programming language. With these solvers user can use their current experience and 
+just learn an API of the constraint library. The other solvers are configured by 
+a solver specific problem description language. This fact is both advantage and disadvantage. 
+As for disadvantage, we must accept that user cannot use their experience with 
+existing programming languages and has to learn new concepts, however; a specialized 
+language for describing constraint problems can be more accessible for users who 
+do not have any programming experiences but they need to solve the given problem.
+A general overview of the examination follows.
 
-We will examine all solvers using point of view of user experienced in given 
+First, we examine all solvers from a perspective of a user experienced in the given 
 programming language but inexperienced in using of the solver. In case of OPL 
-and Minion we will expect that user has general computers knowledge and is able 
-to describe given problem in constraints. The first examination will try to answer 
-the question how difficult it is to learn using the solver. We will model problems 
+and Minion we expect that user has general computers knowledge and is able 
+to describe a given problem in constraints. The first examination tries to answer 
+a question how difficult it is to learn to use the solver. We model problems 
 described in the third chapter and look for constraints which cannot be modelled 
-and describe possible solutions.  Important criterion is the quality of documentation. 
-Solver can be the best of all but if the user cannot understand the usage it is useless. 
+and we describe possible solutions. 
+
+Secondly, a quality of documentation is also important criterion. A solver can be 
+the best of all, but it is useless if the user cannot understand the usage. 
 The quality of documentation is perceived subjectively and cannot be measured 
-exactly. This means that any evaluation is only informational but should be 
-considered. We will count as documentation the user guide, all other available 
-guides, documents, web pages, doxygen style documentation. Availability of user 
-forums or mailing list is also important part of learning of new system. We will 
-mention some of them if there exists some for the solver. Last but not least topic 
-is debugging. There are two areas which can be debugged - the correctness of program 
-and correctness of model. Correctness of program means that program do what should do, 
-that it handles all inputs as programmer expects and so on. Correctness of model 
-means that model is describing given problem accurately. User should be able to 
-inspect variables, visualise decision tree of search and lots of other information. 
-We will discuss ways how solver informs about mistakes (and how descriptive the 
-information is), tools provided with solver to debug the program and similarly the 
+exactly. This means that any evaluation is only informational, although it should be 
+considered. As a documentation we accept a user guide as well as all other available 
+guides, documents, web pages or a doxygen style documentation. An existence of user 
+forums or mailing lists is also an important part of learning of new systems. We 
+mention a couple of existing solvers. 
+
+Last but not least, we aim for debugging. There are two areas which can be 
+debugged - correctness of program and correctness of model. The correctness of 
+program means that the program does what it should do, that it handles all inputs as a programmer expects, etc. 
+The correctness of model stands for an accurate describtion of given modely. User should be able to 
+inspect variables, visualise a decision tree of search and more other information. 
+We discuss the ways how a solver informs about mistakes (and how much descriptive the 
+information is), the tools provided with solver to debug the program and similarly the 
 tools which can be used to debug model correctness.
 
-When user masters the solver and uses it to solve real problems the time and space 
-efficiency of used algorithms matters. We will not examine source codes and analyze 
-time complexity of used algorithms. Instead we will measure the time needed to 
-load and time to solve the problem. If the solver cannot provide such information 
-we will measure only total time. We will also measure amount of consumed memory 
-during the program execution. All measurements will be performed several times 
-and averaged to avoid randomness. The robustness test will be also performed. 
-In robustness test we will set limit one hour and try to compute the biggest magic 
-sequence in given time. We will use models created in process described in previous 
-paragraph. In \cite{fernandez00} authors sent models to the solvers authors and 
-gave them chance to modify them to achieve the best performance of their solvers. 
-We focus on first time users of the solver so we will use our own models which are 
-not perfect and tuned especially for particular solver. All solvers but OPL will 
-be tested on Debian 4.0  Linux with kernel 2.6.18 on Pentium 4, 3GHz (single core 
-with hyper threading). Due to licence problems OPL will be tested on Windows XP 
-SP2 on Intel Core Duo, 1.6GHz. For comparison we will test on this platform also 
-ECLIPSE which should give us relative comparison with solvers tested on another 
+When user masters the solver and uses it to solve real problems, the time and space 
+efficiency of used algorithms matters. We neither examine source codes, nor analyze 
+time complexity of used algorithms. Instead we measure the time needed to 
+load and the time to solve the problem. If a solver cannot provide such information 
+we measure only a total time. We also measure an amount of consumed memory 
+during the program execution. All measurements is performed several times 
+and averaged to avoid randomness. A robustness test is also performed. 
+In the robustness test we set limit one hour and try to compute the biggest magic 
+sequence in given time. We use models created in the process described in the previous 
+paragraph. In \cite{fernandez00} authors have sent models to the solvers' authors and 
+have given them a chance to modify them to achieve the best performance of their solvers. 
+We focus on first-time users of a solver, so we use our own models which are 
+not perfect and, more imporantly, not tuned for any particular solver. Apart from OPL, all solvers 
+are tested on Debian 4.0  Linux with kernel 2.6.18 on Pentium 4, 3GHz (single core 
+with hyper threading). Due to licence problems, OPL is tested on Windows XP 
+SP2 on Intel Core Duo, 1.6GHz. For comparison we test on this platform also 
+\eclipse which step should give us relative comparison with solvers tested on another 
 computer.
-
-Last observed feature of the solvers will be usability of results in external 
-programs. Solvers can be used independently just for solving given problem but 
-more common use would be using solver as constraint solving subsystem of larger 
-system. This means that solver should be equipped with interfaces to programming 
-languages, provides outputs in machine readable formats or solver itself is a 
-library which is directly usable in other systems.
