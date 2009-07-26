@@ -1,38 +1,38 @@
 \chapter{Introduction}
 \thispagestyle{myheadings}\markright{$ $Id$ $}
 
-In this thesis we will compare several constraint solvers using the point of view 
-of user who is not experienced in constraint programming. We will focus on easiness 
-of learning process of each solver and measure performance using benchmarks which 
+In this thesis we compare several constraint solvers from a perspective of a 
+user who is not experienced in a constraint programming. We focus on easiness 
+of a learning process of each solver and we measure performance by using benchmarks which 
 test various aspects of examined systems. 
 
 \section{Motivation}
-Constraint programming is a programming paradigm which uses constraints to a 
+The constraint programming is a programming paradigm which uses constraints to a 
 describe solution rather than to program a way of achieving such solution. 
 Constraint can be any condition which can be asserted as true or false -- $X < Y$, 
-Billy is older than Johnny, $Z = 5$ etc.  As an example of problem which can be 
-solved using constraint programming we will use Sudoku puzzle. Sudoku is worldwide 
+Billy is older than Johnny, $Z = 5$, etc.  As an example of a problem which can be 
+solved using the constraint programming we use Sudoku puzzle. Sudoku is a worldwide 
 known logical problem which is easy to explain, its difficulty can be scaled and 
-one does not need previous training to solve Sudoku. It makes this problem easy 
-to understand for many people and therefore it is very popular. Simple rules of 
-Sudoku are: There is given table of size nine times nine. Every field of table 
-contains number in range one to nine. In each column all numbers are different 
+one does not need previous training to solve Sudoku. It makes the problem easier 
+to understand for many people and, therefore, it is very popular. Simple rules of 
+Sudoku are: There is a given table of size nine times nine. Every field of table 
+contains number in range one to nine. In each column all the numbers are different 
 (this enforces that every column contains all numbers in range one to nine). In 
 each row there are also all numbers different. Finally the same rule which applies 
-for columns and rows stands for three times three sized squares which are in the 
-puzzle marked with bolder lines. The Sudoku is prefilled with a couple of values. 
+for columns and rows also restricts three times three sized squares which are in the 
+puzzle marked using bolder lines. The Sudoku is prefilled with a couple of values. 
 These values help at the beginning of solving and the difficulty can be 
 adjusted by their count and placement.
 
 %// vlozit obrazek sudoku
 
 The way how to describe Sudoku puzzle in the constraint programming is very 
-straightforward. We will define following constraints:
+straightforward. We define following constraints:
 
 \begin{enumerate}
-\item	There are 81 variables s which can contain values in range 1 to 9. We will 
-      arrange them in a two-dimensional array with size 9 $\times$ 9. 
-      (The Sudoku is table sized 9 $\times$ 9 containing values in a range $1..9$)
+\item	There are 81 variables which can contain values in range 1 to 9. We 
+      arrange them into a two-dimensional array with size 9 $\times$ 9. 
+      (The Sudoku is a table sized 9 $\times$ 9 containing values in a range $1..9$)
 \item	For all $i$ in 1..9 is true: All values of $s_{i \bullet}$ are different 
       (Values in each row are different)
 \item	For all $j$ in 1..9 is true: All values of $s_{\bullet j}$ are different 
@@ -43,66 +43,66 @@ straightforward. We will define following constraints:
       $n$ and row $m$ is prefilled and contains $V$.
 \end{enumerate}
 
-These constraints fully describe Sudoku puzzle problem and as the reader can see 
+These constraints fully describe the Sudoku puzzle problem and as the reader can see 
 do not differ from the commonly known rules. A person solving Sudoku puzzle can 
 use many techniques starting with randomly filling the table and looking if this 
 is a good solution (the algorithm using this technique is called GAT -- Generate and Test) 
-and ending with generating all possible fillings and repairing the solution if 
+and ending with generating all possible fillings and correcting the solution if 
 something fails (this algorithm is called backtracking). The first approach can miss 
 a correct solution. Since the second approach systematically searches the possible 
-solutions it has to result inthe correct solution. However it can last enormous 
-time to complete it (even on supercomputer). The secret of successful solution 
-is in fact that not all numbers can be filled in specific field. If there is 
+solutions it has to result into the correct solution, however; it can last enormous 
+time to complete it (even on supercomputer). The secret of a successful solution 
+is in the fact that not all numbers can be filled in a specific field. If there is 
 prefilled value 8 at position [6,7] it means that in row 6 and in column 7 
-cannot be another number 8. And because of constraint (4) there cannot be 8 
-also in right middle square. Person who does these observations usually writes 
-to the destination field all possible values and as examination of the puzzle 
-continues there are less and less possibilities to fill in. In easy Sudoku there 
-is after this examination at least one field which can be filled with only one 
-number. After filling all such fields solving continues in the same way until 
-whole table is filled. Program using constraint programming solves it in the same 
+cannot be another number 8. And because of constraint (4) there also cannot be 8 
+in the right middle square. A person who does these observations usually writes 
+into the destination field all possible values and as an examination of the puzzle 
+progresses there are less and less possibilities to fill in. In an easy Sudoku after 
+this examination there is at least one field which can be filled with only one number. 
+After filling all such fields the solving continues in the same way until 
+the entire table is filled. A program which use constraint programming solves it in the same 
 way. For each variable it remembers the range of possible values (we will call it 
-domain). Before the program starts searching of solution it tries to eliminate as 
-many values from domain as possible. It can reveal that problem does not have a 
-solution (if there is some variable with empty domain) before backtracking. It 
-it is no surprise that in user guide to Choco system is stated "if you know Sudoku, 
-then you know constraint programming."
+a domain). Before the program starts searching of solution it tries to eliminate as 
+many values from the domain as possible. It can reveal that the problem does not have a 
+solution (if there is a variable with an empty domain) before a backtracking. It 
+it is no surprise that in a user guide to Choco system it is stated "if you know Sudoku, 
+then you know the constraint programming."
 
 \section{Constraint programming}
-Constraint programming of course consists of more techniques but generally it works 
+The constraint programming indeed consists of more techniques but generally it works 
 just like the person solving Sudoku described in the previous paragraph.
-All constraint satisfaction problems (CSP) can be transformed in a such way that
+All constraint satisfaction problems (CSP) can be transformed in such a way that
 it contains only binary constraints. Common representation of the CSP is the multigraph 
-where nodes are variables and the edges constraints on them. The value of variable's domain
-is {\em supported} if there is not a constraint which collide with such value.
+where nodes are variables and the edges constraints on them. The value of a variable's domain
+is {\em supported} if there is not a constraint which collides with such a value.
 We can define {\em node consistency} if all values of domain of a node $x$ satisfies
 all constraints $c(x,x)$ (unary constraints). The problem is node consistent (NC) if all
-nodes in problem are node consistent. Similary the edge $e(x,y)$ is arc consistent if
-for all values in $D_x$ exists value of $y$ such that the constraint is satisfied.
+nodes in the problem are node consistent. Similary, the edge $e(x,y)$ is arc consistent if
+for all values in $D_x$ exists a value of $y$ such that the constraint is satisfied.
 This definition does not assure that if the edge $e(x,y)$ is arc consistent then the
-edge $e(y,x)$ as arc consistent too. CSP is arc consistent (AC) of all edged in both 
-directions are arc consistent. The arc consistency does not guarantee that the problem has
-solution (however if the problem is not arc consistent then it has no solution for sure).
+edge $e(y,x)$ is arc consistent too. CSP is arc consistent (AC) if all edges are arc consistent in both 
+directions. The arc consistency does not guarantee that the problem has
+solution, however; if the problem is not arc consistent then it has no solution for sure.
 For example let have variables $X,Y,Z$ with domains $\{0,1\}$ and constraints $X \neq Y$,
  $Y \neq Z$ and $X \neq Z$. The problem is arc consistent but it has no solution.
  
-The general way of solving of CSP is to transform the domains of variables to ensure
-the arc consistency of the problem. After the problem is in stable state -- last iteration of arc 
-consistency algorithm have not changed any domain we test if the problem is solved.
-The problem is solved if each value has one sized domain. If there is empty domain after 
-arc consistency algorithm we declare the problem as cannot be satisfied. This part 
-of algorithm is called {\em propagation}. If we havent found the solution if propagation
-phase we continue with {\em distribution} phase. In distribution phase we add additional
+The general way of solving of the CSP is to transform the domains of variables to ensure
+the arc consistency of the problem. After the problem is in stable state (last iteration of arc 
+consistency algorithm have not changed any domain) we test if the problem is solved.
+The problem is solved if each value has one sized domain. If there is an empty domain after 
+the arc consistency algorithm we declare the problem as unsatisfiable. This part 
+of algorithm is called {\em propagation}. If we have not found the solution in propagation
+phase we continue with {\em distribution} phase. In distribution phase we add an additional
 constraint $c$ to the problem $P$ and rerun the propagation on two new problems, 
- $P \cup \{ c \}$ and $P \cup \{ \neg c \}$. If there exists solution it has to be
+ $P \cup \{ c \}$ and $P \cup \{ \neg c \}$. If there exists a solution it has to be
  contained in at least one of the two new problems. For the usualy used constraint
- we choose one variable $x$ and value $v$ from its actual domain $D_x$. The constraint 
+ we choose one variable $x$ and value $v$ from its current domain $D_x$. The constraint 
  $c$ then can be $x = v$ or $x < v$. The choosing algorithm of the proper variable
- $x$ is important. Usualy we pick the variable with smallest domain because it leads 
+ $x$ is important. Often we pick the variable with the smallest domain because it leads 
  to possible failure more quickly. Usually the solver offers choices of the algorithm
  to suite all needs. This algorithm is called maintained arc consistency or MAC. Its
  schematic source code is in figure \ref{labelling-bartak}. The code is cited from 
- \cite{UI:Bartak}. More detailed of algorithms used in CSP solving can be found in \cite{bartak:ogcp}.
+ \cite{UI:Bartak}. More detailed explanations of algorithms used in CSP solving can be found in \cite{bartak:ogcp}.
  
 \begin{figure}
 \caption{\label{labelling-bartak}The MAC algorithm}
@@ -121,22 +121,22 @@ end
 \end{lstlisting}
 \end{figure}
 
-From previous paragraphs reader could think that constraint programming is used 
-only as an academic toy for solving Sudoku and other applications which are useless 
-for real life. In fact constraint programming is used in various applications. 
-A few examples of many contains scheduling, image recognition, financial modeling, 
-planning, vehicle routing, configuration, computer networks and bioinformatics. 
-Constraint programming was also successfully used at NASA in Deep Space 1 experiment. 
+In reading previous paragraphs, a reader could think that the constraint programming is used 
+only as an academic toy for solving Sudoku and for other applications which are useless 
+in a real life. In fact the constraint programming is used in various applications. 
+A few examples of many contain scheduling, an image recognition, financial modeling, 
+planning, vehicle routing, a configuration, computer networks and bioinformatics. 
+The constraint programming was also successfully used at NASA in Deep Space 1 experiment. 
 Deep Space 1 was a space probe using 12 cutting-edge technologies which were never 
 tested in space before. One of these technologies was a remote agent used to plan 
-actions of space vehicle while only general commands were sent to agent. Agent 
+actions of a space vehicle while only general commands were sent to agent. Agent 
 used for planning constraint solver \cite{nasa:ds1-ara}.
 
 \section{Constraint solvers}
-Programmer who wants to solve problem using constraint programming can use in his 
-algorithms ideas described in previous paragraphs or use specialized software -- a 
+A programmer who wants to solve problem using constraint programming can use in their 
+algorithms ideas described in previous paragraphs or use specialized software, a 
 constraint solver. Constraint solver is a system which uses constraint programming 
-techniques to solve given problem. There are many solvers available both commercial 
+techniques to solve a given problem. There are many solvers available both commercial 
 and freeware. A short list of available systems can be found in table 
 \ref{constraints-solvers-list}. More detailed list is maintained by Roman Barták in 
 On-line guide to constraints programming at \cite{bartak:los}.
@@ -146,11 +146,11 @@ There exists a paper "A Comparative Study of Eight Constraint Programming Langua
 Over the Boolean and Finite Domains" by A. Fernandez and others \cite{fernandez00} 
 which covers similar area. However this paper does not focus on the user experience 
 with the solvers. They compared solvers by their performance on various benchmarks 
-and discussed implementation of self referential quiz in each solver. We are not 
+and discussed an implementation of self referential quiz in each solver. We are not 
 benchmarking the same sets of solvers and we do not use similar methodology which 
 means this thesis conclusions cannot replace or update results from \cite{fernandez00}.
 
-Each year there is held the International Constraint Solver Competition where authors
+Every year there is held the International Constraint Solver Competition where authors
 of solvers can compete. The solvers can be submitted in two categories -- complete 
 and incomplete. Complete solvers can prove that the instance of problem is satisfiable
 or not (or find and prove the optimum). As stated in the rules \cite{csp-competition:rules} 
@@ -158,23 +158,23 @@ for each solver there is a {\em Boolean capability vector}
 which indicates which constraints the solver can handle. Solvers with the same
 capability vector can be naturally compared. Solvers with different capabilities 
 can be compared on instances which belong to the intersection
-of their capabilities, provided it is nonempty. During the competition the solvers
-are run in the sandbox environment on the Linux cluster. The task is to compute solution
+of their capabilities, provided it is non-empty. During the competition the solvers
+are run in the sandbox environment on a Linux cluster. The task is to compute solution
 of as many benchmarks as possible in the smallest time amount.
 
 There exists a library \cite{csplib} of the constraint satisfaction problems which can be used in 
-benchmarking and comparing of solver capabilities. The library contains various problems
-in several fields -- optimalisation problems, combinatioral problems etc. We encourage
+benchmarking and comparing of solver capabilities. The library contains varying problems
+in several fields -- optimalisation problems, combinatioral problems and so on. We encourage
 the reader to try to implement several problems in the chosen solver as a part of learning of
 modelling in the solver.
 
 \section{Outline of the thesis}
 We described our motivation for this thesis and listed some constraint solvers. 
-In the second chapter we will define methodology used to examine some of mentioned 
+In the second chapter we define methodology used to examine some of mentioned 
 solvers. The examination consists of two parts -- performance tests and usability 
 tests. In third chapter we will define benchmarks used to performance tests. 
-Fourth chapter describes in details each solver, mentions a little from their 
-history but mainly focus on usability and easiness of learning and using the solver. 
-In fifth chapter we will discuss the performance tests results and compare the solvers. 
-Finally in sixth chapter we will state conclusion of whole examination process 
-and present decision graph "which solver use in which situation".
+The fourth chapter describes in details each solver, mentions a little from their 
+history but mainly focuses on usability and easiness of learning and using the solver. 
+In the fifth chapter we discuss the performance tests results and compare the solvers. 
+Finally, in the sixth chapter we state a conclusion of the whole examination process 
+and present a decision graph "which solver use in which situation".
