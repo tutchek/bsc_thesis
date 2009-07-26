@@ -1,0 +1,117 @@
+\section{Choco}
+\verb= $Id$ =
+
+Choco je øe¹iè omezujících podmínek implementovaný jako knihovna pro programovací 
+jazyk Java. Choco je distribuováno jako balíèek JAR s dokumentací ve formátu Javadoc. 
+Instalace je tedy velmi snadná i pro zaèínajícího programátora v Javì a v bì¾nì 
+pou¾ívaných IDE nezabere více ne¾ pìt minut. Díky programovacímu jazyku Java je 
+solver Choco dostupný na mnoha platformách a operaèních systémech. Proto¾e ale 
+není cílem této práce popisovat vlastnosti hostitelského programovacího jazyka, 
+nebudeme zde dále rozebírat mo¾nosti Javy. Choco je vyvíjeno na Ecole des Mines 
+de Nantes ve Francii a je volnì dostupné na serveru Sourceforge. Aktuální hlavní 
+verze má èíslo 2. Choco dìlí øe¹eí problému na dvì èásti -- model a samotý øe¹iè. 
+Model obsahuje promìnné a podmínky dané zadáním. Øe¹iè pak dostane na vstupu model 
+a pokusí se v nìm najít øe¹ení. Model mù¾e obsahovat jako promìnné celá èísla, 
+reálná èísla a mno¾iny. Øe¹iè je pak schopný k danému modelu najít øe¹ení. U¾ivatel 
+mù¾e od øe¹ièe získat informaci, zda je problém øe¹itelný èi zda neobsahuje spor. 
+Pro samotná øe¹ení poskytuje interface umo¾òující dotázat se na úrvní, následující 
+a nebo na v¹echna øe¹ení. Pokud mu urèíme promìnnou s hodnotou objektivní funkce 
+umo¾òuje øe¹iè tuto promìnnou minimalizovat nebo maximalizovat. Øe¹iè dále podporuje 
+volbu strategií na míru øe¹enému problému. Promìnné modelu a øe¹ièe jsou ve vzájemném 
+vztahu. Pøesto není mo¾é získat øe¹ení pøímo z promìnných modelu ale je nutné je 
+získat pøes odpovídající promìnné øe¹ièe.
+
+\subsection{Popis øe¹ièe omezujících podmínek}
+Jak bylo naznaèeno v pøedchozí sekci, je øe¹ení problému rozdìleno na dva 
+úkoly -- nadefinovat model a pøedlo¾it ho správnì nastavenému øe¹ièi. Jak model 
+tak øe¹iè jsou tøídy, které si u¾ivatel instancuje do pøíslu¹ného objektu. 
+Popí¹eme nejprve model a poté øe¹iè.
+
+\subsubsection{Model}
+Model  je tvoøen objektem tøídy CPModel. Promìnné modelu jsou v Choco reprezentovány 
+objekty následujících typù IntegerVariable, RealVariable a SetVariable. Tyto promìnné 
+se standardnì nevytváøení pomocí klíèového slova new, ale choco má pro tento úèel 
+pøipravené tovární metody. Takovéto promìnné je nutné v modelu zaregistrovat pomocí 
+funkce CPModel::addVariable resp. CPModel.addVariables (pro zaregistrování celého 
+pole promìnných). Pøi registraci promìnné do modelu je mo¾né urèit dodateèné vlastnosti 
+promìnných, napøíklad zda jde o decision promìnné, nebo o promìnnou obsahující výsledek 
+objektivní funkce. Tyto vlastnosti není nutné v¾dy zadávat, ale mohou výraznì urychlit 
+výpoèet. Alternativou je definovat si tyto vlastnosti v øe¹ièi. Toto bude popsáno v 
+následující sekci.
+
+Po zaregistrování promìnných následuje definice omezujících podmínek. Je mo¾né pou¾ít 
+jak ¹irokou nabídku podmínek dodaných s øe¹ièem, tak si definovat vlastní podmínky. 
+Podmínky dodané s øe¹ièem jsou vypsané v tabulce (tabulka). Lze je rozdìlit na základní 
+podmínky (pravda, nepravda, operátory uspoøádání), a základní výrazy (goniometrické 
+funkce, mocniny, sumy), ostatní podmínky (\texttt{abs}, \texttt{div}, \texttt{max}, ...), reifikované podmínky 
+(\texttt{and}, \texttt{or}, \texttt{ifOnlyIf}) a globální podmínky (\texttt{allDifferent}, 
+\texttt{occurenceMax}, ...). K dispozici 
+jsou také podmínky pro modelování geometricých podmínek, podmínky pro rozvrhování a 
+podmínky pro sekkvenci promìnných, které mù¾e pøijímat koneèný automat.
+
+Vedle dodaných podmínek je mo¾né definovat podmínky vlastní. Jednou mo¾ností je 
+definovat podmínku $p(x,y)$ jako mno¾inu kompatibilních hodnot $(a,b)$, tedy $p$ platí, 
+pokud $x=a$ a $y=b$, pøípadnì jako mno¾inu nekompatibilních hodnot. Tato mno¾ina je zadaná 
+jako tabulka hodnot. Vedle zadání tabulkou je mo¾né zadat podmínku jako predikát, 
+který musí platit. Podmínka pak je tvoøena objektem typu podìdìného od tøídy BinRelation 
+s implementovanou funkcí checkCouple. Tato funkce dostane jako parametry dvojici 
+hodnot a vrátí bool hodnotu zda byla podmínka splnìna nebo ne. Vedle binárních 
+podmínek je mo¾né specifikovat podmínky podobným stylem na n-ticích.  Pro v¹echny 
+takové podmínky (jak binární tak n-ární) lze pak specifikovat po¾adovaný algoritmus 
+hranové konzistence. K dispozici je AC3, AC2001, AC3rm, AC3 pro binární podmínky a 
+AC32, AC3rm, AC2001 a AC2008 pro n-ární podmínky. Popis jednotlivých algoritmù mù¾ete 
+nalézt v [najít citaci pro algoritmy AC].
+
+\subsubsection{Øe¹iè}
+Øe¹iè je objekt typu CPSolver, který se na základì modelu popsaného v pøedhoczí 
+sekci pokusí najít øe¹ení. Øe¹iè nejprve pøeète promìnné modelu, které pøevede na 
+promìnné øe¹ièe (IntegerVariable na IntDomainVar, RealVariable na RealVar a SetVariable 
+na SetVar). Poté pøeète podmínky z modelu a vyrobí na jejich základì podmínky øe¹ièe. 
+Øe¹iè poté pou¾ije vyhledávací strategii a hledá øe¹ení. Proto¾e je volba správné 
+strategie klíèovým faktorem pro rychlost øe¹ení, je mo¾né nastavit její rùzné parametry. 
+U¾ivatel si mù¾e zvolit tzv. selektor a iterátor. Selektor vybírá, kterou promìnnou 
+vybrat k pøí¹tímu rozhodnutí solveru. Iterátor pak vybírá jednotlivé mo¾né hodnoty a 
+iteruje pøes nì. Choco ve standardní distribucí nabízí základní selektory jako promìnnou 
+s minimální doménou, promìnnou s maximální doménou apod. Iterátory pak mohou zkou¹et 
+hodnoty v sestupném nebo vzestupném poøadí. Alternativou k iterátoru je selektor hodnoty, 
+který na po¾ádání vrátí dal¹í mo¾nou hodnotu. Pro selektor hodnoty je mo¾né pou¾ít 
+napøíklad minimální hodnotu domény, náhodnou hodnotu domény apod. Pro rùzné skupiny 
+promìnných je mo¾né zvolit vlastní strategie tak, aby co nejlépe vystihovaly zadání 
+problému. V tomto pøípadì se definuje chování øe¹ièe pomocí tzv. cílù. Cíl obsahuje 
+definici strategie tzn. selektor nad danými promìnnými a iterátor nad hodnotami.
+
+Proto¾e pøi øe¹ení rozsáhlých problémù mù¾e dojít k neúmìrnému èasu výpoètu, 
+spotøebovaných systémových prostøedkù apod, lze definovat omezení na øe¹iè. Øe¹iè 
+je mo¾né omezit èasem, poètem uzlù vyhledávacího stromu, hloubkou backtrackingu, 
+poètem neúspì¹ných øe¹ení a nebo CPU èasem. U¾ivatel si mù¾e vedle tìchto limitù 
+na øe¹ení nastavit vlastní limity.
+
+Po pøeètení modelu a definici strategií pøichází samotné øe¹ení problému. Øe¹iè 
+poskytuje interface jak pro iterování pøes øe¹ení (solve, nextSolution), tak pro 
+získání v¹ech øe¹ení naráz. Dále øe¹iè umo¾òuje urèit promìnnou, kterou se pokusí 
+minimalizovat/maximalizovat. Øe¹ení je ulo¾eno v promìnných øe¹ièe, ne v promìnných 
+modelu, které byly u¾ivatelem definovány. Je tedy nutné promìnné øe¹ièe z øe¹ièe 
+získat zavoláním funkce CPSolver::getVar která jako parametr pøijme promìnnou modelu 
+a vrátí promìnnou øe¹ièe. 
+
+\subsection{Nástroje pro podporu modelování}
+Choco neobsahuje nástroj na grafickou visualisaci vyhledávacího stromu podobnì jako 
+má napøíklad systémk Mozart nebo Gecode. Choco umo¾òuje vypsat log z prùbìhu øe¹ení. 
+Logu se dají nastavit rùzné úrovnì podrobnosti od zcela tichého a¾ po kompletní výpis 
+v¹ech událostí, které choco internì provádí. [Protyp pokud bude odpoved autoru zaporna] 
+Mimo zmínìného logování u¾ivatel nemá k dispozici jiné debugovací nástroje jako napøíklad 
+interaktivní procházení prohledávacího stromu a nebo zmínìnou visualisaci. [/prototyp]
+
+\subsection{Subjektivní hodnocení solveru}
+Solver Choco se ukázal jednoduchý na bì¾né pou¾ití. I èlovìk, které pøedtím 
+nemìl zku¹enosti s javou, omezujícími podmínkami ani tímto solverem nemìl problém 
+zaèít pou¾ívat solver a prakticky ho uplatnit. Systém je dobøe zdokumentován, i 
+kdy¾ v dobì psaní této práce je dokumentace lehce nepøehledná. Pøesto v ní peèlivvý 
+ètenáø najde zpravidla v¹e co potøebuje. Programátorská dokumentace je generovaná 
+systémem JavaDoc. Díky tomu je ve vìt¹inì bì¾ných Java IDE u¾ivateli k dispozici 
+ji¾ bìhem výbìru funkce pomocí intellisense, co¾ napomáhá rychlému pochopení øe¹ièe. 
+Vývoj øe¹ièe je provozován na serveru SourceForge, je tedy jednoduchou standardní 
+formou pøístup jak ke zdrojovým kódùm aplikace tak k historii skrze verzovací 
+nástroj subversion. Na serveru sourceforge je také umístìné fórum technické 
+podpory, ve kterém autoøi odpovídají na dotazy u¾ivatelù. Reakèní doba je velmi 
+nízká a úroveò odpovìdí na takové úrovni, ¾e vìt¹ina problémù je rychle vyøe¹ena.

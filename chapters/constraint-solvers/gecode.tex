@@ -1,0 +1,111 @@
+\section{Gecode}
+\verb= $Id$ =
+
+Gecode je C++ knihovna pro øe¹ení problémù s omezujícími podmínkami. Gecode umo¾òuje
+modelovat problémy obsahující celoèíselné promìnné, booleovské promìnné a koneèné mno¾iny 
+celých èísel. Gecode je podobnì jako vìt¹ina ostatních zde prezentovaných solverù
+free open source software. Knihovna je distribuovaná ve formì zdrojových kódù a pro 
+systém Windows je navíc pøipravený instalátor s pøedkompilovanými knihovnami. Volitelnì 
+u¾ivatel potøebuje knihovnu Qt, která je pou¾ita k vykreslování grafického nástroje
+Gist. Gecode nabízí vedle bì¾ných podmínek podmínky pro plánování,
+podmínky nad koneènými automaty, podmínky pro grafy a dal¹í. Blí¾e tyto podmínky 
+rozebereme v následující sekci. Gecode hojnì vyu¾ívá mo¾nosti v C++ pøetí¾it funkce 
+a operátory. Díky tomu má mnoho podmínek stejného typu nad rùznými datovými typy
+stejný název. Pøetí¾ení operátorù pak pomáhá zjednodu¹it práci s výrazy. Nevýhodou je, 
+¾e u¾ivatel ztrácí explicitní vìdomí, ¾e operátor, který aplikoval na promìnné není 
+obyèejný operátor ale jde o èást podmínky. Klíèovou postavou øe¹ièe Gecode je Christian 
+Schulte, který se také podílí na vývoji systému Mozart/Oz.
+
+\subsection{Popis øe¹ièe omezujících podmínek}
+Problém je modelován jako tøída odvozená od tøídy Space. V této tøídì jsou definovány
+promìnné a podmínky. Promìnné jsou objekty typu IntVar pro celoèíselné promìnné, 
+BoolVar pro booleovské promìnné a SetVar pro koneèné celoèíselné mno¾iny. Oproti 
+ostatním øe¹ièùm nejsou booleovské promìnné pouze celoèíselné promìnné= s doménou ${0,1}$.
+Není dokonce ani mo¾né pro booleovskou promìnnou $b$ a celoèíslenou promìnnoi $i$ 
+vlo¾it podmínku $b=i$. Pro vztahy mezi booleovskými a celoèíselnými promìnnými se 
+pou¾ívá buï reifikace ($(i = 1) \Leftrightarrow b = 1$) a nebo kanálovací podmínky
+ $b_i = j \Leftrightarrow i = j$ (napø. $b = (0,0,0,1,0,0)$, $i = 3$). Podmínky jsou 
+ globální funkce v namespace Gecode, které je nutné zaregistrovat v modelu pomocí
+ funkce \texttt{post}. Díky pøetí¾ení funkcí je vìt¹ina podmínek implementovaná tak,
+ ¾e pokud má napøíklad smysl volat danou podmínku jak s dvojicí promìnných tak s promìnnou
+ a vektorem promìnných, existují obì varianty a díky pøetí¾ení se vybere ta správná.
+V pøípadì ¾e u¾ivatel pou¾ije tzv. {\em minimodel}, tak je umo¾nìno pou¾ívat zkrácených výrazù, 
+napøíklad podmínku $a = x \cdot y$ mù¾eme psát \texttt{post(home, a == x*y )} místo \texttt{mult(home,x,y,a)}. 
+Minimodel ale funguje pouze jako "syntaktický cukr", proto¾e nepøiná¹í ¾ádné nové
+podmínky, pouze zjednodu¹uje zápis stávajících podmínek. 
+
+Vedle standardních aritmetických podmínek a podmínek na uspoøádání nabízí Gecode
+¹iroké spektrum specializovaných podmínek. Pro SAT je k dispozici podmínka \texttt{clause(space,rel,x,y,z)},
+která odpovídá podmínce $\bigvee {x_i} \vee \bigvee{\neg y_i}$ resp. $\bigwedge {x_i} \wedge \bigwedge{\neg y_i}$
+v závislosti na parametru {\em rel}. Zajímavá je podmínka count, která zaji¹»uje, ¾e
+bude platit $\#\{i \in \{0, ..., |x|-1\}|x_i = j\} = y_j$. To jinými slovy znamená,
+¾e benchmark Magická sekvence se dá namodelovat pomocí jedné podmínky \texttt{count(*this, x, x)}.
+K dispozici jsou také extensional podmínky. To jsou podmínky, které jsou definované skrze 
+nìjakou extension. Napøíklad deterministický koneèný automat. Podmínka pak má tvar
+ {\em $x$ je slovo, které pøijme automat $A$}. Pro grafové podmínky Gecode poskytuje podmínku
+ {\em $x$ je hamiltonovská kru¾nice}. Z oblasti plánování je k dispozici podmínka
+ \texttt{cumulatives(home, resource, start, duration, end, height, limit, atmost)}, 
+která zajistí, ¾e v mno¾inì úkolù T (úkol $T_i = \langle \mathrm{resource}_i, \mathrm{start}_i,
+\mathrm{duration}_i, \mathrm{end}_i, \mathrm{height}_i \rangle$) je pou¾ito maximálnì 
+(pøípadnì v závislosti na parametru atmost minimálnì) $\mathrm{limit}$ zdrojù ???!!!???
+zjistit pøesnou definici co to dìlá, nedává mi to moc smysl ???!!!???. 
+
+Podmínky nad mno¾inami zahrnují standardní mno¾inové operace. Dále podmínku na kardinalitu mno¾iny,
+a podmínku zaji¹»ující, ¾e vá¾ený souèet mno¾iny má danou hodnotu, tedy pokud máme mno¾inu
+ $x$ a váhový vektor $w$ a souèet má být $y$, tak má podmínka tvar $\sum{x_i w_i} = y$. 
+ Dále jsou k dispozici dvì podmínky související s konvexností.
+Mno¾ina je konvexní, pokud je tvoøena souvislým intervalem èísel. Mno¾ina $\{1,2,3\}$ 
+tedy konvexní je, zatímco mno¾ina $\{1,3,4\}$ konvexní není, proto¾e neobsahuje èíslo 2.
+Konvexní obálkou (convex hull pro pøeklad) je pak nejmen¹í konvexní nadmno¾ina.
+Podmínka \texttt{home,x} zajistí, ¾e $x$ je konvexní a \texttt{home,x,y} znamená,
+¾e $y$ je konvexní obálka pro $x$. 
+
+Pokud je potøeba modelovat optimalizaèní problém, tak se tøída reprezentující problém
+podìdí od tøídy MaximizeScript místo od tøídy Space. Objektivní funkci pak u¾ivatel definuje
+override metody cost, která vrátí její hodnotu pro aktuální model. Prohledávání je
+øízeno funkcí \texttt{branch(home,x,var,val)}, kterou se nastaví prohledávání vektoru
+ $x$. Parametrem $var$ se nastavuje algoritmus pro výbìr promìnné pøi distribuci a 
+parametrem $val$ se zvolí algoritmus pro výbìr hodnoty promìnné, podle které má být
+distribuce provedena. Pro samotné hledání problému je nutné pou¾ít následující kód: 
+
+\begin{verbatim}
+Model* m = new Model;	
+SEARCH<Model> e(m);
+delete m;
+
+while (Model* s = e.next())
+{
+	s->print();
+	delete s;
+}  
+\end{verbatim}
+
+Model je tøída podìdìná od Space resp. MaximizeScript, která reprezentuje model CSP.
+Místo {\em SEARCH} jenutné zadat konkrétní vyhledávací algoritmus. K dispozici je 
+\texttt{DFS} -- depth-first left-most search, \texttt{LDS} -- limited discrepancy,
+\texttt{BAB} -- branch-and-bound and finally \texttt{Restart} -- depth-first left-most
+restart search. Algoritmy \texttt{BAB} a \texttt{Restart} se dají vyu¾ít pro hledání 
+optimálního øe¹ení. V¹echny algoritmy podporují paralelní výpoèet. U¾ivatel tedy na
+poèítaèi s více procesory mù¾e dosáhnout výraznì rychlej¹ího výpoètu.  
+
+\subsection{Nástroje pro podporu modelování}
+Pro zobrazení prohledávacího stromu nabízí Gecode nástroj Gist. Jedná se o nástroj velmi
+podobný nástroji Explorer v øe¹ièi Mozart/Oz. Rozhraní, grafické symboly i funkce jsou
+s Explorerem toto¾né. Funkce, kterou má Gist navíc je Gist node statistics, která
+pro daný uzel prohledávacího stromu doká¾e zobrazit statistiku obsahující informace
+o hloubce aktuálního uzlu vùèi koøenu stromu, aktuální vý¹ce podstromu daného uzlu 
+a poètu úspì¹ných/neúspì¹ných øe¹ení v podstromu. Gist také obsahuje nástroj Inspector,
+který funguje stejnì jako Inspector v Mozart/Oz.
+
+\subsection{Subjektivní hodnocení solveru}
+Gecode je typickým pøíkladem kvalitního software, který není rozumnì pøístupný u¾ivateli
+kvùli absenci dokumentace. A¾ do verze 3.0.0, která vy¹la v bøeznu 2009 existovala pouze
+programátorská dokumentace ve formátu doxygen. Ukázkové modely byly navíc obalené ¹ablonovou
+tøídou example pro jejich snadnìj¹í spu¹tìní, ale pro samotné pochopení jak umístit 
+øe¹iè do svého programu toto nestaèilo a bylo nutné prozkoumat dùkladnì zdrojové kódy øe¹ièe.
+S verzí 3.0.0 vy¹la i elektronická kniha Modelling with Gecode \cite{gecode:modelling},
+která toto zcela zmìnila. Jedná se o tutoriál, který krok po kroku provádí od základního 
+po¾adavku -- z daného modelu vytvoøit zadání pro øe¹iè a¾ po ¹iroké mo¾nosti dal¹ího
+nastavení øe¹ièe. Vedle klasické dokumentace existuje také emailová konference, která
+je v dobì psaní této práce výborným místem pro kladení dotazù, na které zpravidla 
+autoøi odpovídají ve velmi krátkém èase. 

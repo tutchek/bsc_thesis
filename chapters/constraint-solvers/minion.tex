@@ -1,0 +1,74 @@
+\section{Minion}
+\verb= $Id$ =
+
+Minion je øe¹iè omezujících podmínek, který funguje jako samostatná aplikace, která
+na vstupu dostane popis problému a na výstupu vrátí øe¹ení. Jako mnoho ostatních 
+øe¹ièù je k dispozici na serveru sourceforge.net jako open-source program. Oproti ostatním øe¹ièùm, 
+které fungují jako knihovny pro nìjaký programovací jazyk a je mo¾né je pou¾ít jako subsystém
+pro øe¹ení omezujících podmínek pøímo uvnitø programu, Minion pracuje samostatnì. 
+Popis problému dostává ve speciálním datovém souboru, který je rozdìlen na definici promìnných,
+definic podmínek na nich a pøípadnou definici objektivní funkce. Výstup øe¹ièe pak mù¾e 
+u¾ivatel pøeèíst na standardním výstupu. Samotný jazyk pro popis problému by se dal
+nejlépe popsat jako "assembler pro omezující podmínky". ©kálovat problém není mo¾né 
+bez zmìny vstupního souboru, proto¾e ten je navr¾ený jak na míru problému tak jeho
+parametrù -- zatímco v jiných øe¹ièích staèí pro zmìnu z problému ètyø královen 
+na osm královen jenom pøepsat konstantu 4 na 8, zde je nutné pøepsat vìt¹inu vstupního
+souboru. Mno¾ina podporovaných podmínek je koneèná a není mo¾né pøidat novou podmínku
+bez zásahu do kódu samotného øe¹ièe. U¾ivatele jistì zaujme, ¾e není mo¾né specifikovat
+podmínku $a = \sum{w_i x_i}$, ale je nutné ji nahradit dvojicí $a \leq \sum{w_i x_i}$,
+ $a \geq \sum{w_i x_i}$. Podmínky také není mo¾né øetìzit. Pokud je øetìzení podmínek
+ pro model podstatné, je nutné zavést auxiliary promìnnou, pøes kterou se podmínka
+ svá¾e. Minion podporuje ètyøí typy promìnných -- bool, bound, discrete a sparseboud.
+ Bool promìnné jsou promìnné s doménou $\{0,1\}$. Bound promìnné jsou internì ulo¾ené
+ pouze okraji intervalu, který reprezentují. Discrete promìnné také reprezentují zadaný interval,
+ ale oproti bound promìnným mohou obsahovat v intervalu díru. Koneènì sparsebound 
+ reprezentuje doménu, která sestává z pøevá¾nì osamocených hodnot, které jsou definovány
+ ve vstupním souboru. V prùbìhu výpoètu se pro sparsebound promìnné upravují opìt pouze
+ okraje intervalu. Z tìchto promìnných je pak mo¾né vytváøet vektory, matice a n-tice.
+ 
+Formát vstupu pro minion není moc human-friendly. Ji¾ pro malé problémy roste poèet 
+pomocných promìnných nad rozumné meze a vstup se stává nepøehledným. Proto se vyplatí
+vstupní soubor generovat automaticky. Buï pomocí ad hoc generátorù, které si u¾ivatel
+napí¹e napø. jako souèást svého programu, který posléze volá minion a nebo pomocí nástroje
+Tailor popsaného v sekci \ref{tailor}.
+
+\subsection{Popis øe¹ièe omezujících podmínek}
+Jak bylo zmínìno v pøedchozí sekci, minion je samostatný spustitelný program, který 
+jako parametr dostane název vstupního souboru (pøípadnì dostane vstup na standardním vstupu) 
+a na standardní výstup pøípadnì do souboru vypí¹e øe¹ení. Umí pracovat pouze s celými èísly, 
+problém tedy musí být zakódován tak, aby se jimi dal vyjádøit. Formát vstupního souboru 
+prochází mezi verzemi zmìnami, ale øe¹iè by mìl být schopen pracovat se v¹emi star¹ími 
+formáty. Aktuální verze formátu vstupního souboru má èíslo 3. Ka¾dý soubor obsahuje 
+na prvním øádku specifikaci formátu, v tomto pøípadì tedy \texttt{MINION 3}. Dále 
+následují v libovolném poøadí a s libovolnou mo¾ností opakování jednotlivé sekce souboru. 
+Soubor mù¾e obsahovat sekci s definicí promìnných, sekci s definicí n-tic, sekci s 
+definicí podmínek a koneènì sekci s definicí parametrù hledání øe¹ení. Podmínky se 
+nechovají jako klasické funkce, ale jako predikáty, které musí být splnìny a nemají 
+návratovou hodnotu. To vede k tomu, ¾e abychom slo¾ili efekty více podmínek, musíme 
+zavést pomocnou promìnnou. Napøíklad mìjme podmínku $|x| < y$ a k dispozici jen podmínky 
+ $X = |Y|$ a $X < Y$. Pro podmínku $|x| < y$ pak musíme zavést pomocnou promìnnou 
+ $a$ a do modelu pøidat následující dvì podmínky $a = |x|$, $a < y$. Pøehled podporovaných 
+ podmínek øe¹ièe Minion lze nalézt v tabulce \ref{podporovane-podminky}. Parametry 
+ vyhledávání lze ovlivnit buï pøímo v definièním souboru, napøíklad poøadí promìnných 
+ apod. a nebo skrze parametry pøíkazové øádky.
+ 
+\subsection{Nástroje pro podporu modelování}
+Minion umo¾òuje vypsat na standardní výstup prohledávací strom, ve kterém je mo¾né 
+sledovat èinnost solveru na pøedlo¾eném modelu. Vlastní nástroj pro visualisaci 
+øe¹ení systém neobsahuje. Proto¾e je ruèní modelování v systému Minion pomìrnì obtí¾né,
+u¾ivatel pravdìpodobnì pou¾ije pro tvorbu modelu nástroj Tailor. Ten umo¾òuje jak
+pøeklad programu v Essence' do formátu Minion, tak pøímo spustit minion a sledovat
+øe¹ení z Tailoru. 
+
+\subsection{Subjektivní hodnocení solveru}
+Autoøi na stránkách solveru uvádí, ¾e je Minion nejrychlej¹í solver, který je k 
+dispozici. Toto necháme na posouzení ètenáøi po vlastních pokusech se systémem pøípadnì
+po zhodnocení výsledkù na¹ich benchmarkù. Rozhodnì se ukázalo, ¾e v pøípadì kdy systému
+nedojde pamì» z dùvodu velikosti problému, je i pro velké instance problému schopen 
+okam¾ité odpovìdi. Nejvìt¹í pøeká¾kou je tedy vstupní formát, ale tento problém je 
+elegantnì øe¹itelný zmínìným programem Tailor. Jako samostatný program, který je
+mo¾né zavolat s definicí problému a on na standardní výstup vrátí øe¹ení je pou¾itelný
+jako øe¹iè i pro takové programy jako napøíklad Bash skripty. Jediný po¾adavek na 
+pou¾ití je schopnost sestavit vstupní soubor. Co se týèe dokumentace, je k dispozici
+referenèní pøíruèka, která obsahuje popis v¹ech podmínek a vstupního formátu souboru.
+Také je souèástí pøíruèky jemný úvod do pøevodu CSP modelu na vstupní soubor Minionu. 
