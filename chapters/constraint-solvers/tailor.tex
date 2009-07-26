@@ -2,6 +2,14 @@
 \label{tailor}
 \verb= $Id$ =
 
-Tailor není øe¹iè omezujících podmínek. Jedná se o systém na pøeklad kódu v programovacím
-jazyce Essence' do vstupního formátu souboru pro systém Minion a nebo do zdrojových 
-kódù pro øe¹iè Gecode.
+Tailor is not an constraint solver. It is an open source Essence compiler which can produce input
+format of the Minion solver, C++ source using Gecode as a solver and input format of Gecode/FlatZinc.
+Tailor is a Java application, which can be run either interactively as well as a
+command line utility. Tailor takes as an input Essence program and Essence parameters file.
+Then it normalize the input to one source code. After normalization it performs the 
+flattening of the code. In flattening phase it removes all foreach loops and sums
+and replaces them by introducing new auxiliary variables and by repeating of the 
+basic constraints. Finally it transforms this normalized code to the destination
+language. Tailor offers tuning the output code by setting several parameters about
+the language coonstruct which can be used. Tailor offers directly run the solver
+from its environment on the translated source code.
