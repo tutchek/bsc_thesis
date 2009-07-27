@@ -374,8 +374,8 @@ znamená cenu dopravy ze skladu $i$ do prodejny $j$.
   	 \item celková cena za dopravu: $\mathrm{costSum} = \sum_i{\mathrm{cost}_i}$,
   	 \item poèet otevøených skladù: $\mathrm{numberOpen} = \sum_i{\mathrm{open}_i}$,
   	 \item kapacita skladu nesmí být pøekroèena: $\forall i \in \{1,...,W\}: w_i \geq \sum_{\mathrm{supplier}_j = i}{1}$,
-  	 \item pokud sklad dodává do nìjaké prodejny, je otevøený: $\forall i \in \{1,...,W\}: \left(\mathrm{open} = 1\right) \Leftrightarrow \left(\left(\sum_{\mathrm{supplier}_j = i}{1}\right) > 0\right)$,
-  	 \item cena za dopravu ze skladu do prodejny: $\forall i \in {1,...,S}, \forall j \in \{1,...,W\}: \left(\mathrm{supplier}_i = j\right) \Rightarrow \left(\mathrm{cost}_1 = \mathrm{supplyCost}_{ij} \right)$.
+  	 \item pokud sklad dodává do nìjaké prodejny, je otevøený: $\forall i \in \{1,...,W\}: \left(\mathrm{open}_i = 1\right) \Leftrightarrow \left(\left(\sum_{\mathrm{supplier}_j = i}{1}\right) > 0\right)$,
+  	 \item cena za dopravu ze skladu do prodejny: $\forall i \in {1,...,S}, \forall j \in \{1,...,W\}: \left(\mathrm{supplier}_i = j\right) \Rightarrow \left(\mathrm{cost}_i = \mathrm{supplyCost}_{ij} \right)$.
      
      %$ \sum_{w \textnormal{ is open}}\left(c+\sum_{s \textnormal{ is suplied by } w} \mathrm{SC}(s,w) \right)$
     \end{itemize}
