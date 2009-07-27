@@ -1,20 +1,20 @@
 \section{Gecode}
 \verb= $Id$ =
 
-Gecode je C++ knihovna pro øe¹ení problémù s omezujícími podmínkami. Gecode umo¾òuje
-modelovat problémy obsahující celoèíselné promìnné, booleovské promìnné a koneèné mno¾iny 
-celých èísel. Gecode je podobnì jako vìt¹ina ostatních zde prezentovaných solverù
-free open source software. Knihovna je distribuovaná ve formì zdrojových kódù a pro 
-systém Windows je navíc pøipravený instalátor s pøedkompilovanými knihovnami. Volitelnì 
-u¾ivatel potøebuje knihovnu Qt, která je pou¾ita k vykreslování grafického nástroje
-Gist. Gecode nabízí vedle bì¾ných podmínek podmínky pro plánování,
-podmínky nad koneènými automaty, podmínky pro grafy a dal¹í. Blí¾e tyto podmínky 
-rozebereme v následující sekci. Gecode hojnì vyu¾ívá mo¾nosti v C++ pøetí¾it funkce 
-a operátory. Díky tomu má mnoho podmínek stejného typu nad rùznými datovými typy
-stejný název. Pøetí¾ení operátorù pak pomáhá zjednodu¹it práci s výrazy. Nevýhodou je, 
-¾e u¾ivatel ztrácí explicitní vìdomí, ¾e operátor, který aplikoval na promìnné není 
-obyèejný operátor ale jde o èást podmínky. Klíèovou postavou øe¹ièe Gecode je Christian 
-Schulte, který se také podílí na vývoji systému Mozart/Oz.
+Gecode is a C++ library for solving problems with constraints. It allows to
+model problem containing integers, boolean variables and finite integer set. Gecode
+is a free open source software as most of the mentioned solvers are. The librarz is
+distributed as source codes and Windows OS there is also an installer with
+pre-compiled libraries. Optionaly user needs a Qt library, which is used in 
+a visualise graphic tool Gist. Apart from basic constraints, Gecode has also 
+constraints for scheduling, finite automatons, graphs and so on. We describe those
+constraints further in the following section. Gecode often uses the feature of C++
+to overload functions and operators, which leads to a fact that many equal constraints for
+varying data types have the same name. In addition, the overloading of operators
+helps to ease a work with expressions. A disadvantage is a lack of explicit consciousness
+about a state of used operators, therefore a user cannot be sure if an operator that is used 
+for a variable is just a common operator, or a part of constraint. A key man of Gecode 
+solver is Christian Schulte, who also participated in a development of the system Mozart/Oz. 
 
 \subsection{Popis øe¹ièe omezujících podmínek}
 Problém je modelován jako tøída odvozená od tøídy Space. V této tøídì jsou definovány
