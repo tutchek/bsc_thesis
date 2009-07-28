@@ -77,13 +77,13 @@ while (Model* s = e.next())
 }  
 \end{verbatim}
 
-Model je tøída podìdìná od Space resp. MaximizeScript, která reprezentuje model CSP.
-Místo {\em SEARCH} jenutné zadat konkrétní vyhledávací algoritmus. K dispozici je 
-\texttt{DFS} -- depth-first left-most search, \texttt{LDS} -- limited discrepancy,
+A model is a class derived from a class Space or, respectively, MaximizeScript, which
+represents a model of CSP. Instead of {\em SEARCH} it has to be given a specific search
+algorithm. There are several algorithms available: \texttt{DFS} -- depth-first left-most search, \texttt{LDS} -- limited discrepancy,
 \texttt{BAB} -- branch-and-bound and finally \texttt{Restart} -- depth-first left-most
-restart search. Algoritmy \texttt{BAB} a \texttt{Restart} se dají vyu¾ít pro hledání 
-optimálního øe¹ení. V¹echny algoritmy podporují paralelní výpoèet. U¾ivatel tedy na
-poèítaèi s více procesory mù¾e dosáhnout výraznì rychlej¹ího výpoètu.  
+restart search. Both algorithms \texttt{BAB} a \texttt{Restart} can be used when 
+searching an optimal solution. All of the alforithms can be used for a parallel computation.
+Having a computer with more CPUs, one can reach much faster computation.
 
 \subsection{Nástroje pro podporu modelování}
 Pro zobrazení prohledávacího stromu nabízí Gecode nástroj Gist. Jedná se o nástroj velmi
