@@ -1,66 +1,80 @@
 \section{Minion}
 \verb= $Id$ =
 
-Minion je øe¹iè omezujících podmínek, který funguje jako samostatná aplikace, která
-na vstupu dostane popis problému a na výstupu vrátí øe¹ení. Jako mnoho ostatních 
-øe¹ièù je k dispozici na serveru sourceforge.net jako open-source program. Oproti ostatním øe¹ièùm, 
-které fungují jako knihovny pro nìjaký programovací jazyk a je mo¾né je pou¾ít jako subsystém
-pro øe¹ení omezujících podmínek pøímo uvnitø programu, Minion pracuje samostatnì. 
-Popis problému dostává ve speciálním datovém souboru, který je rozdìlen na definici promìnných,
-definic podmínek na nich a pøípadnou definici objektivní funkce. Výstup øe¹ièe pak mù¾e 
-u¾ivatel pøeèíst na standardním výstupu. Samotný jazyk pro popis problému by se dal
-nejlépe popsat jako "assembler pro omezující podmínky". ©kálovat problém není mo¾né 
-bez zmìny vstupního souboru, proto¾e ten je navr¾ený jak na míru problému tak jeho
-parametrù -- zatímco v jiných øe¹ièích staèí pro zmìnu z problému ètyø královen 
-na osm královen jenom pøepsat konstantu 4 na 8, zde je nutné pøepsat vìt¹inu vstupního
-souboru. Mno¾ina podporovaných podmínek je koneèná a není mo¾né pøidat novou podmínku
-bez zásahu do kódu samotného øe¹ièe. U¾ivatele jistì zaujme, ¾e není mo¾né specifikovat
-podmínku $a = \sum{w_i x_i}$, ale je nutné ji nahradit dvojicí $a \leq \sum{w_i x_i}$,
- $a \geq \sum{w_i x_i}$. Podmínky také není mo¾né øetìzit. Pokud je øetìzení podmínek
- pro model podstatné, je nutné zavést auxiliary promìnnou, pøes kterou se podmínka
- svá¾e. Minion podporuje ètyøí typy promìnných -- bool, bound, discrete a sparseboud.
- Bool promìnné jsou promìnné s doménou $\{0,1\}$. Bound promìnné jsou internì ulo¾ené
- pouze okraji intervalu, který reprezentují. Discrete promìnné také reprezentují zadaný interval,
- ale oproti bound promìnným mohou obsahovat v intervalu díru. Koneènì sparsebound 
- reprezentuje doménu, která sestává z pøevá¾nì osamocených hodnot, které jsou definovány
- ve vstupním souboru. V prùbìhu výpoètu se pro sparsebound promìnné upravují opìt pouze
- okraje intervalu. Z tìchto promìnných je pak mo¾né vytváøet vektory, matice a n-tice.
+Minion is a constraint solver which works as a standalone application. Minion takes
+as an input the problem description and returns the solutions if there are any.
+Minion is open source and available at sourceforge.net. The problem description
+is contained in a file with special format. The file contains definitions of variables,
+their domains and constraints on them. The best description of the input format could
+be "the constraint assembly language". The constraints cannot use as their parameters 
+expressions. If we need to costrain the expression we have to introduce new variable
+to be equal to the expression and then constrain this variable. For example let assume 
+we can use constraints $X = |Y|$ and $X < Y$ and we need to use constraint $X < |Y|$.
+We have to introduce the auxiliary variable $a$ and post two constraints $a = |Y|$ and
+ $X < a$. If we use many expressions in our problem it leads to enormous number of
+ auxiliary variables. Moreover the language does not contain loops. Therefore we
+ cannot post various number of constraints based on the size parameter of the model.
+ We have to state all constraints for given problem instance. As a result the definition
+ of 4-queens problem cannot be easily transformed to 8-queens problem. The set of constraint
+ is limited and cannot be extended. Moreover some basic constraints have to be used in unusual way.
+ If we want to constrain $a = \sum{w_i x_i}$ we have to use pair of constraints
+ $a \leq \sum{w_i x_i}$, $a \geq \sum{w_i x_i}$ since the variant with equal sign
+ is not in the system. The used variable can be boolean, bounded integers, discrete integers
+ and sparse bounded integers. Bool variable is a variable with domain $\{0,1\}$.
+ Bounded integer variable is integer variable where the solver stores only its bounds.
+ Discrete itegers are generally the same as bounded integers except it can contain 
+ holes in the intrval. Finally sparse bounded integers are variables which have small
+ amount of non consecutive values specified in the file. During the computation
+ only bounds of the spare bounded integers are updated.  
  
-Formát vstupu pro minion není moc human-friendly. Ji¾ pro malé problémy roste poèet 
-pomocných promìnných nad rozumné meze a vstup se stává nepøehledným. Proto se vyplatí
-vstupní soubor generovat automaticky. Buï pomocí ad hoc generátorù, které si u¾ivatel
-napí¹e napø. jako souèást svého programu, který posléze volá minion a nebo pomocí nástroje
-Tailor popsaného v sekci \ref{tailor}.
+The input format is not very human-friendly. Even form small problems the amount of
+auxiliary variables grows over reasonable limits and the input is not easy to understand.
+It is a reasonable solution to use a generator to generate a minion input file.
+User can either write his own ad hoc generator for his problem or use tool like
+Tailor which is described in the section \ref{tailor}.
 
-\subsection{Popis øe¹ièe omezujících podmínek}
-Jak bylo zmínìno v pøedchozí sekci, minion je samostatný spustitelný program, který 
-jako parametr dostane název vstupního souboru (pøípadnì dostane vstup na standardním vstupu) 
-a na standardní výstup pøípadnì do souboru vypí¹e øe¹ení. Umí pracovat pouze s celými èísly, 
-problém tedy musí být zakódován tak, aby se jimi dal vyjádøit. Formát vstupního souboru 
-prochází mezi verzemi zmìnami, ale øe¹iè by mìl být schopen pracovat se v¹emi star¹ími 
-formáty. Aktuální verze formátu vstupního souboru má èíslo 3. Ka¾dý soubor obsahuje 
-na prvním øádku specifikaci formátu, v tomto pøípadì tedy \texttt{MINION 3}. Dále 
-následují v libovolném poøadí a s libovolnou mo¾ností opakování jednotlivé sekce souboru. 
-Soubor mù¾e obsahovat sekci s definicí promìnných, sekci s definicí n-tic, sekci s 
-definicí podmínek a koneènì sekci s definicí parametrù hledání øe¹ení. Podmínky se 
-nechovají jako klasické funkce, ale jako predikáty, které musí být splnìny a nemají 
-návratovou hodnotu. To vede k tomu, ¾e abychom slo¾ili efekty více podmínek, musíme 
-zavést pomocnou promìnnou. Napøíklad mìjme podmínku $|x| < y$ a k dispozici jen podmínky 
- $X = |Y|$ a $X < Y$. Pro podmínku $|x| < y$ pak musíme zavést pomocnou promìnnou 
- $a$ a do modelu pøidat následující dvì podmínky $a = |x|$, $a < y$. Pøehled podporovaných 
- podmínek øe¹ièe Minion lze nalézt v tabulce \ref{podporovane-podminky}. Parametry 
- vyhledávání lze ovlivnit buï pøímo v definièním souboru, napøíklad poøadí promìnných 
- apod. a nebo skrze parametry pøíkazové øádky.
+\subsection{Solver description}
+As stated in previous section Minion is a standalone executable which takes as a parameter
+filename of the input file or through the standard input the contents of input.
+It automaticaly starts computation and writes on the standard output or into the
+specified file solutions. It can handle only integers and therefore the problem have to
+be encoded in a such way. Format of the input file is not stable but uses an identifier
+which prevets from misinterpretation of the input. If the user feed the Minion with 
+an unsupported format of the file the solver informs about that and ends. Current version
+of the input file is 3, and user can recognize it by observing first line of the input, which
+has to contain only string \texttt{MINION 3}. After this identification line follows in any order
+with no limit on repeating the sections of the file. The file can contain the following sections:
+
+\begin{itemize}
+  \item Definition of the variables
+  \item Definition of the tupples
+  \item Definition of the constraints
+  \item Definition of the search parameter
+\end{itemize}
+
+The list of supported variables can be found in the table \ref{podporovane-podminky}.
+The search engine behavior can be adjusted either in the input file or at the command line
+by parameters. User can adjust the order of variables during the selection phase of search,
+whether solve all solutions or only one or how to format the output.
  
-\subsection{Nástroje pro podporu modelování}
-Minion umo¾òuje vypsat na standardní výstup prohledávací strom, ve kterém je mo¾né 
-sledovat èinnost solveru na pøedlo¾eném modelu. Vlastní nástroj pro visualisaci 
-øe¹ení systém neobsahuje. Proto¾e je ruèní modelování v systému Minion pomìrnì obtí¾né,
-u¾ivatel pravdìpodobnì pou¾ije pro tvorbu modelu nástroj Tailor. Ten umo¾òuje jak
-pøeklad programu v Essence' do formátu Minion, tak pøímo spustit minion a sledovat
-øe¹ení z Tailoru. 
+\subsection{Debugging support}
+Minion offers printing out the search tree where one can observe the solvers actions.
+However other tool than this printout is not available. Since the modelling in Minion
+is difficult user will probably use the Tailor tool. Tailor offers not only translation
+to the Minion format but direct invocation of the Minion, passing the input to it and
+show the solution. User then can directly modify the Essence source code and perform
+the invokation again if the results are not what he expected. 
 
 \subsection{Subjektivní hodnocení solveru}
+The authors stated on the Minion website that Minion is the fastest available solver.
+We will leave it to the readers consideration. e found out that even for large problem 
+instances if the memory was sufficient the anwer was given immediately. The biggest 
+problem is then the inout format but this can be resolved by using the Tailor tool.
+As a standalone executable which can be called from command line it can even bring 
+the constraint solving capability to programs written in languages like bash. The only
+thing which is needed is the capability to assemble the input format. As a documentation 
+there is available 
+
 Autoøi na stránkách solveru uvádí, ¾e je Minion nejrychlej¹í solver, který je k 
 dispozici. Toto necháme na posouzení ètenáøi po vlastních pokusech se systémem pøípadnì
 po zhodnocení výsledkù na¹ich benchmarkù. Rozhodnì se ukázalo, ¾e v pøípadì kdy systému
