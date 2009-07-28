@@ -6,52 +6,67 @@ user who is not experienced in a constraint programming. We focus on easiness
 of a learning process of each solver and we measure performance by using benchmarks which 
 test various aspects of examined systems. 
 
-\section{Motivation}
-The constraint programming is a programming paradigm which uses constraints to a 
-describe solution rather than to program a way of achieving such solution. 
-Constraint can be any condition which can be asserted as true or false -- $X < Y$, 
+\section{Constraint Satisfaction Problems}
+The constraint programming is a programming paradigm which uses constraints to 
+describe a solution rather than to program a way of achieving such a solution. 
+The constraint can be any relation which can be asserted as true or false -- $X < Y$, 
 Billy is older than Johnny, $Z = 5$, etc.  As an example of a problem which can be 
-solved using the constraint programming we use Sudoku puzzle. Sudoku is a worldwide 
+solved using the constraint programming we use the Sudoku puzzle. Sudoku is a worldwide 
 known logical problem which is easy to explain, its difficulty can be scaled and 
 one does not need previous training to solve Sudoku. It makes the problem easier 
 to understand for many people and, therefore, it is very popular. Simple rules of 
-Sudoku are: There is a given table of size nine times nine. Every field of table 
-contains number in range one to nine. In each column all the numbers are different 
+Sudoku are: There is a given table of size nine times nine. Every field of the table 
+contains a number in the range one to nine. In each column all the numbers are different 
 (this enforces that every column contains all numbers in range one to nine). In 
 each row there are also all numbers different. Finally the same rule which applies 
 for columns and rows also restricts three times three sized squares which are in the 
 puzzle marked using bolder lines. The Sudoku is prefilled with a couple of values. 
 These values help at the beginning of solving and the difficulty can be 
-adjusted by their count and placement.
+adjusted by their number and placement.
 
 %// vlozit obrazek sudoku
+\begin{figure}
+\caption{\label{sudoku:example}Example of the Sudoku puzzle}
+\begin{sudoku}
+|2|5| | |3| |9| |1|.
+| |1| | | |4| | | |.
+|4| |7| | | |2| |8|.
+| | |5|2| | | | | |.
+| | | | |9|8|1| | |.
+| |4| | | |3| | | |.
+| | | |3|6| | |7|2|.
+| |7| | | | | | |3|.
+|9| |3| | | |6| |4|.
+\end{sudoku}
+\end{figure}
 
 The way how to describe Sudoku puzzle in the constraint programming is very 
-straightforward. We define following constraints:
+straightforward. We define the following constraints:
 
 \begin{enumerate}
-\item	There are 81 variables which can contain values in range 1 to 9. We 
+\item	There are 81 variables $s_ij$, $i,j \in \{1,...,9\}$ which can contain values in range 1 to 9. We 
       arrange them into a two-dimensional array with size 9 $\times$ 9. 
-      (The Sudoku is a table sized 9 $\times$ 9 containing values in a range $1..9$)
-\item	For all $i$ in 1..9 is true: All values of $s_{i \bullet}$ are different 
-      (Values in each row are different)
-\item	For all $j$ in 1..9 is true: All values of $s_{\bullet j}$ are different 
-      (Values in each column are different)
-\item	For each square is true: For all $k$, $l$ such that $k$, $l$ is in square values of 
-      $s_{kl}$ are different (Values in each square are different)
-\item	For all prefilled values: $q_{mn} = V$ if and only if field with placed in column 
+      (The Sudoku is a table sized 9 $\times$ 9 containing values in range $1,...,9$)
+\item	For all $i$ in $1,...,9$ the following condition is true: All values of $s_{i \bullet}$ are different 
+      (values in each row are different)
+\item	For all $j$ in $1,...,9$ the following condition is true: All values of $s_{\bullet j}$ are different 
+      (values in each column are different)
+\item	For each square the following condition is true: For all $k$, $l$ such that $k$, $l$ 
+      are indexes defining the square all values of 
+      $s_{kl}$ are different (values in each square are different)
+\item	For all prefilled values: $q_{mn} = V$ if and only if the field with placed in column 
       $n$ and row $m$ is prefilled and contains $V$.
 \end{enumerate}
 
 These constraints fully describe the Sudoku puzzle problem and as the reader can see 
-do not differ from the commonly known rules. A person solving Sudoku puzzle can 
+they do not differ from the commonly known rules. A person solving the Sudoku puzzle can 
 use many techniques starting with randomly filling the table and looking if this 
 is a good solution (the algorithm using this technique is called GAT -- Generate and Test) 
 and ending with generating all possible fillings and correcting the solution if 
 something fails (this algorithm is called backtracking). The first approach can miss 
-a correct solution. Since the second approach systematically searches the possible 
-solutions it has to result into the correct solution; however, it can last enormous 
-time to complete it (even on supercomputer). The secret of a successful solution 
+a correct solution. Since the second approach systematically searches all possible 
+solutions it has to result in a correct solution; however, it can last enormous 
+time to complete it (even on a supercomputer). The secret of a successful solution 
 is in the fact that not all numbers can be filled in a specific field. If there is 
 prefilled value 8 at position [6,7] it means that in row 6 and in column 7 
 cannot be another number 8. And because of constraint (4) there also cannot be 8 
@@ -65,12 +80,13 @@ way. For each variable it remembers the range of possible values (we will call i
 a domain). Before the program starts searching of solution it tries to eliminate as 
 many values from the domain as possible. It can reveal that the problem does not have a 
 solution (if there is a variable with an empty domain) before a backtracking. It 
-it is no surprise that in a user guide to Choco system it is stated "if you know Sudoku, 
+it is no surprise that in a user guide to Choco system, one of the available constraint
+solvers, it is stated "if you know Sudoku, 
 then you know the constraint programming."
 
 \section{Constraint programming}
 The constraint programming indeed consists of more techniques but generally it works 
-just like the person solving Sudoku described in the previous paragraph.
+just like the person solving Sudoku described in the previous paragraphs.
 All constraint satisfaction problems (CSP) can be transformed in such a way that
 it contains only binary constraints. Common representation of the CSP is the multigraph 
 where nodes are variables and the edges constraints on them. The value of a variable's domain
@@ -130,11 +146,11 @@ The constraint programming was also successfully used at NASA in Deep Space 1 ex
 Deep Space 1 was a space probe using 12 cutting-edge technologies which were never 
 tested in space before. One of these technologies was a remote agent used to plan 
 actions of a space vehicle while only general commands were sent to agent. Agent 
-used for planning constraint solver \cite{nasa:ds1-ara}.
+used a constraint solver for planning \cite{nasa:ds1-ara}.
 
 \section{Constraint solvers}
-A programmer who wants to solve problem using constraint programming can use in their 
-algorithms ideas described in previous paragraphs or use specialized software, a 
+A programmer who wants to solve problems using constraint programming can use in their 
+algorithms ideas described in the previous paragraphs or use specialized software, a 
 constraint solver. Constraint solver is a system which uses constraint programming 
 techniques to solve a given problem. There are many solvers available both commercial 
 and freeware. A short list of available systems can be found in table 
@@ -144,11 +160,18 @@ On-line guide to constraints programming at \cite{bartak:los}.
 \section{Related work}
 There exists a paper "A Comparative Study of Eight Constraint Programming Languages 
 Over the Boolean and Finite Domains" by A. Fernandez and others \cite{fernandez00} 
-which covers similar area; however, this paper does not focus on the user experience 
+which covers a similar area; however, this paper does not focus on the user experience 
 with the solvers. They compared solvers by their performance on various benchmarks 
 and discussed an implementation of self referential quiz in each solver. We are not 
 benchmarking the same sets of solvers and we do not use similar methodology which 
-means this thesis conclusions cannot replace or update results from \cite{fernandez00}.
+means this thesis conclusions cannot fully replace or update the results from \cite{fernandez00}.
+
+M. Plachá in 2007 wrote the bachelor thesis \cite{placha} focused on the same topic as this thesis.
+The thesis compared SICStus Prolog,  ILOG Solver and Gecode/J. She compared the modelling
+capabilites of these solvers and showed ways to debug the models. Finally the speed 
+of solvers was measured on several benchmarks. In this thesis we study wider range of
+solvers. We used the same criteria as the mentioned thesis by M. Plachá but additionally
+we compare the accessibility of the solvers for user. 
 
 Every year there is held the International Constraint Solver Competition where authors
 of solvers can compete. The solvers can be submitted in two categories -- complete 
@@ -170,7 +193,7 @@ modelling in the solver.
 
 \section{Outline of the thesis}
 We described our motivation for this thesis and listed some constraint solvers. 
-In the second chapter we define methodology used to examine some of mentioned 
+In the second chapter we define methodology used to examine some of the mentioned 
 solvers. The examination consists of two parts -- performance tests and usability 
 tests. In third chapter we will define benchmarks used to performance tests. 
 The fourth chapter describes in details each solver, mentions a little from their 

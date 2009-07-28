@@ -18,13 +18,16 @@
 
 \usepackage[latin2]{inputenc} % nastavuje pou¾ité kódování, u¾ivatelé Windows zamìní latin2 za cp1250
 %\usepackage{czech}
-\usepackage[czech]{babel}
+% \usepackage[czech]{babel}
 \usepackage{a4wide} % nastavuje standardní evropský formát stránek A4
 %\usepackage{index} % nutno pou¾ít v pøípadì tvorby rejstøíku balíèkem makeindex
 %\usepackage{fancybox} % umo¾òuje pokroèilé rámeèkování :-)
 %\usepackage{natbib}
 \usepackage{graphicx} % nezbytné pro standardní vkládání obrázkù do dokumentu
 \usepackage{listings}
+\usepackage{sudoku}
+\renewcommand*\sudokuformat[1]{\sffamily#1}
+\setlength\sudokusize{5cm}
 
 
 \usepackage{chessboard}

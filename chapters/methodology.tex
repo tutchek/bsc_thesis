@@ -5,15 +5,15 @@ In the introduction we explained what constraint solvers are and presented sever
 examples of them. In the rest of the thesis we focus on seven of them -- ILOG 
 OPL, SICStus Prolog, Mozart, \eclipse, Gecode, Choco and Minion. The first two of them are 
 professional commercial solutions and the others are freely available open source 
-products. A purpose of this thesis is to help new users with choosing of the right solver. 
-Therefore we study difficulty of learning and using of each solver and their 
+products. The purpose of this thesis is to help new users with choosing of the right solver. 
+Therefore we study complexity of learning and using of each solver and their 
 performance and abilities. We test solvers which use various programming languages 
-and paradigms. An imperative paradigm is represented by a C++ library Gecode and a Java 
+and paradigms. The imperative paradigm is represented by a C++ library Gecode and a Java 
 library Choco. Users experienced in a logical programming might find interesting 
 SICStus Prolog or \eclipse. Mozart is implementation of Oz, a multi-paradigm 
-programming language. With these solvers user can use their current experience and 
+programming language. With these solvers the users can use their current experience and 
 just learn an API of the constraint library. The other solvers are configured by 
-a solver specific problem description language. This fact is both advantage and disadvantage. 
+a solver-specific problem description language. This fact is both advantage and disadvantage. 
 As for disadvantage, we must accept that user cannot use their experience with 
 existing programming languages and has to learn new concepts; however, a specialized 
 language for describing constraint problems can be more accessible for users who 
@@ -53,14 +53,15 @@ load and the time to solve the problem. If a solver cannot provide such informat
 we measure only a total time. We also measure an amount of consumed memory 
 during the program execution. All measurements is performed several times 
 and averaged to avoid randomness. A robustness test is also performed. 
-In the robustness test we set limit one hour and try to compute the biggest magic 
-sequence in given time. We use models created in the process described in the previous 
+In the robustness test we set limit one hour and try to compute the longest magic 
+sequence (reader can find definition of a magic sequence in the section \ref{magic-sequence}) 
+in given time. We use the models created in the process described in the previous 
 paragraph. In \cite{fernandez00} authors have sent models to the solvers' authors and 
 have given them a chance to modify them to achieve the best performance of their solvers. 
 We focus on first-time users of a solver, so we use our own models which are 
 not perfect and, more imporantly, not tuned for any particular solver. Apart from OPL, all solvers 
 are tested on Debian 4.0  Linux with kernel 2.6.18 on Pentium 4, 3GHz (single core 
-with hyper threading). Due to licence problems, OPL is tested on Windows XP 
+with hyper threading). Due to limited availability, OPL is tested on Windows XP 
 SP2 on Intel Core Duo, 1.6GHz. For comparison we test on this platform also 
-\eclipse which step should give us relative comparison with solvers tested on another 
+\eclipse which step should give us a relative comparison with solvers tested on another 
 computer.
