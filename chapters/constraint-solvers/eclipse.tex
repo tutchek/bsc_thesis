@@ -2,65 +2,65 @@
 \verb= $Id$ =
 
 The \eclipse Constraint Programming System is an open source implementation of 
-Prolog programming language. \eclipse is provided with libraries for constraint 
+the Prolog programming language. \eclipse is provided with libraries for constraint 
 solving. It is possible to solve models over integers, real numbers and finite 
 integer sets. The solver is not just one library but there is one general solver 
-and several specialised solvers. Basic solver is the {\em ic} library -- interval 
+and several specialised solvers. The basic solver is the {\em ic} library -- interval 
 constraints which contains basic arithmetic constraints. For global constraints there 
-is a {\em ic\_global} library. Global constraints are constraints
-which use some more advanced techniques to filter the variable domain, for example 
+is a {\em ic\_global} library. The global constraints are constraints
+which use a couple of more advanced techniques to filter the variable domain, for example 
 the \texttt{alldifferent} constraint implemented as a matching in a bipartite graph.
 The ic library contains the alldifferent constraint too, but the one introduced in
 ic\_global library is stronger. For scheduling problems there is an {\em ic\_cumulative}
-library and for finite integer sets {\em ic\_sets} library. User is able to define his own
+library and for finite integer sets an {\em ic\_sets} library. A user is able to define their own
 constraints if the shipped set of constraints is not satisfactory.
 
 \subsection{Solver description}
-As stated in previous paragraph \eclipse is an implementation of the Prolog programming language.
+As stated in the previous paragraph \eclipse is an implementation of the Prolog programming language.
 The system contains the solver as an independent library. Therefore the user is not 
-limited to use only shipped solvers but can use his own solvers if there are any.
-Standard solver is the {\em ic} solver which is hybrid finite domain and real number 
-interval constraint solver. As the name suggest it offers constraining the variables with
-both real and integer domains. Ic supports the arithmetic expressions, arithmetic constraints,
+limited to use only shipped solvers, but they can use their own solvers if any.
+A standard solver is the {\em ic} solver which is a hybrid finite domain and real number 
+interval constraint solver. As the name suggests, it offers constraining the variables with
+both real and integer domains. It supports arithmetic expressions, arithmetic constraints,
 global constraints, reified constraints and search algorithms. The set of global constraints
 can be extended by using {\em ic\_global} constraints. This library provides constraints
-on the lists like \texttt{alldifferent}, \texttt{ordered}, \texttt{occurences} and so on.
+for lists such as \texttt{alldifferent}, \texttt{ordered}, \texttt{occurences} and so on.
 For scheduling the mentioned {\em ic\_cumulative} constraint is available as well as 
-their stronger versions {\em ic\_edge\_finder} respectively {\em ic\_edge\_finder3} which
-differs in the time complexity of used algoriths. For the constraints over the symbolic 
-domains like days of the week the {\em ic\_symbolic} domain is available.  The 
+their stronger versions {\em ic\_edge\_finder} or {\em ic\_edge\_finder3}, both of which
+vary in the time complexity of used algoriths. For the constraints over the symbolic 
+domains -- such as days of the week -- the {\em ic\_symbolic} domain is available.  The 
 constraining over finite integer domains is also available using the {\em fd\_sets} library.
-This library provides member constraints, cardinaity constraints, relation constraints
-as well as set expressions. Problem is typically modelled as a prolog predicate which constrains the variables domains
-then applies constraints on these variables and finally it calls a search algorithm 
+This library provides member constraints, cardinality constraints, relation constraints,
+as well as set expressions. The problem is typically modelled as a prolog predicate which constrains the variables domains,
+then applies constraints on these variables and, finally, it calls a search algorithm 
 on the variables. 
 
-Capability of the solver can be extended by defining user defined constraints. For this
+A capability of the solver can be extended by defining user defined constraints. For this
 purpose the system is equiped with {\em Propia} library and the {\em Constraint Handling Rules}
-library or {\em CHR}. CHR is a high level language for describing constraint rules. Reader can find
+library or {\em CHR}. CHR is a high level language for describing constraint rules. The reader can find
 the description of CHR in \cite{fru_chr_book_2009}.
-\eclipse offers {\em chr} library which can load source code in CHR format, translate it
+\eclipse offers {\em chr} library which can load a source code in CHR format, translate it
 into prolog predicate and then include it. The constraint then can be used as any standard
-constrant shipped with the system.
-The second way to introduce new constraint is using the Propia system. Propia takes 
+constraint shipped with the system.
+The second way to introduce new constraint is to use the Propia system. Propia takes 
 any prolog predicate and convert it to the proper constraint.
 The calling convence is \texttt{Goal infers most}. The library infers as many information about {\em Goal} 
-as possible based on loaded constraint solver libraries. The level of infering can be adjusted.
-Propia offers approximate generalised propagation. The {\em most} infering can be expensive 
-to compute and maybe not necessary. The alternatives are predicates \texttt{Goal infers ic}, 
+as possible based on the loaded constraint solver libraries. The level of infering can be adjusted.
+Propia offers an approximate generalised propagation. The {\em most} infering can be expensive 
+to compute and may not be necessary. The alternatives are predicates \texttt{Goal infers ic}, 
 \texttt{Goal infers unique} and \texttt{Goal infers consistent}. As the name suggests, the {\em unique} 
 infer ensures that all answers to the query are unique. The {\em consistent} infer can give
-answer if the querzy can be solved or not. If it can be solved it additionaly checks, if the
-constraint is already true. The {\em ic} infer is the same as {\em most} infer except that
-{\em most} is based on currently loaded solvers opposed to {\em ic} which uses the specified solver.
-We will show the example of using of our reimplemented $X \#> Y$ constraint which 
+answer if the querzy can be solved or not. If it can be solved, it additionally checks whether the
+constraint is already true or not. The {\em ic} infer is the same as the {\em most} infer except that
+the {\em most} is based on currently loaded solvers compared to {\em ic} which uses the specified solver.
+We shall show the example of using of our reimplemented $X \#> Y$ constraint which 
 enforces that $X$ is greater than $Y$ using the standard $>$ operator. The problem predicate is the same 
-as if we used only shipped constraints. However the $>$ operator cannot handle constrained
+as if we used only shipped constraints; however, the $>$ operator cannot handle constrained
 variables. And even if it could, it is not what we need. The standard behavior is to 
 determine if $X$ is greater than $Y$ in the time of calling of the operator predicate and
-that is all. We need that the operator keeps track on the variables and enforce the constraints
-as the domain updates due to other constraints propagation. This is the point when the propia
-comes. We mark the predicate as \texttt{infers most} and since that it is normal
+that is all. We need the operator to keep track on the variables and enforce the constraints
+as the domain updates due to the other constraints propagation. This is the point when the Propia
+comes. Once we mark the predicate as \texttt{infers most}, it is normal
 constraint just like any other.
 
 \begin{verbatim}
@@ -73,10 +73,10 @@ problem(X, Y) :-
 \end{verbatim}
 
 \subsection{Debugging support}
-\eclipse offers visualisation related libraries, whose predicates can be applied 
+\eclipse offers visualisation related libraries, which predicates can be applied 
 on the variables. First the user has to create a viewable object using \texttt{create\_viewable}
-from {\em viewable} library which contains variables in proper order and so on. Then
+from {\em viewable} library which contains variables in a proper order and so on. Then
 user has to invoke a visualisation client, which is responsible for visualisation of the 
-given viewable objects. The visualisation can be performed using  visualisation client
+given viewable objects. The visualisation can be performed using a visualisation client
 in the {\em java\_vc} library. The created {\em viewable} objects are shown in
-the visualisation client using several types of viewlets. and so on 
+the visualisation client using several types of viewlets and so on. 

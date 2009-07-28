@@ -3,22 +3,22 @@
 
 Gecode is a C++ library for solving problems with constraints. It allows to
 model a problem which contains integers, boolean variables and finite integer sets. Gecode
-is a free open source software as many of the mentioned solvers are. The library is
-distributed as source codes and for Windows OS there is also an installer with
-pre-compiled libraries. Optionaly a user needs a Qt library, which is used in 
+is a free open source software as most of the mentioned solvers are. The library is
+distributed as source and for Windows OS there is also an installer with
+pre-compiled libraries. Optionally, a user needs a Qt library, which is used in 
 a visualization graphic tool Gist. Apart from basic constraints, Gecode has also 
 constraints for scheduling, finite automatons, graphs and so on. We describe those
 constraints further in the following section. Gecode often uses the feature of C++
 to overload functions and operators, which leads to a fact that many equal constraints for
-varying data types have the same name. In addition, the overloading of operators
+various data types have the same name. In addition, the overloading of operators
 helps to ease the work with expressions. A disadvantage might be a lack of explicit consciousness
 about a state of used operators, therefore a user cannot be sure if an operator that is used 
-for a variable is just a common operator, or a part of constraint. A key man of Gecode 
+for a variable is just a common operator, or a part of constraint. The most important person of Gecode 
 solver is Christian Schulte, who also participated in a development of the system Mozart/Oz. 
 
 \subsection{Solver description}
 A problem is modeled as a class derived from a class Space. In this particular class
-there are defined variables and constraints. Variables are objects of one of the following type:
+there are defined variables and constraints. The variables are objects of one of the following type:
 IntVar for integers, BoolVar for boolean variables and SetVar for finite integer sets. 
 Compared to other solvers the boolean variables aren't just integers with a domain ${0,1}$.
 It is not even allowed to declare a constraint $b=i$ having a boolean variable $b$ and an integer $i$.
