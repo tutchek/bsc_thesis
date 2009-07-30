@@ -1,56 +1,51 @@
 \chapter{Benchmarks}
 \verb= $Id$ =
 
-In this chapter we define the benchmarks which are used to test features of each 
-solver. It is five problems which are well known and documented. N-queens problem,
-magic sequence problem, self refferential quiz, quasigroup with holes problem and 
-locating warehouses problem. Further description of these benchmark is in the rest of
-this chapter. We show on them the different ways how the solvers model the problems. 
-Also we measure time and memory amount needed to compute the solutions of the benchmark 
-problems. Except the self refferential quiz all of the presented problems can be scaled
-and can be used to test the robustness of the solver. We test the robustness on the 
-magic sequence problem. We define the robustness of the solver as the length of
+In this chapter we shall define benchmarks which will later be used to examine the properties of each solver. We will be dealing with five different cases which are well known and documented: N-queens problem, magic sequence problem, self referential quiz, quasigroup with holes problem and locating warehouses problem. In this chapter, we will show on these benchmarks the different ways of modelling the problem with solvers.
+We will also measure time and the amount of memory needed to compute the solutions to the benchmarking 
+problems. Except for the self referential quiz all of the presented problems can be scaled up or down
+and can be therefore used to test the robustness of the solver. We shall test the robustness on the 
+magic sequence problem; we define the robustness of the solver as the length of
 the longest magic sequence which can be computed in the selected solver in a given 
-amount of time. The last benchmark problem -- locating warehouses -- is an optimalistion
-problem. The solver not only has to find correct solution but also the best of such 
-solutions based on the value of the objective function. For each benchmart we present 
-its general description, formal model of the constraint problem and implementation in
-the Essence  programming language. The language basics are described in the following 
+time. The last benchmarking problem -- locating warehouses -- is an optimalisation
+problem. The solver not only has to find correct solutions but also has to evaluate the best of the
+solutions based on the value of an objective function. For each benchmark 
+a general description is presented as is the formal model of the constraint problem and an implementation in
+the Essence  programming language. The basics of the language are described in the following 
 section.
 
-\section{Essence}
+\section{Essence programming language}
 Essence  is a programming language for modelling of combinatorial problems. Is is 
-sufficiently easy to understand and simple that even person who has never seen the
-language can corretly guess what is the program supposed to do. Program in Essence 
-consists of three parts. The first part defines version of the language, the second
-part used variables and finally the third part the used constraints on the given 
-variables. The constrained variables can be integers, booleans and vectors or matrices.
+easy enough to understand and so simple that even person who has never seen the
+language before can correctly guess what is the expected output of the program. Every program in Essence 
+consists of three parts. The first part defines the version of the language, the second
+part the used variables and finally, the third part presents the constraints used on the given 
+variables. These constrained variables can be integers, booleans and vectors or matrices.
 The language supports sums and loops over the variables; however, the bounds of the
-sum or loop have to be constant because it is in the process of compilig translated
-to a sequence of statements. The program can be split into the model definition
+sum or loop have to be constant as they are in the process of compiling translated
+to a sequence of statements. The program itself can be split into the model definition
 and parameters definition parts. Examples in this chapters shows only the model 
-definition parts. The parameter definition files can be found on the included CD.
-As a compiler from the Essence language to solver specific language the Tailor tool
-is available. In the current version it can tranlaste the Essence program to Minion 
+definition parts. Files containing the parameter definitions can be found on the included CD.
+Tailor tool is the compiler of choice in this case and this program mediates the translation from the Essence language to solver specific language. In the current version it can translate the Essence program to Minion 
 input file, FlatZinc and C++ source code using Gecode library. Further description of
 the Tailor system is in section \ref{tailor}.
 
 \section{N-queens}
-This benchmark is based on a classic chess task. The player have to place eight queens
+This benchmark is based on a classic chess task. The player has to place eight queens
 on the chessboard in a way that none of the queens offends any other. The task
-can be generalised on chessboard of any size. The goal is then place $n$ queens to
-the table of size $n \times n$ in a way that no queen offends any other. The queen
-offend all pieces which are placed in the same row, column and diagonal on the chessboard.
-The problem is little bit easier if we find out that if we want to place $n$ queens
-on the chessboard with $n$ columns, there have to be one queen per column. Therefore 
-we need only to find out which in which row is the queen in each column. We model the
-solution of problem as a vector $q_i$ where $i \in \{1,...,n\}$. To avoid
-placing the queens on the same row we simply add constraint that all $q_i$ are 
-different. Finally we hve to handle the diagonals. Two pieces are on the same diagonal 
+can be scaled to a chessboard of any size. The goal is then place $n$ queens to
+onto table of size $n \times n$ in such way that no queen offends any other. A queen
+offends all pieces which are placed in the same row, column and diagonal on the chessboard.
+The problem is little bit easier if we find out that when we realize that in order to place $n$ queens
+on a chessboard with $n$ columns, there has to be one queen per column. Therefore 
+we only need to find out in which rows the queens are in each column. We model a
+solution of the problem as a vector $q_i$ where $i \in \{1,...,n\}$. To avoid
+placing the queens in the same row we simply add constraint that all $q_i$ are 
+different. Finally we have to include the diagonals in the solution: two pieces are on the same diagonal, 
 if the difference in the horizontal and vertical coordinates is equal. Therefore we 
 add the constraint $\left|Q(i) - Q(j)\right| \neq \left|i - j\right|$.
-Since the chessboard and queens effect are symmetric also the solutions are symmetric.
-We can cut down the number of solutions if we avoid such symmetries.
+Since both the chessboard and the modes of offence the queen can carry out are symmetric, the solutions are symmetric as well.
+We can decrease the number of solutions if we avoid such symmetries.
 
 \subsection{Constraint problem model}
 \begin{itemize}
@@ -65,7 +60,7 @@ We can cut down the number of solutions if we avoid such symmetries.
 	   \item optional avoiding of the symmetry: $q_1 < q_n$
 	  \end{itemize}
 \end{itemize}
-The Essence implementation is in figure \ref{benchmark-essence:nqueens}.
+The Essence implementation is in the figure \ref{benchmark-essence:nqueens}.
 
 \begin{figure}
 \caption{\label{benchmark-essence:nqueens}Implementation of N-Queens Problem in Essence}
@@ -103,12 +98,11 @@ forall i: int(1..n). forall j: int(i+1..n).
 
 \section{Magic sequence}
 \label{magic-sequence}
-Magic sequence of length $n$ is a sequence $m_i$, $i \in \{0,...,n-1\}$ of numbers 
+Magic sequence of length $n$ is a sequence of numbers such as $m_i$, $i \in \{0,...,n-1\}$
 which satisfies the following condition: The value of $m_k$ is equal to the
-number of occurences of value $k$ in sequence. For example the sequence $(2\, 1\, 2\, 0\, 0)$
-is magic sequence of length five because the condition is satisfied. The number zero
-is twice in the sequence and $m_0$ is equal to two. Simillary one is in the sequence only
-once and therefore $m_1$ is one, and so on.
+number of occurrences of value $k$ in the sequence. For example the sequence $(2\, 1\, 2\, 0\, 0)$ is magic sequence of length five as the condition above is satisfied. The number zero
+is twice in the sequence and $m_0$ is equal to two. Similarly one is in the sequence only
+once and therefore $m_1$ is one.
 
 \subsection{Constraint problem model}
 Model for a magic sequence $m$ of length $k$:
@@ -155,55 +149,55 @@ such that
 \end{lstlisting} 
 \end{figure}
 
-\section{Self-refferential quiz}
+\section{Self-referential quiz}
 
-Selfrefferential quiz is a quiz where the answers to questions depends on the answers
-to other questions in the same quiz. There is only one answer valid for each question.
+Self-referential quiz is a quiz where the answers to the questions depend on the answers
+to other questions in the same quiz. There is only one valid answer for each question.
 Typical question in such quiz can be: 
 
 \begin{enumerate}
-  \item First question whose anser is $A$ is: \\
+  \item First question where the answer is $A$: \\
     (A) 1 (B) 2 (C) 3 (D) 4 (E) there is no question with answer A
-  \item Answer to thiss question is: \\ 
+  \item Answer to this question: \\ 
     (A) A (B) B (C) C (D) D (E) E
 \end{enumerate}
 
-these quizes are best modelled using rified constraints. Reified constraint is a constraint
-in form $(C \Leftrightarrow x) \& x \in \left\{0,1\right\}$. The ways how to construct
-such quizes are described in the article by Maja Bubalo \cite{jios:bubalo}.
+These quizzes are best modelled using reified constraints. Reified constraint is a constraint
+in the form $(C \Leftrightarrow x) \& x \in \left\{0,1\right\}$. The ways how to construct
+such quizzes are described in the article by Maja Bubalo \cite{jios:bubalo}.
 The quiz assignment follows:
 
 \begin{enumerate}
-	\item The first question whose answer is A is:\\
+	\item The first question to which the answer is A:\\
 		(A) 4 (B) 3 (C) 2 (D) 1 (E) none of above
-	\item The only two consecutive questions with identical answers are: \\
+	\item The only two consecutive questions with identical answers: \\
 		(A) 3 and 4 (B) 4 and 5 (C) 5 and 6 (D) 6 and 7 (E) 7 and 8
-	\item The next question with answer A is: \\
+	\item The next question with answer A: \\
 		(A) 4 (B) 5 (C) 6 (D) 7 (E) 8
-	\item The first even numbered question with answer B is: \\
+	\item The first even numbered question with answer B: \\
 		(A) 2 (B) 4 (C) 6 (D) 8 (E) 10 
-	\item The only odd numbered question with answer C is: \\
+	\item The only odd numbered question with answer C: \\
 		(A) 1 (B) 3 (C) 5 (D) 7 (E) 9
 	\item A question with answer D: \\
 		(A) comes before this one, but not after this one (B) comes after this one, but not before this one (C) comes before and after this one (D) does not occur at all (E) none of the above
-	\item The last question whose answer is E is: \\
+	\item The last question to which the answer is E: \\
 		(A) 5 (B) 6 (C) 7 (D) 8 (E) 9
-	\item The number of questions whose answers are consonants is: \\
+	\item The number of questions to which the answer is a consonant: \\
 		(A) 7 (B) 6 (C) 5 (D) 4 (E) 3
-	\item The number of questions whose answers are vowels is: \\
+	\item The number of questions to which the answer is a vowel: \\
 		(A) 0 (B) 1 (C) 2 (D) 3 (E) 4
 	\item The answer to this question is: \\
 		(A) A (B) B (C) C (D) D (E) E
 \end{enumerate}
 
-We model the quiz as a table of boolean variables with five columns (A,B,C,D,E) 
+We model the quiz as a table of boolean variables with five columns (A, B, C, D, E) 
 and ten rows, one for each question. The value in the column $i$ and row $j$ is
-{\em true} if and only if the answer to question $j$ is $i$. Because there is only one
-answer possible to all questions we constraint the rows of the table to contain
-only one {\em true}. The test has only one solution showed in figure \ref{srq-solution-table}. 
+{\em true} if and only if the answer to the question $j$ is $i$. Because there is only one
+answer possible to each question, we constraint the rows of the table to contain
+only one {\em true}. The test has only one solution showed in the figure \ref{srq-solution-table}. 
  
 \begin{table}[ht]
-\caption{\label{srq-solution-table}Solution of Self Referential Quiz}
+\caption{\label{srq-solution-table}Solution of a Self Referential Quiz}
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline Question & A & B & C & D & E \\
@@ -228,7 +222,7 @@ only one {\em true}. The test has only one solution showed in figure \ref{srq-so
     \begin{itemize}
       \item Answer to the questions: $s_{1|1}, s_{1|2}, ..., s_{10|4}, s_{10|5} \in {0, 1}$.
     \end{itemize}
-	\item Podmínky:
+	\item Constraints:
 	 \begin{itemize}
     \item There is exactly one value 1 in the row: \\
       $\forall i \in \{1, \ldots, 10\}: \left(\sum_{j \in \{1, ..., 5\}}{s_{i|j}}\right) = 1$,
@@ -262,15 +256,15 @@ only one {\em true}. The test has only one solution showed in figure \ref{srq-so
       $\forall i \in \{1,...,5\}: (s_{0|i} = 1) \Leftrightarrow \left(\sum_{j=1}^{10}{\left(s_{j|1} + s_{j|5}\right)} = i-1 \right)$. 
    \end{itemize}
 	\end{itemize}
-The Essence implementation is in figure \ref{benchmark-essence:srq}.
+The Essence implementation is in the figure \ref{benchmark-essence:srq}.
 
 \begin{figure}
-\caption{\label{benchmark-essence:srq}Implementation of Self Referential Quiz in Essence}
+\caption{\label{benchmark-essence:srq}Implementation of the Self Referential Quiz in Essence}
 \begin{lstlisting}
 language ESSENCE' 1.b.a
 find s : matrix indexed by [int(1..10), int(1..5)] of bool
 such that
-$ the is only one answer to each question and there is not any unanswered question
+$ there is only one answer to each question and there is not any unanswered question
  forall row : int(1..10). ((sum col : int(1..5). s[row,col]) = 1),
 $ Question 1
 $ A to D
@@ -303,34 +297,34 @@ $ Constraints for question 10 are useless
 \end{figure}
 
 \section{Quasigroup with holes}
-Quasigroup or latin square is a table of size $n \times n$ filled with numers in
-range $1..n$ such that all values in each row and in each column are unique. There
+Quasigroup or latin square is a table of size $n \times n$ filled with numbers in the
+range $1..n$ such as that all values in each row and in each column are unique. There
 can be also additional condition on the items of quasigroup, for example that the 
-items on the main diagonal have to be even and so on. The task is to fully fill the 
+items on the main diagonal have to be even. The task is to fully fill the 
 given partly filled quasigroup. The completed quasigroup have to satisfy all previously
 stated constraints. This problem is called {\em quasigroup completion problem} or QCP.
-Unfortunately this benchmark does not provide allways the same results. Some partial fillings
-can be solved surprisingly easily, some on the other hand can be extremly hard and 
-some can even be unsolvable. The problem is that determining if the assignment can
-be satisfied of not is a NP-hard task. Therefore we cannot be sure if the problem is only
-too hard for the solver or if the solution does not exist and the solvver has to search 
-through the enormous state space. To avoid this uncertainity we use the modification of
+Unfortunately, this benchmark does not provide a consistent result. Some partial fillings
+can be solved surprisingly easily while other can be extremely demanding; 
+some can even be impossible to solve. The crucial problem is that the determining whether the problem can
+be solved or not is an NP-hard task. Therefore we cannot determine with certainty whether the problem is only
+too hard for the solver or the solution does not exist at all and the solver has to search 
+through enormous space of the particular state. To avoid this uncertainty, we use a modification of
 QCP called {\em quasigroup with holes} or QWH. First we generate fully filled quasigroup
-which satisfies the given conditions, then we drop some values and this quasigroup
-with holes is the assignment for QCP. We have guarantee that the assignment is correct
-and can be solved. The generating of proper QWH assignments was studied by D. Achlioptas
-et al. They found out that the hardness of the problem coincide with the size of 
-so called backbone \cite{Achlioptas00generatingsatisfiable}. Backbone is a set 
+which satisfies the given conditions and then we exclude some of the values; this quasigroup
+with holes is the new assignment for QCP. We have a guarantee that the assignment is correct
+and that it can be solved. Generation of QWH assignments was studied by D. Achlioptas
+et al. who found out that the difficulty of finding a solution of such problem depends on the size of the
+so called backbone \cite{Achlioptas00generatingsatisfiable}. The backbone is a set 
 of positions in the quasigroup which have the same value in all solutions.
-If the size of backbone is close to $0 \%$, there are many different solutions and
-the solver can find some "by accident". On the other hand if the backbone is close
-to $100 \%$, there is only one solution and all constraints leads towards to it.
-We can therefore expect interesting behavior with the backbone of the size $50 \%$,
+If the size of the backbone is close to $0 \%$, there are many different solutions and
+the solver can find some "by accident". On the other, hand if the backbone is close
+to $100 \%$, there is only one solution and all constraints lead towards it.
+We can therefore expect interesting behaviour for the backbone of the size $50 \%$,
 The experiments \cite{Achlioptas00generatingsatisfiable} showed that this interesting 
-behavior is somewhere near the $30 \%$.
+behaviour is somewhere near the $30 \%$.
 
-We use the quasigroups with no additional conditions. The used quasigroups are generated
-by the generators {\em lsencode} by Carla Gomez and {\em walksat} by Henry Kautz. 
+The quasigroups we use have no additional conditions. The used quasigroups are produced
+by generators {\em lsencode} created by Carla Gomez and {\em walksat} Henry Kautz. 
  
 \subsection{Constraint problem model}
 Model quasigroup of order $n$. Assignment values are in the vector $\mathrm{data}_{ij}$:
@@ -342,12 +336,12 @@ Model quasigroup of order $n$. Assignment values are in the vector $\mathrm{data
     \end{itemize}
 	\item Podmínky:
 	 \begin{itemize}
-    	\item All items in one rows are unique: $\forall i \in \left\{1, ..., n\right\}: \forall j,k \in \left\{1, ..., n\right\}: q_{ij} \neq q_{ik}$, 
+    	\item All items in one row are unique: $\forall i \in \left\{1, ..., n\right\}: \forall j,k \in \left\{1, ..., n\right\}: q_{ij} \neq q_{ik}$, 
     	\item all items in one column are unique: $\forall i \in {1, ..., n}: \forall j,k \in {1, ..., n}: q_{ji} \neq q_{ki}$ 
-    	\item some items of quasigroup are preassigned: $\mathrm{data}_{ij} \textnormal{ definováno } \Leftrightarrow (q_{ij} = \mathrm{data}_{ij})$
+    	\item some items of the quasigroup are preassigned: $\mathrm{data}_{ij} \textnormal{ definováno } \Leftrightarrow (q_{ij} = \mathrm{data}_{ij})$
 	 \end{itemize}
 \end{itemize}
-The Essence implementation is in figure \ref{benchmark-essence:qwh}.
+The Essence implementation is in the figure \ref{benchmark-essence:qwh}.
 
 \begin{figure}
 \caption{\label{benchmark-essence:qwh}Implementation of Quasigroup With Holes Problem in Essence}
@@ -362,36 +356,35 @@ such that
 \end{figure}
 
 \section{Locating warehouses}
-Let assume that we want to help the hypothetical business company with decision which
-warehouses shoud be built for their stores and which warehouse should supply which
-store. The main criteria is of course the cost of the solution. The cost has two component. One
-is a fixed fee for opening a new store. The second is the price for distribution of
-goods from warehouse to store. The price vary and is different for all pairs (warehouse, store). 
-Each possible warehouse has defined the maximal capacity, which means the number
-of stores which can be supplied from this warehouse. As a last condition we need to
-supply all stores. Our task is to choose the solution with minimal total cost.
+Lets assume that we want to help a hypothetical business company with the decision which
+warehouses should be built for their shops and which warehouses should supply which
+shop. The main criterion is in this case the cost of the solution. The cost has two components. The first one
+is payment of the constant cost for opening a new store. The second component is the price for the distribution of
+goods from a warehouse to the shop. The price varies and is different for all pairs (warehouse, shop). 
+Each possible warehouse has a defined maximum capacity which accounts for the number
+of shops which can be supplied from this warehouse. As the last condition of the task, we state that all shops have to be supplied. Our task is to choose the solution with minimal total cost.
 
-The solver takes as an input parameter maximal cappacities of warehouses, table with
-prices of supplying for each pair (warehouse, store) and computes the vector
+Both maximum capacities of warehouses and a table with
+prices for supplying each of the pairs (warehouse, store) are the required input parameters for the solver which computes the vector
  $s_i$, $i \in \{1,...,\#\mathrm{ of stores}\}$ where $s_i$ indicates which warehouse
- supplies the store $i$.
+ supplies the shop $i$.
 
 \subsection{Model CSP}
 We can build $W$ warehouses. The price for opening of a new warehouse is fixed and 
-stored in parameter $\mathrm{openCost}$. We have also $S$ stores. The maximal capacity
-of warehouses is given as vector $w$, where $w_i$ is maximal number of stores, which
+stored in the parameter $\mathrm{openCost}$. We also have $S$ shops. The maximum capacity
+of warehouses is given by vector $w$, where $w_i$ is the maximum number of shops which
 can be supplied by the warehouse $i$, $i \in \{1,...,W\}$.
-Finally we have the matrix of supply costs $\mathrm{supplyCost}$ where $\mathrm{supplyCost}_{ij}$ 
-means cost of supplying the store $j$ from warehouse $i$.
+Finally, we have a matrix of supply costs $\mathrm{supplyCost}$ where $\mathrm{supplyCost}_{ij}$ 
+translates as the cost of supplying the shop $j$ from warehouse $i$.
 
 	\begin{itemize}
   \item Variables and domains:
     \begin{itemize}
       \item Total cost -- value of objective function: $\mathrm{totalCost} \in \mathbb{N} $,
-      \item number of opened stores: $\mathrm{numberOpen} \in \{0, W\}$,
-      \item indication whether the store is open: $\mathrm{open}_1, ..., \mathrm{open}_{W} \in \{0, 1\}$,
-      \item indication which warehouse supply which store: $\mathrm{supplier}_1, ..., \mathrm{supplier}_{S} \in \{1, ..., W\}$,
-      \item indication the supply cost for given store: $\mathrm{cost}_1, ..., \mathrm{cost}_{S} \in \mathbb{N}$,
+      \item number of opened shops: $\mathrm{numberOpen} \in \{0, W\}$,
+      \item indication whether the shop is open: $\mathrm{open}_1, ..., \mathrm{open}_{W} \in \{0, 1\}$,
+      \item indication which warehouse supplies which shop: $\mathrm{supplier}_1, ..., \mathrm{supplier}_{S} \in \{1, ..., W\}$,
+      \item indication the supply cost for given shop: $\mathrm{cost}_1, ..., \mathrm{cost}_{S} \in \mathbb{N}$,
       \item total supply cost: $\mathrm{costSum} \in \mathbb{N}$.
     \end{itemize} 
 	\item Constraints:
@@ -400,7 +393,7 @@ means cost of supplying the store $j$ from warehouse $i$.
   	 \item total supply cost: $\mathrm{costSum} = \sum_i{\mathrm{cost}_i}$,
   	 \item number of opened warehouses: $\mathrm{numberOpen} = \sum_i{\mathrm{open}_i}$,
   	 \item maximal capacity of each warehouse: $\forall i \in \{1,...,W\}: w_i \geq \sum_{\mathrm{supplier}_j = i}{1}$,
-  	 \item the warehouse is open if it suppply at least one store: $\forall i \in \{1,...,W\}: \left(\mathrm{open}_i = 1\right) \Leftrightarrow \left(\left(\sum_{\mathrm{supplier}_j = i}{1}\right) > 0\right)$,
+  	 \item the warehouse is open if it suppplies at least one shop: $\forall i \in \{1,...,W\}: \left(\mathrm{open}_i = 1\right) \Leftrightarrow \left(\left(\sum_{\mathrm{supplier}_j = i}{1}\right) > 0\right)$,
   	 \item supply cost computation: $\forall i \in {1,...,S}, \forall j \in \{1,...,W\}: \left(\mathrm{supplier}_i = j\right) \Rightarrow \left(\mathrm{cost}_i = \mathrm{supplyCost}_{ij} \right)$.
      
      %$ \sum_{w \textnormal{ is open}}\left(c+\sum_{s \textnormal{ is suplied by } w} \mathrm{SC}(s,w) \right)$
