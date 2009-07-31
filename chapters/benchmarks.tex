@@ -194,7 +194,9 @@ We model the quiz as a table of boolean variables with five columns (A, B, C, D,
 and ten rows, one for each question. The value in the column $i$ and row $j$ is
 {\em true} if and only if the answer to the question $j$ is $i$. Because there is only one
 answer possible to each question, we constraint the rows of the table to contain
-only one {\em true}. The test has only one solution showed in the figure \ref{srq-solution-table}. 
+only one {\em true}. The test has three solutions. One of them is showed in the figure 
+\ref{srq-solution-table}, the other two solutions differ in the answer to the question
+10 which can be also B or C.  
  
 \begin{table}[ht]
 \caption{\label{srq-solution-table}Solution of a Self Referential Quiz}
@@ -227,7 +229,7 @@ only one {\em true}. The test has only one solution showed in the figure \ref{sr
     \item There is exactly one value 1 in the row: \\
       $\forall i \in \{1, \ldots, 10\}: \left(\sum_{j \in \{1, ..., 5\}}{s_{i|j}}\right) = 1$,
     \item question 1, A to D: \\
-      $\forall i \in \{1,...,4\}: (s_{1|i} = 1) \Leftrightarrow (s_{4-i+1|1} = 1 \mand (\forall j \in \{1,...,4-1\}: s_{j|1} = 0))$,
+      $\forall i \in \{1,...,4\}: (s_{1|i} = 1) \Leftrightarrow (s_{4-i+1|1} = 1 \mand (\forall j \in \{1,...,4-i\}: s_{j|1} = 0))$,
     \item question 1, E: \\
       $(s_{1|5} = 1) \Leftrightarrow (\forall j \in \{1,...,4\}: s_{j|1} = 0)$,
     \item question 2: \\

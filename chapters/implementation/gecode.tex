@@ -1,0 +1,454 @@
+\section{Gecode}
+\verb= $Id$ =
+
+\subsection{N-Queens}
+\begin{lstlisting}[language=C++]
+class Queens : public Space {
+protected: 
+	IntVarArray q;
+
+public:
+	Queens(int length) : q(*this, length, 1, length)
+	{
+		distinct(*this, q);
+
+		for (int i = 0; i < length; i++)
+		{
+			for (int j = i+1; j < length; j++)
+			{
+				post(*this, (q[i]-q[j]) != (i-j));
+				post(*this, (q[i]-q[j]) != (j-i));
+			}
+		}
+
+		post(*this, q[0] < q[length-1]);
+		
+		branch(*this, q, INT_VAR_SIZE_MIN, INT_VAL_MIN);
+	}
+
+	Queens(bool share, Queens& s) : Space(share, s) {
+		q.update(*this, share, s.q);
+	}
+
+	virtual Space* copy(bool share)
+	{
+		return new Queens(share, *this);
+	}
+
+	void print(void) const {
+		std::cout << q << std::endl;
+	}
+
+};
+\end{lstlisting}
+
+\subsection{Magic Sequence}
+\begin{lstlisting}[language=C++]
+class MagicSequence : public Space {
+protected: 
+	IntVarArray m;
+
+public:
+	MagicSequence(int length) : m(*this, length, 0, length)
+	{
+		count(*this, m, m);
+		
+		branch(*this, m, INT_VAR_SIZE_MIN, INT_VAL_MIN);
+	}
+
+	MagicSequence(bool share, MagicSequence& s) : Space(share, s) {
+		m.update(*this, share, s.m);
+	}
+
+	virtual Space* copy(bool share)
+	{
+		return new MagicSequence(share, *this);
+	}
+
+	void print(void) const {
+		std::cout << m << std::endl;
+	}
+
+};
+\end{lstlisting}
+
+\subsection{Self-refferential Quiz}
+\begin{lstlisting}[language=C++]
+class SRQ : public Space {
+protected: 
+	BoolVarArray q;
+
+public:
+	inline int getId(int question, int answer) const {
+		return question * 5 + answer;
+	}
+	
+	SRQ() : q(*this, 50, 0, 1)
+	{
+		// Exactly one answer to any question
+		for (int i = 0; i < 10; i++)
+		{
+			IntVarArray aux(*this, 5, 0, 1);
+
+			for (int j = 0; j < 5; j++)
+			{
+				channel(*this, q[getId(i,j)], aux[j]);
+			}
+
+			linear(*this, aux, IRT_EQ, 1);
+		}
+		
+		// Question 1
+		for (int i = 0; i < 4; i++)
+		{
+			BoolVarArgs q1true(1);
+			BoolVarArgs q1false(4-i-1);
+
+			q1true[0] = q[getId(4-i-1, 0)];
+			for (int j = 0; j < 4-i-1; j++)
+			{
+				q1false[j] = q[getId(4-j-1, 0)];
+			}
+
+			clause(*this, BOT_AND, q1true, q1false, q[getId(0, i)]);
+		}
+		
+		BoolVarArgs q1e(4);
+		for (int i = 0; i < 4; i++)
+		{
+			q1e[i] = q[ i*5 ];
+		}
+		rel(*this, BOT_AND, q1e, q[4]);
+
+		// Question 2
+		for (int i = 0; i < 5; i++)
+		{
+			BoolVarArray aux(*this, 5, 0, 1);
+			for (int j = 0; j < 5; j ++)
+			{
+				post(*this, tt(eqv( aux[j] , 
+						(q[ getId(i+2, j) ] && q[ getId(i+3, j) ])
+						||
+						(!q[ getId(i+2, j) ] && !q[ getId(i+3, j) ])
+				)));
+			}
+
+			rel(*this, BOT_AND, aux, q[ getId(1, i) ]);
+		}
+
+		// Question 3
+		for (int i = 0; i < 5; i++)
+		{
+			BoolVarArgs q3true(1);
+			BoolVarArgs q3false(i);
+
+			q3true[0] = q[getId(3+i, 0)];
+
+			for (int j = 0; j < i; j++)
+			{
+				q3false[j] = q[getId(3+j, 0)];
+			}
+
+			clause(*this, BOT_AND, q3true, q3false, q[getId(2, i)]);
+		}
+
+		// Question 4
+		for (int i = 0; i < 5; i++)
+		{
+			BoolVarArgs q4true(1);
+			BoolVarArgs q4false(i);
+
+			q4true[0] = q[getId(i*2+1, 1)];
+
+			for (int j = 0; j < i; j++)
+			{
+				q4false[j] = q[getId(j*2+1, 1)];
+			}
+
+			clause(*this, BOT_AND, q4true, q4false, q[getId(3, i)]);
+		}
+
+		// Question 5
+		for (int i = 0; i < 5; i++)
+		{
+			BoolVarArgs q5true(1);
+			BoolVarArgs q5false(i);
+
+			q5true[0] = q[getId(i*2, 2)];
+
+			for (int j = 0; j < i; j++)
+			{
+				q5false[j] = q[getId(j*2, 2)];
+			}
+
+			clause(*this, BOT_AND, q5true, q5false, q[getId(4, i)]);
+		}
+
+		// Question 6
+		IntVarArray dBefore(*this, 5, 0, 1),
+					dAfter (*this, 4, 0, 1);
+
+		for (int i = 0; i < 5; i++)
+		{
+			channel(*this, q[getId(i,4)], dBefore[i]);
+		}
+
+		for (int i = 0; i < 4; i++)
+		{
+			channel(*this, q[getId(i+5,4)], dAfter[i]);
+		}
+
+		IntVar dBeforeSum(*this, 0, 5),
+			   dAfterSum (*this, 0, 4);
+		
+		linear(*this, dBefore, IRT_EQ, dBeforeSum);
+		linear(*this, dAfter , IRT_EQ, dAfterSum );
+		// 6A
+		post(*this, tt(eqv((dBeforeSum > 0) && (dAfterSum == 0) , q[getId(5, 0)] )));
+		// 6B
+		post(*this, tt(eqv((dBeforeSum == 0) && (dAfterSum > 0) , q[getId(5, 1)] )));
+		// 6C
+		post(*this, tt(eqv((dBeforeSum > 0) && (dAfterSum > 0) , q[getId(5, 2)] )));
+		// 6D
+		post(*this, tt(eqv(!q[getId(5, 3)] && (dBeforeSum == 0) && (dAfterSum == 0) , q[getId(5, 3)] )));
+		// 6E
+		post(*this, tt(eqv(q[getId(5, 3)] && (dBeforeSum == 0) && (dAfterSum == 0), q[getId(5, 4)])));
+		
+		// Question 7
+		for (int i = 0; i < 5; i++)
+		{
+			BoolVarArgs q7true(1);
+			BoolVarArgs q7false(5-i);
+
+			q7true[0] = q[getId(4+i, 4)];
+
+			for (int j = 0; j < 5-i; j++)
+			{
+				q7false[j] = q[getId(4+i+j+1, 4)];
+			}
+
+			clause(*this, BOT_AND, q7true, q7false, q[getId(6, i)]);
+		}
+
+		// Question 8
+		IntVarArray consonants(*this, 3*10, 0, 1);
+		for (int i = 0; i < 10; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				channel(*this, q[ getId(i,j+1) ], consonants[i*3 + j]);
+			}
+		}
+		IntVar consonantsSum(*this, 0, 3*10);
+		linear(*this, consonants, IRT_EQ, consonantsSum); 
+
+		for (int i = 0; i < 5; i++)
+		{
+			post( *this, tt(eqv( consonantsSum == 7-i, q[ getId(7,i) ] )) );
+		}
+
+		// Question 9
+		IntVarArray vowels(*this, 2*10, 0, 1);
+		for (int i = 0; i < 10; i++)
+		{
+			channel(*this, q[ getId(i,0) ], vowels[i*2 + 0]);
+			channel(*this, q[ getId(i,4) ], vowels[i*2 + 1]);
+		}
+		IntVar vowelsSum(*this, 0, 2*10);
+		linear(*this, vowels, IRT_EQ, vowelsSum); 
+
+		for (int i = 0; i < 5; i++)
+		{
+			post( *this, tt(eqv( vowelsSum == i, q[ getId(8,i) ] )) );
+		}
+		
+		branch(*this, q, INT_VAR_SIZE_MIN, INT_VAL_MIN);
+	}
+
+	SRQ(bool share, SRQ& s) : Space(share, s) {
+		q.update(*this, share, s.q);
+	}
+
+	virtual Space* copy(bool share)
+	{
+		return new SRQ(share, *this);
+	}
+
+	void print(void) const {
+		std::cout << "------" << std::endl;
+		for (int i = 0; i < 10; i++)
+		{
+			for (int j = 0; j < 5; j++)
+			{
+				std::cout << q[i*5 + j] << " ";
+			}
+			std::cout << std::endl;
+		}
+	}
+
+};
+\end{lstlisting}
+
+\subsection{Quasigroup With Holes}
+\begin{lstlisting}[language=C++]
+class QWH : public Space {
+protected: 
+	IntVarArray m_q;
+	int m_width;
+
+public:
+	QWH(int width, const std::vector<int>& preassignment) 
+		: m_width(width), m_q(*this, width*width, 0, width-1)
+	{
+		for (int i = 0; i < m_width; i++)
+		{
+			IntVarArgs row(m_width);
+			IntVarArgs column(m_width);
+
+			for (int j = 0; j < m_width; j++)
+			{
+				if (preassignment[i*m_width + j] != -1)
+				{
+					rel(*this, m_q[i*m_width + j], IRT_EQ, preassignment[i*m_width + j]);
+				}
+
+				row[j] = m_q[i*m_width + j];
+				column[j] = m_q[i + j*width];
+			}
+
+			distinct(*this, row);
+			distinct(*this, column);
+		}
+
+		branch(*this, m_q, INT_VAR_SIZE_MIN, INT_VAL_MIN);
+	}
+
+	QWH(bool share, QWH& s) : Space(share, s) {
+		m_q.update(*this, share, s.m_q);
+		m_width = s.m_width;
+	}
+
+	virtual Space* copy(bool share)
+	{
+		return new QWH(share, *this);
+	}
+
+	void print(void) const {
+		//std::cout << m_q << std::endl;
+		
+		for (int i = 0; i < m_width; i++)
+		{
+			for (int j = 0; j < m_width; j++)
+			{
+				std::cout << m_q[i*m_width + j] << " ";
+			}
+			std::cout << std::endl;
+		}
+	}
+
+};
+\end{lstlisting}
+
+\subsection{Locating warehouses}
+\begin{lstlisting}[language=C++]
+class Warehouses : public MinimizeSpace {
+protected: 
+	IntVar TotalCost;
+	IntVar NumberOpen;
+	
+	IntVarArray Open;
+	IntVarArray Supplier;
+
+
+	IntVarArray Cost;
+	IntVar SumCost;
+
+	int numberOfWarehouses;
+	int numberOfStores;
+
+public:
+	Warehouses(
+		int nbWarehouses,
+		int nbStores,
+		const std::vector<int>& supplyCost, 
+		const std::vector<int>& warehouseCapacity
+		) 
+	: 
+		numberOfWarehouses(nbWarehouses),
+		numberOfStores(nbStores),
+		Supplier(*this, nbStores, 0, nbWarehouses-1),
+		TotalCost(*this, 0, Gecode::Int::Limits::max),
+		Open(*this, nbWarehouses, 0, 1),
+		NumberOpen(*this, 0, nbWarehouses),
+		Cost(*this, nbStores, 0, Gecode::Int::Limits::max),
+		SumCost(*this, 0, Gecode::Int::Limits::max)
+	{
+		
+		for (int i = 0; i < numberOfWarehouses; i++)
+		{
+			IntVarArray aux_supplied(*this, numberOfStores, 0, 1);
+
+			for (int j = 0; j < numberOfStores; j++)
+			{
+				post(*this, tt( imp( Supplier[j] == i, aux_supplied[j] == 1) ));
+				post(*this, tt( imp( Supplier[j] != i, aux_supplied[j] == 0) ));
+
+				post(*this, tt( imp( Supplier[j] == i, Cost[j] == supplyCost[i + j * numberOfWarehouses]) ));
+			}
+
+			IntVar aux_sum(*this, 0, numberOfStores);
+			
+			linear(*this, aux_supplied, IRT_EQ, aux_sum);
+
+			post(*this, tt( imp( aux_sum > 0, Open[i] == 1 ) ));
+			post(*this, tt( imp( aux_sum == 0, Open[i] == 0 ) ));
+
+			rel( *this, aux_sum, IRT_LQ, warehouseCapacity[i] );
+		}
+		
+		linear(*this, Open, IRT_EQ, NumberOpen);
+
+		linear(*this, Cost, IRT_EQ, SumCost);
+
+		IntArgs costArgs(2);
+		costArgs[0] = 1;
+		costArgs[1] = 50;
+
+		IntVarArgs costVariables(2);
+		costVariables[0] = SumCost;
+		costVariables[1] = NumberOpen;
+
+		linear(*this, costArgs, costVariables, IRT_EQ, TotalCost);
+		
+		branch(*this, Supplier, INT_VAR_SIZE_MIN, INT_VAL_MIN);
+	}
+
+	virtual IntVar cost() const {
+		return TotalCost;
+	}
+
+	Warehouses(bool share, Warehouses& s) : MinimizeSpace(share, s) {
+		Supplier.update(*this, share, s.Supplier);
+		TotalCost.update(*this, share, s.TotalCost);
+		Open.update(*this, share, s.Open);
+		NumberOpen.update(*this, share, s.NumberOpen);
+		Cost.update(*this, share, s.Cost);
+		SumCost.update(*this, share, s.SumCost);
+
+		numberOfWarehouses = s.numberOfWarehouses;
+		numberOfStores = s.numberOfStores;
+	}
+
+	virtual Space* copy(bool share)
+	{
+		return new Warehouses(share, *this);
+	}
+
+	void print(void) const {
+		std::cout << "Cost: " << TotalCost << std::endl;
+		std::cout << "Suppliers:" << Supplier << std::endl;
+		std::cout << "Open:" << Open << std::endl;
+	}
+
+};
+\end{lstlisting}
