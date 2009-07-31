@@ -1,0 +1,5 @@
+language ESSENCE' 1.b.a
+find s : matrix indexed by [int(0..n-1)] of int(0..n)
+such that
+  forall i : int(0..n-1).
+        ( s[i] = (sum j : int(0..n-1). (s[j] = i)))

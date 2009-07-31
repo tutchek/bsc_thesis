@@ -1,0 +1,2 @@
+The SICStus prolog is a closed software and therefore it cannot be included on
+this cd.

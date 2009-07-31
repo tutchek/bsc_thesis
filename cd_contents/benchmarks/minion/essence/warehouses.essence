@@ -1,0 +1,35 @@
+language ESSENCE' 1.b.a
+
+given Capacity : matrix indexed by [WarehousesRANGE] of int(0..numberOfStores)
+
+given StoreWarehouseCost : matrix indexed by [StoresRANGE,WarehousesRANGE] of CostRANGE
+
+letting CostRANGE be domain int(0..maxCost)
+letting StoresRANGE be domain int(0..numberOfStores-1)
+letting WarehousesRANGE be domain int(0..numberOfWarehouses-1)
+
+find 
+  TotalCost : CostRANGE,
+  Open : matrix indexed by [WarehousesRANGE] of int(0..1),
+  NumberOpen : int(0..numberOfWarehouses),
+  Supplier : matrix indexed by [StoresRANGE] of WarehousesRANGE,
+  Cost : matrix indexed by [StoresRANGE] of CostRANGE,
+  SumCost : CostRANGE
+  
+minimising TotalCost
+
+such that
+  TotalCost = SumCost + NumberOpen * warehouseCost,
+  SumCost = sum j : StoresRANGE. (Cost[j]),
+  NumberOpen = sum j : WarehousesRANGE. (Open[j]),
+
+  forall i : WarehousesRANGE.  
+	(Capacity[i] >= (sum j : StoresRANGE. (Supplier[j] = i))),
+
+  forall i : WarehousesRANGE.  
+	(((sum j : StoresRANGE. (Supplier[j] = i)) > 0) => (Open[i] = 1) ),
+
+  forall i : WarehousesRANGE.  
+	(((sum j : StoresRANGE. (Supplier[j] = i)) = 0) => (Open[i] = 0) ),
+  
+  forall i : StoresRANGE. forall j : WarehousesRANGE. ( (Supplier[i] = j) => (Cost[i] = StoreWarehouseCost[i,j]) )
