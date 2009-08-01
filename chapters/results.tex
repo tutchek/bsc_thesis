@@ -1,3 +1,62 @@
 \chapter{Benchmark results}
 \thispagestyle{myheadings}\markright{$ $Id$ $}
 
+In this chapter we present the results of the performance measuring of each solver.
+There are two types of tests. The robustness test and the performance test. In the robustness
+test we compare the solvers according to the size of the task which the solver
+was able to compute in a given time limit. In the performance tests we measure the time 
+which is needed to find a solution to the problem and the consumed memory. We used 
+for this purpose designed tool. The tool runs the solver executable with given parameters.
+While the solver process is running the benchmarking tool periodically checks the \texttt{/proc/(pid)/stat} file
+and saves the current state. If the elapsed time is larger than the given limit the 
+\texttt{SIGINT} signal is sent to the process. The proces have one second to end
+and produce some output. If the process is still running one second after the 
+\texttt{SIGINT} signal the \texttt{SIGKILL} signal is sent and process is killed. 
+In the robustness test the tool tries to estimate the size of the tast using the
+binary search.
+
+All of the benchmarks were performed on a single dedicated computer Pentium IV, 3GHz (single core 
+with hyper threading),
+1GB RAM running the Debian linux with linux kernel 2.6.18. Except the Mozart/Oz 
+solver and SICStus Prolog all solvers were compiled on the target machine. The 
+precompiled binaries distribution was used for the Mozart/Oz solver because the
+source distribution contained in the time of writing of this thesis error which
+prevented compiling of the code. The SICStus Prolog is not distributed as source 
+code but only as a binary. Therefore we used the shipped executable. Since the 
+SICStus Prolog is not a free open-source software we used a trial version of the solver.
+There should be limited only the period when the solver can be used. The performance
+of the solver should not be affected.
+
+The following versions of the solvers were used:
+\begin{itemize}
+  \item Mozart 1.4.0-20080704
+  \item Choco 2.1.0
+  \item Minion 0.8.1
+  \item Gecode 3.1.0
+  \item \eclipse 6.0\_96
+  \item SISCtus Prolog 4.0.7 -- linux, glibc 2.7
+\end{itemize}   
+
+\section{The robustness test}
+In the robustness test we measure how long magic sequence the solver is able to compute in 
+ten minutes. As stated in previous paragraph the benchmarking tool uses for this 
+purpose the binary search. The tool have an interval $[a,b]$ of values on which the search 
+is performed. It picks a value $v$ in the middle of the interval and tries to compute
+the solution of that length. If it success it changes the interval to $[v+1,b]$, if 
+it fails it changes the interval to $[a,v-1]$. Then the search continues in the same way
+until the lower bound of the interval is larger than upper bound.
+
+\section{The performance test}
+This test compares the solvers according to the two citerias. the first criteria is
+the time needed to solve given problem instances. The second criteria is the highest
+peak of used computer memory during the computation. The following benchmark instances 
+were used:
+
+\begin{itemize}
+  \item {\em queens10} -- 10 queens, find all solutions
+  \item {\em queens100} -- 100 queens, find one solution
+  \item {\em magic20} -- Magic sequence of the length 20, find one solution
+  \item {\em srq} -- Self Refferential Quiz, find one solution
+  \item {\em qwh20}
+  \item {\em warehouses} -- Locating Warehouses, find the best solution with the initial setting as in the figure \ref{warehouses-setting} 
+\end{itemize}  

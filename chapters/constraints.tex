@@ -1,2 +1,96 @@
 \chapter{List of the constraints}
 \thispagestyle{myheadings}\markright{$ $Id$ $}
+
+In this appendix we provide a list of supported constraints foe each of studied 
+constraint solvers. The constraints of the same type have often different names
+in the system. Therefore we use a symbolic expression which describes the constraint.
+The following convention is used: the integer or real variables are typed as 
+text in the latin small alphabet, $x$, $y$, $a$ for example. 
+Boolean variables are denoted by the monospace font, for example \texttt{b}, \texttt{x}. 
+If more variables have  The constants which are not to be 
+constrained are typed as the small greek letters, for example $\alpha$, $\epsilon$. The set
+variables are denoted by the capital latin letters, for example $S$, $X$, $P$. Vector
+of variables is denoted by the square brackets. For example a vector of the set variables would
+be typed $[X,Y,S]$. The subscript index after the ending bracket of the vector means specification
+of the element of the vector. To denote second item of vector $[x,y,x]$ we write $[x,y,z]_2$.
+All standard mathematical symbols do have their standard meaning. 
+If the constraint cannot be described by the mathematical expression the standard
+name is used. The definition of such constraint follows at the end of the appropriate section.  
+
+The symbol \ano means that the constraint is fully supported in the constraint solver.
+The symbol \trochu means partial support of the constraint. The explanation follows under
+the table. The symbol \vubec means that this constraint is not supported by the standard
+version of the solver. We use following abbreviations for the constraint solver names:
+Moz means Mozart/Oz, Cho means Choco, Min means Minion, ECL means \eclipse and finally
+SiP means SICStus Prolog.
+
+\section{Domain constraints}
+\begin{center}
+\begin{tabular}{|l||c|c|c|c|c|c|}
+\hline Constraint & Moz & Cho & Min & Gec & ECL & SiP \\
+\hline 
+\hline $x = n$ & ? & ? & ? & \ano & ? & ? \\
+\hline $x \in \{\alpha, ..., \beta\}$ & ? & ? & ? & \ano & ? & ? \\
+\hline $x \in S$ & ? & ? & ? & \ano & ? & ? \\
+\hline $(x = n) \Leftrightarrow \mathtt{b}$ & ? & ? & ? & \ano & ? & ? \\
+\hline $(x \in \{\alpha ... \beta\}) \Leftrightarrow \mathtt{b}$ & ? & ? & ? & \ano & ? & ? \\
+\hline $(x \in S) \Leftrightarrow \mathtt{b}$ & ? & ? & ? & \ano & ? & ? \\
+\hline 
+\end{tabular}
+\end{center}
+
+\section{Relation constraints}
+\begin{center}
+\begin{tabular}{|l||c|c|c|c|c|c|}
+\hline Constraint & Moz & Cho & Min & Gec & ECL & SiP \\
+\hline 
+
+\hline $x > y$ & ? & ? & ? & \ano & ? & ? \\
+\hline $x \geq y$ & ? & ? & ? & \ano & ? & ? \\
+\hline $x = y$ & ? & ? & ? & \ano & ? & ? \\
+\hline $x \leq y$ & ? & ? & ? & \ano & ? & ? \\
+\hline $x < y$ & ? & ? & ? & \ano & ? & ? \\
+\hline $x \neq y$ & ? & ? & ? & \ano & ? & ? \\
+
+\hline $\sum{[x_0,...,x_\alpha]} > y$      & ? & ? & \vubec & \ano & ? & ? \\
+\hline $\sum{[x_0,...,x_\alpha]} \geq y$   & ? & ? & \ano & \ano & ? & ? \\
+\hline $\sum{[x_0,...,x_\alpha]} = y$      & ? & ? & \vubec & \ano & ? & ? \\
+\hline $\sum{[x_0,...,x_\alpha]} \leq y$   & ? & ? & \ano & \ano & ? & ? \\
+\hline $\sum{[x_0,...,x_\alpha]} < y$      & ? & ? & \vubec & \ano & ? & ? \\
+\hline $\sum{[x_0,...,x_\alpha]} \neq y$   & ? & ? & \vubec & \ano & ? & ? \\
+
+\hline $\bigwedge {\mathtt{x}_i} \wedge \bigwedge{\neg \mathtt{y}_i} = \mathtt{b}$   & ? & ? & ? & \ano & ? & ? \\
+\hline $\bigvee {\mathtt{x}_i} \vee \bigvee{\neg \mathtt{y}_i} = \mathtt{b}$   & ? & ? & ? & \ano & ? & ? \\
+\hline 
+\end{tabular}
+\end{center}
+
+\section{Element constraints}
+\begin{center}
+\begin{tabular}{|l||c|c|c|c|c|c|}
+\hline Constraint & Moz & Cho & Min & Gec & ECL & SiP \\
+\hline 
+
+\hline $[\alpha_1, ..., \alpha_\beta]_x = \gamma$ & ? & ? & ? & \ano & ? & ? \\
+\hline $[\alpha_1, ..., \alpha_\beta]_x = y$ & ? & ? & ? & \ano & ? & ? \\
+\hline $[x_1, ..., x_\alpha]_y = \beta$ & ? & ? & ? & \ano & ? & ? \\
+\hline $[x_1, ..., x_\alpha]_y = z$ & ? & ? & ? & \ano & ? & ? \\
+
+\hline 
+\end{tabular}
+\end{center}
+
+\section{Global constraints}
+\begin{center}
+\begin{tabular}{|l||c|c|c|c|c|c|}
+\hline Constraint & Moz & Cho & Min & Gec & ECL & SiP \\
+\hline 
+
+\hline $\mathrm{alldifferent}([x_1, ..., x_\alpha])$ & \ano & \ano & \ano & \ano & \ano & \ano \\
+\hline $[x_1, ..., x_\alpha]_i = j \Leftrightarrow [y_1, ..., y_\beta]_j = i$ & ? & ? & ? & \ano & ? & ? \\
+
+\hline 
+\end{tabular}
+\end{center}
+
+The alldifferent constraint ensures that all values in a given vector are distinct.
