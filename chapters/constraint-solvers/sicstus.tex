@@ -42,6 +42,15 @@ We constrain the variable $X$ to be in the domain $\{5,...,9\}$ and the variable
 to be in domain $\{1,...,6\}$. Then we constrain the variable $X$ to be smaller than
 variable $Y$. We did not perform the search so the variables remains not solved.
 User can set names for the variables to achieve a better orientation in the printout.
+The library uses the following events which results in the action. The {\em constraint 
+event} which is invoked when the global constraint is woken and the {\em labelling event}
+which is called after the variable labeling is started or a variable gets constrained
+or the labeling has failed. After such event eccurs the {\em visualiser} is called. 
+The visualiser is a prolog predicate which typically shows the event in the user 
+friendly format; however, it can do any action instead as a response to the event.
+The primitive constraints are not tracked by {\em fdbg} but the arithmetical constraints
+like $X \#< Y$ are changed to the global constraints when the library is loaded.
+The user can specify the filename where the output of the {\em fdbg} will be written.
 
 \begin{figure}
 \caption{\label{sicstus:fdbg}The example of the {\em fdbg} output.}

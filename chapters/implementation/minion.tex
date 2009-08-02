@@ -1,0 +1,143 @@
+\section{Minion}
+\verb= $Id$ =
+
+\subsection{Magic sequence}
+\label{implementation:minion:ms}
+\subsubsection{The Minion Input file}
+\begin{lstlisting}[language=C++]
+MINION 3
+
+**VARIABLES**
+DISCRETE s[5] {0..5}
+
+BOOL aux0
+BOOL aux1
+BOOL aux2
+BOOL aux3
+BOOL aux4
+BOOL aux5
+BOOL aux6
+BOOL aux7
+BOOL aux8
+BOOL aux9
+BOOL aux10
+BOOL aux11
+BOOL aux12
+BOOL aux13
+BOOL aux14
+BOOL aux15
+BOOL aux16
+BOOL aux17
+BOOL aux18
+BOOL aux19
+BOOL aux20
+BOOL aux21
+BOOL aux22
+BOOL aux23
+BOOL aux24
+
+**SEARCH**
+
+PRINT[s]
+
+VARORDER [
+s , aux0, aux1, aux2, aux3, aux4, aux5, aux6, aux7, aux8, aux9, aux10, aux11, aux12, aux13, aux14, aux15, aux16, aux17, aux18, aux19, aux20, aux21, aux22, aux23, aux24]
+
+
+**CONSTRAINTS**
+
+reify(eq(0, s[0]), aux0)
+reify(eq(0, s[1]), aux1)
+reify(eq(0, s[2]), aux2)
+reify(eq(0, s[3]), aux3)
+reify(eq(0, s[4]), aux4)
+sumleq([aux0,aux1,aux2,aux3,aux4], s[0])
+sumgeq([aux0,aux1,aux2,aux3,aux4], s[0])
+reify(eq(1, s[0]), aux5)
+reify(eq(1, s[1]), aux6)
+reify(eq(1, s[2]), aux7)
+reify(eq(1, s[3]), aux8)
+reify(eq(1, s[4]), aux9)
+sumleq([aux5,aux6,aux7,aux8,aux9], s[1])
+sumgeq([aux5,aux6,aux7,aux8,aux9], s[1])
+reify(eq(2, s[0]), aux10)
+reify(eq(2, s[1]), aux11)
+reify(eq(2, s[2]), aux12)
+reify(eq(2, s[3]), aux13)
+reify(eq(2, s[4]), aux14)
+sumleq([aux10,aux11,aux12,aux13,aux14], s[2])
+sumgeq([aux10,aux11,aux12,aux13,aux14], s[2])
+reify(eq(3, s[0]), aux15)
+reify(eq(3, s[1]), aux16)
+reify(eq(3, s[2]), aux17)
+reify(eq(3, s[3]), aux18)
+reify(eq(3, s[4]), aux19)
+sumleq([aux15,aux16,aux17,aux18,aux19], s[3])
+sumgeq([aux15,aux16,aux17,aux18,aux19], s[3])
+reify(eq(4, s[0]), aux20)
+reify(eq(4, s[1]), aux21)
+reify(eq(4, s[2]), aux22)
+reify(eq(4, s[3]), aux23)
+reify(eq(4, s[4]), aux24)
+sumleq([aux20,aux21,aux22,aux23,aux24], s[4])
+sumgeq([aux20,aux21,aux22,aux23,aux24], s[4])
+
+**EOF**
+\end{lstlisting}
+
+\subsubsection{PHP generator}
+\label{implementation:minion:ms:php}
+\begin{lstlisting}[language=PHP]
+<?php
+
+$n = 5;
+if ($_SERVER['argc'] > 1)
+{
+  $n = (int) $_SERVER['argv'][1];
+}
+
+?>
+MINION 3
+
+**VARIABLES**
+DISCRETE s[<?php echo $n ?>] {0..<?php echo $n ?>}
+
+<?php
+for ($i = 0; $i < $n*$n; $i++) {
+echo "BOOL aux{$i}\n";
+}
+?>
+
+**SEARCH**
+
+PRINT[s]
+
+VARORDER [
+s <?php
+for ($i = 0; $i < $n*$n; $i++) {
+echo ", aux{$i}";
+}
+?>]
+
+
+**CONSTRAINTS**
+
+<?php
+for ($i = 0; $i < $n; $i++) {
+  $aux = Array();
+  for ($j = 0; $j < $n; $j++)
+  {
+    echo "reify(eq({$i}, s[{$j}]), aux".($i * $n + $j).")\n";
+    
+    $aux[] = "aux".($i * $n + $j);
+  }
+  
+  $aux_i = Implode(",", $aux);
+  
+  echo "sumleq([{$aux_i}], s[$i])\n";
+  echo "sumgeq([{$aux_i}], s[$i])\n";
+}
+?>
+
+**EOF**
+\end{lstlisting}

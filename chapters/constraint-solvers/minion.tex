@@ -66,15 +66,35 @@ show the solution. User then can directly modify the Essence source code and per
 the invokation again if the results are not what he expected. 
 
 \subsection{Benchmarks implementation}
+Due to the length of the Minion input files we include in this thesis only the implementation
+of the Magic Sequence problem of the length 5. The source code of the input file
+is in the section \ref{implementation:minion:ms}. As the reader can see the input file
+is divided into several sections. The specification of the file format comes on the first line.
+Then follows the sections of the file denoted by the label \texttt{*** SECTION NAME ***}. These
+sections can be in the file in any order and repeated as many times as needed. The
+only exception is the \texttt{EOF} section which denotes the end of the file and should be in
+the file only once at the end of the file. We used the alternative model of the 
+problem as described in the section \ref{benchmarks:ms}. Therefore we need five 
+variables for the sequence and twenty-five auxiliary variables. We define them in 
+the \texttt{VARIABLES} section on lines 4 -- 30. Then the constraints are defined in the 
+\texttt{CONSTRAINTS} section. The implication is modelled using the reification constraint.
+Since the Minion have only the constraints $\sum{x} \leq a$ and $\sum{x} \geq a$ but
+ does not have the constraint $\sum{x} = a$ we have to use the constraints \texttt{sumleq} and
+ \texttt{sumgeq}. Finally the \texttt{search} section defines the order of the variables.
+ The variables will be searched in that order. The \texttt{SEARCH} section defines also the
+ solution using the \texttt{PRINT} command. All variables marked for printing will
+ be printed out as a solution. For the benchmars we used the Tailor tool which
+ compiled the Essence source code into the Minion input file; however, the large
+ problems were problematic for this tool. Therefore we used ad-hoc generators. For the
+ magic sequence we used the generator showed in the subsection {\em PHP generator}
+ of the section \ref{implementation:minion:ms}.
 
 \subsection{Subjective description}
 %% TODO: Tohle by se asi hodilo lehce prepsat
-The authors stated on the Minion website that Minion is the fastest available solver.
-We will leave it to the readers consideration. e found out that even for large problem 
-instances if the memory was sufficient the anwer was given immediately. The biggest 
-problem is then the inout format but this can be resolved by using the Tailor tool.
-As a standalone executable which can be called from command line it can even bring 
-the constraint solving capability to programs written in languages like bash. The only
-thing which is needed is the capability to assemble the input format. As a documentation 
-there is available the refference guide with description of all constraints available and
+The largest problem of the solver is the input format. The problem can be resolved 
+by using the Tailor tool; however, for the large problems the tool is not sufficient.
+As a standalone executable which can be called from command line it can bring the capability of 
+the constraint solving to programs written in the languages like bash. The only
+thing which is needed is the capability to assemble the input file in the proper format. 
+There is available the reference guide with description of all constraints available and
 description of the input format.
