@@ -1,2 +1,70 @@
 \section{SICStus Prolog}
 \verb= $Id$ =
+
+SICStus Prolog is an implementation of the Prolog programming language by Swedish
+Institue of Computer Science or SICS. It differs from the other here discussed solvers 
+because SICStus Prolog is not a free open source system. The trial version of this
+system can be obtained. Just like the \eclipse system the SICStus Prolog is not only
+a constraint solver but a programming language where constraint solver is shipped as 
+an independent library. The system provides libraries for solving the constraint problems
+over the finite domains, over the boolean domains and over the real domains.
+
+\section{Solver description}
+Simillary as in the \eclipse system the solvers are independent libraries shipped 
+with the system. The constraint solver over the finite domain consist of the
+{\em clp(fd)} library \cite{Carlsson97anopen-ended}. The language constructs are different
+compared to \eclipse; however, the basic properties are preserved. Therefore porting
+the \eclipse program to SICStus Prolog is not a hard work but also it is not trivial.
+The number of available constraints is higher than the \eclipse system provides.
+The clp(fd)library offers standard arithmetic expressions, the relation constraints
+and the global constraints. The library also provides the scheduling constraints and 
+the extensional constraints.
+
+The {\em clp(b)} provides a solver over the boolean variables. The solver contains
+the relation constraints as well as constraints for the tautology and satisfiability.
+Finally the {\em clp(q,r)} library \cite{clpqr:opai} provides constraining of the
+
+The standard set of constraints can be expanded by user defined constraints. As well as the
+\eclipse system the SICStus Prolog offers to add constraints using the Constraint Handling
+Rules language and FlatZinc language. User can also define his own constraints as the
+Prolog predicate. The user created constraint can be either a global constraint or
+a primitive constraint. The ways how to create such constraints are described in 
+the SICStus Prolog manual.
+
+\section{Debugging support}
+The SICStus Prolog offers the {\em Finite Domain Constraint Debugger} or {\em fdbg} library.
+This library can be used next to the standard Prolog debugging predicate \texttt{trace}. This
+predicate allows to debug any prolog program. The {\em fdbg} library provides the
+log of the constraint propagation and distribution. There are logged all changes to the
+domains and other events which occured during the computation. The example of the {\em fdbg}
+output is in the figure \ref{sicstus:fdbg}. On the first line there is a Prolog query.
+We constrain the variable $X$ to be in the domain $\{5,...,9\}$ and the variable $Y$
+to be in domain $\{1,...,6\}$. Then we constrain the variable $X$ to be smaller than
+variable $Y$. We did not perform the search so the variables remains not solved.
+User can set names for the variables to achieve a better orientation in the printout.
+
+\begin{figure}
+\caption{\label{sicstus:fdbg}The example of the {\em fdbg} output.}
+\begin{verbatim}
+| ?- X in 5..9, Y in 1..6, X #< Y.
+<fdvar_9> in 5..9
+    fdvar_9 = inf..sup -> 5..9
+    Constraint exited.
+
+<fdvar_10> in 1..6
+    fdvar_10 = inf..sup -> 1..6
+    Constraint exited.
+
+<fdvar_9>+1#=<<fdvar_10>
+    fdvar_9 = 5..9 -> {5}
+    fdvar_10 = 1..6 -> {6}
+    Constraint exited.
+    
+X in 4..6,
+Y in 5..7 
+\end{verbatim}   
+\end{figure}
+
+\subsection{Benchmarks implementation}
+
+\subsection{Subjective description}
