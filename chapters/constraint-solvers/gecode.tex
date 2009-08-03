@@ -37,19 +37,19 @@ Apart from standard arithmetic constraints and order constraints, the Gecode off
 wide range of specialize constraints. For SAT there is a constraint \texttt{clause(space,rel,x,y,z)},
 which is equal to a condition $\bigvee {x_i} \vee \bigvee{\neg y_i}$, respectively, $\bigwedge {x_i} \wedge \bigwedge{\neg y_i}$
 depending on a param {\em rel}. There is another interesting constraint {\em count}, which 
-quarantees that $\#\{i \in \{0, ..., |x|-1\}|x_i = j\} = y_j$ is satisfied. Which brings us to a fact,
+guarantees that $\#\{i \in \{0, ..., |x|-1\}|x_i = j\} = y_j$ is satisfied. Which brings us to a fact,
 that a benchmark Magic sequence can be modeled using one constraint \texttt{count(*this, x, x)}.
 Moreover, there are also available extensional constraints. Those are constraints, which are 
 defined using an extenstion, for example, a deterministic finite automata. In such a case, the constraint
 has following pattern:  {\em $x$ is a word, which is accepted by automata $A$}. As for graph constraints, 
 Gecode has a constraint {\em $x$ is a Hamilton cycle}. For an area of scheduling, there is available
 a constraint \texttt{cumulatives(home, resource, start, duration, end, height, limit, atmost)}, which
-guarantees, that in a set of tasks T (task $T_i = \langle \mathrm{resource}_i, \mathrm{start}_i,
-\mathrm{duration}_i, \mathrm{end}_i, \mathrm{height}_i \rangle$) it is used either up to $\mathrm{limit}$ of sources,
-or at least the value depending on a param {\em atmost}. ???!!!???
-zjistit pøesnou definici co to dìlá, nedává mi to moc smysl ???!!!???
+guarantees, that in a set of tasks T (task $T_i = \langle \mathrm{machine}_i, \mathrm{start}_i,
+\mathrm{duration}_i, \mathrm{end}_i, \mathrm{height}_i \rangle$) will be performed on 
+the available machines. Each machine can handle at most $\mathrm{limit}_j$ tasks at
+one moment.
 
-A constraints set also contains following: standard set operations, constraints for cardinality of set and a constraint
+The following constraints can be used for constraining of the set variables: standard set operations, constraints for cardinality of set and a constraint
 which guarantees, that a weighed sum of set has a given value. That means if we have a set $x$, 
 a weight vector $w$ and the total should be $y$, the coinstrant has a pattern $\sum{x_i w_i} = y$. 
 Furthermore, there are two constraints available, both of which are related to convexity. A set is convexed, 
@@ -95,6 +95,34 @@ of the node's subtree and a number of successful/unsuccessful solutions in subtr
 In Gist there is also a tool Inspector, which works equally to the Inspector in Mozart/Oz.
 
 \subsection{Benchmarks implementation}
+All benchmarks are represented by the class derived from the base class Space except the
+Locating Warehouses problem which is derived from the MinimizeSpace. The non-auxiliary
+ constraint variables are member variables of the class. The constraints are posted in the 
+ constructor. In the constructor there is also the call to the \texttt{branch} function which
+ is used to tell the constraint solver over which variables should be the labelling algorithm
+ used. To model most of the constraints we used the {\em minimodel} extension. That means that we could {\em post} the expressions
+to the constraint store without having to explicitly set auxiliary variables and then
+constrain them. All benchmarks except the Magic Sequence were transformed to the 
+Gecode source very straightforward using the same structure of the constraint variables
+and constraints as proposed in the chapter \ref{benchmarks}. For the magic sequence 
+the solver offers the constraint \texttt{count} which itself representes the whole 
+problem and therefore we used it. The Self Refferential Quiz in the section \ref{implementation:gecode:srq} 
+was modelled using the boolean variables. The oly way how to constrain the boolean variables with
+the integer constraints is by the \texttt{channel} constraint. This constraint among
+the other possible actions can post a constraint $x = b$ where $x$ is an integer variable
+and b is a boolean variable. Then we can constrain the integer variables and effects of 
+these constraints applies on the boolean variables. This principle was used to ensure
+that there is only one answer to each question on the lines 12--23. A lot of the
+constraints in the SRQ problem have the form $(x \mand y \mand ... \mand \neg a \mand \neg b) \Leftrightarrow c$.
+The standard boolean relation constraints could be used for this purpose; however, we use 
+the \texttt{clause(space, rel, x,y,z)} constraint (line 37) which posts the constraint 
+ $\bigvee {x_i} \vee \bigvee{\neg y_i} \Leftrightarrow z$, respectively, $\bigwedge {x_i} \wedge \bigwedge{\neg y_i} \Leftrightarrow z$.
+ This constraint significantly reduces the number of the negation propagators.
+ The optimalization problem need also call the \texttt{branch} function. Also the
+ \texttt{cost} function has to be declared. Result of this function is used as a value of
+ the objective function to find a better solution. The search engine for optimalization
+ problems has to be \texttt{BAB} or \texttt{Restart}.
+   
 
 \subsection{Subjective description}
 Gecode is a typical example of a top software, which is not quite well usable due to

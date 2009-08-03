@@ -8,7 +8,7 @@ connected to the cluster. Since it is a multi-paradigmatic language the user
 can write as well imperative as logic Prolog-like programs. Language also offers classes
 including inheritance and creating the objects. The language was designed for the
 highest variability of usage because the programmer can use the all features of imperative,
-functional, logic, oop and other paradigms in one program. In standard distribution
+functional, logic, object-oriented programming and other paradigms in one program. In standard distribution
 it is shipped as a standalone compiler which compile into the native executable code.
 Moreover it can run in the interactive mode. The programmer can feed the compiler with
 a single line, buffer or whole program and compiler immediately responds. As an IDE
@@ -78,22 +78,24 @@ solution is found and the value $v$ of objective function is computed. Then the 
  exists a better solution the value of $v$ is updated to the new value of objective function.
 
 \subsection{Debugging support}
-Mozart nabízí u¾ivateli interaktivní nástroj Explorer, který umo¾òuje prozkoumat 
-strom øe¹ení vèetnì dílèích rozhodnutí, které øe¹iè bìhem výpoètu uèinil. Explorer 
-je mo¾né pou¾ívat také v interaktivním módu a ruènì urèovat, které vìtve øe¹ení prozkoumat. 
- 
-Koleèka oznaèují uzly rozhodovacího stromu, ve kterých probìhlo rozhodnutí, kosoètverce 
-oznaèují nalezení úspì¹ného øe¹ení a ètverec vìtev kde není øe¹ení. Svìtlej¹í barvou 
-jsou uvedené uzly, které je mo¾né je¹tì dále expandovat. Na uvedeném obrázku tedy 
-máme jedno øe¹ení, dvì neúspì¹ná øe¹ení a pìt okam¾ikù, kdy do¹lo k rozhodnutí z 
-nich¾ lze je¹tì ve tøech hledat dal¹í øe¹ení. Explorer umo¾òuje také export 
-nakresleného stromu ve formátu PostScript.
+Mozart/Oz offers to the user the interactive tool Explorer. The Explorer can be used to explore 
+the search tree including the choice nodes. The user can use the Explorer in the 
+interactive mode and choose the subtrees of the search tree to be expanded. 
+ The Explorer tool screenshot is in the figure \ref{mozart:explorer}. The circles 
+ denotes the choice nodes of the tree, the diamonds means the solution of
+ the problem and finally the squares are the branches with no solution. The lighter color
+ denotes the nodes which can be expanded. On the figure there is one solution, two 
+ unsuccesful branches and five choice nodes. Three of the choice nodes can be still expanded.
+ The Explorer tool offers also exporting off the tree diagram to PostScript.
+
+\begin{figure}
+\caption{\label{mozart:explorer}The Explorer tool}
+\begin{center}
+\includegraphics[scale=0.3]{images/screenshoty/explorer.eps}
+\end{center}
+\end{figure}
 
 \subsection{Benchmarks implementation}
-Ka¾dý implemetovaný benchmark je samostatný solver. Po zavolání pøíslu¹ného 
-solveru je vrácena funkce, která je posléze pøedána funkci realizující hledání 
-øe¹ení. Jde buï o funkce SearchOne resp. SearchAll, které naleznou jedno nebo 
-v¹echna øe¹ení problému a vrátí je v seznamu. Pro spu¹tìní exploreru a interaktivní 
-hledání øe¹ení lze pak zavolat ExploreOne resp. ExploreAll.
+
 
 \subsection{Subjective description}

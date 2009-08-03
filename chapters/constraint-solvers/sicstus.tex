@@ -22,7 +22,8 @@ the extensional constraints.
 
 The {\em clp(b)} provides a solver over the boolean variables. The solver contains
 the relation constraints as well as constraints for the tautology and satisfiability.
-Finally the {\em clp(q,r)} library \cite{clpqr:opai} provides constraining of the
+Finally the {\em clp(q,r)} library \cite{clpqr:opai} provides constraining over the 
+rational and real numbers. The constraint solver for set variables is not available.
 
 The standard set of constraints can be expanded by user defined constraints. As well as the
 \eclipse system the SICStus Prolog offers to add constraints using the Constraint Handling
@@ -75,5 +76,40 @@ Y in 5..7
 \end{figure}
 
 \subsection{Benchmarks implementation}
-
+The implemented benchmarks in the SICStus Prolog are listed in the section \ref{implementation:sicstus}.
+The solver is very similar to the one distributed with the \eclipse system. Therefore
+the benchmarks were implemented in a very similar way. In fact we used the \eclipse source
+code and modified them that they could be used in the SICStus Prolog. The main difference
+between the systems is in the domain constraints and in the sum constraint.
+The domain relation constraint in the \eclipse system is the operator \texttt{::/2}.
+This predicate can be applied on the single variable as well as on the list.
+The second operand is the domain in the form of a list of intervals. For example to constrain
+the variable $X$ to be in the domain $\{1,2\}$ we use \texttt{X :: [1..2]}. 
+In the SICStus Prolog one have to pay attention if the constraint
+is used on the single variable or on the list of variables. In the first case the operator
+\texttt{in/2} is used. The domain of the variable is the second operand. The domain 
+can be specified as a single interval using the \texttt{../2} operator or using the set
+expression. The expresion can contain the intervals connected using the set unions, 
+set intersections or set complements. The list of variables can be constrained using
+the \texttt{domain/3} predicate. The user specifies the lower and upper bound of the 
+domain. The second change needed to get the correct SICStus Prolog source code was
+determined by the \texttt{sum/3} predicate. In the \eclipse the \texttt{sum/1} predicate
+takes a list as an argument and the return value can be used in the expression. In the SICStus Prolog
+the sum is standard predicate and therefore it does not return a value. The predicate 
+\texttt{sum(L, R, V)} instead posts the constraint $\sum{L} \sim_R V$, where L is a list,
+R a relation, equality for example, and V is a variable. Example can be found in 
+the magic sequence implementation in the section \ref{implementation:sicstus:ms} on
+the line 17. The last change to the \eclipse implementation was the {\em implies} constraint.
+We can use in the SICStus Prolog the equivalence constraint and therefore we used it.
+Example of the equivalence constraint is in the SRQ implementation in the section \ref{implementation:sicstus:srq}
+on line 39. The implementation of the SRQ problem also shows the problem with large
+predicates. We had to split the \texttt{questions} predicate because it contained more than
+256 variables. The optimalisation problem Location Warehouses is modelled also very
+similar to the \eclipse system. The source code is in the section \ref{implementation:sicstus:warehouses}.
+ 
 \subsection{Subjective description}
+The SICStus Prolog is a profesional solution. The variety of available libraries 
+is really large; however if iser need to solve constraint problem over the set variables 
+it is useles. System is well documented and the manual is exhaustive. The system
+is not available freely for the public use but the time limited trial version can
+be acquired.

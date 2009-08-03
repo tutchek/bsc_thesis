@@ -1,4 +1,5 @@
 \chapter{Benchmarks}
+\label{benchmarks}
 \verb= $Id$ =
 
 In this chapter we shall define benchmarks which will later be used to examine the properties of each solver. We will be dealing with five different cases which are well known and documented: N-queens problem, magic sequence problem, self referential quiz, quasigroup with holes problem and locating warehouses problem. In this chapter, we will show on these benchmarks the different ways of modelling the problem with solvers.
@@ -194,9 +195,8 @@ We model the quiz as a table of boolean variables with five columns (A, B, C, D,
 and ten rows, one for each question. The value in the column $i$ and row $j$ is
 {\em true} if and only if the answer to the question $j$ is $i$. Because there is only one
 answer possible to each question, we constraint the rows of the table to contain
-only one {\em true}. The test has three solutions. One of them is showed in the figure 
-\ref{srq-solution-table}, the other two solutions differ in the answer to the question
-10 which can be also B or C.  
+only one {\em true}. The test has only one solution which is showed in the figure 
+\ref{srq-solution-table}.  
  
 \begin{table}[ht]
 \caption{\label{srq-solution-table}Solution of a Self Referential Quiz}
@@ -371,7 +371,7 @@ prices for supplying each of the pairs (warehouse, store) are the required input
  $s_i$, $i \in \{1,...,\#\mathrm{ of stores}\}$ where $s_i$ indicates which warehouse
  supplies the shop $i$.
 
-\subsection{constraint problem model}
+\subsection{Constraint problem model}
 We can build $W$ warehouses. The price for opening of a new warehouse is fixed and 
 stored in the parameter $\mathrm{openCost}$. We also have $S$ shops. The maximum capacity
 of warehouses is given by vector $w$, where $w_i$ is the maximum number of shops which
