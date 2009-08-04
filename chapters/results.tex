@@ -45,7 +45,21 @@ purpose the binary search. The tool have an interval $[a,b]$ of values on which 
 is performed. It picks a value $v$ in the middle of the interval and tries to compute
 the solution of that length. If it success it changes the interval to $[v+1,b]$, if 
 it fails it changes the interval to $[a,v-1]$. Then the search continues in the same way
-until the lower bound of the interval is larger than upper bound.
+until the lower bound of the interval is larger than upper bound. The results of
+the robustness test are in the table \ref{results:robustness}.
+
+\begin{table}
+\caption{\label{results:robustness}The results of the robustness test.}
+\begin{center}
+\begin{tabular}{cccccc}
+\hline Mozart/Oz & Choco & Minion & Gecode & \eclipse & SICStus Prolog \\
+\hline
+   & 111 & 236 & 27 & 55 & 174 \\
+\hline 
+ 
+\end{tabular}
+\end{center}
+\end{table}
 
 \section{The performance test}
 This test compares the solvers according to the two citerias. The first criterium is

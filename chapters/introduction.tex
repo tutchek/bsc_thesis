@@ -1,17 +1,17 @@
 \chapter{Introduction}
 \thispagestyle{myheadings}\markright{$ $Id$ $}
 
-In this thesis we compare several constraint solvers from a perspective of a 
-user who is not experienced in a constraint programming. We focus on easiness 
+In this thesis we compare several constraint solvers from the perspective of a 
+user who is not experienced in the constraint programming. We focus on easiness 
 of a learning process of each solver and we measure performance by using benchmarks which 
-test various aspects of examined systems. 
+compare various aspects of examined systems. 
 
 \section{Constraint Satisfaction Problems}
-The constraint programming is a programming paradigm which uses constraints to 
+Constraint programming is a programming paradigm which uses constraints to 
 describe a solution rather than to program a way of achieving such a solution. 
 The constraint can be any relation which can be asserted as true or false -- $X < Y$, 
 Billy is older than Johnny, $Z = 5$, etc.  As an example of a problem which can be 
-solved using the constraint programming we use the Sudoku puzzle. Sudoku is a worldwide 
+solved using constraint programming we use the Sudoku puzzle. Sudoku is a worldwide 
 known logical problem which is easy to explain, its difficulty can be scaled and 
 one does not need previous training to solve Sudoku. It makes the problem easier 
 to understand for many people and, therefore, it is very popular. Simple rules of 
@@ -40,8 +40,8 @@ adjusted by their number and placement.
 \end{sudoku}
 \end{figure}
 
-The way how to describe Sudoku puzzle in the constraint programming is very 
-straightforward. We define the following constraints:
+The way how to describe thr Sudoku puzzle in constraint programming is very 
+straightforward. We define the following model:
 
 \begin{enumerate}
 \item	There are 81 variables $s_{ij}$, $i,j \in \{1,...,9\}$ which can contain values in range 1 to 9. We 
@@ -54,7 +54,7 @@ straightforward. We define the following constraints:
 \item	For each square the following condition is true: For all $k$, $l$ such that $k$, $l$ 
       are indexes defining the square all values of 
       $s_{kl}$ are different (values in each square are different)
-\item	For all prefilled values: $q_{mn} = V$ if and only if the field with placed in column 
+\item	For all prefilled values: $q_{mn} = V$ if and only if the field in column 
       $n$ and row $m$ is prefilled and contains $V$.
 \end{enumerate}
 
@@ -68,21 +68,21 @@ a correct solution. Since the second approach systematically searches all possib
 solutions it has to result in a correct solution; however, it can last enormous 
 time to complete it (even on a supercomputer). The secret of a successful solution 
 is in the fact that not all numbers can be filled in a specific field. If there is 
-prefilled value 8 at position [6,7] it means that in row 6 and in column 7 
+prefilled value 8 at position [6,7] it means that in row 6 and in column 7 there
 cannot be another number 8. And because of constraint (4) there also cannot be 8 
 in the right middle square. A person who does these observations usually writes 
 into the destination field all possible values and as an examination of the puzzle 
 progresses there are less and less possibilities to fill in. In an easy Sudoku after 
 this examination there is at least one field which can be filled with only one number. 
 After filling all such fields the solving continues in the same way until 
-the entire table is filled. A program which use constraint programming solves it in the same 
+the entire table is filled. A program which uses constraint programming solves it in the same 
 way. For each variable it remembers the range of possible values (we will call it 
-a domain). Before the program starts searching of solution it tries to eliminate as 
+a domain). Before the program starts searching for a solution it tries to eliminate as 
 many values from the domain as possible. It can reveal that the problem does not have a 
 solution (if there is a variable with an empty domain) before a backtracking. It 
 it is no surprise that in a user guide to Choco system, one of the available constraint
 solvers, it is stated "if you know Sudoku, 
-then you know the constraint programming." The formal definitions of the constraint satisfaction
+then you know constraint programming." The formal definitions of the constraint satisfaction
 problem and the solution of the constraint satisfaction problem follows (the definitions 
 are cited from \cite{bartak:ogcp}).
 
@@ -103,40 +103,57 @@ A {\bf solution} to a CSP is an assignment of a value from its domain to every v
 \end{itemize}
 \end{definition}
 
+All of the constraint problem can be modeled only by using of the binary constraints (the constraints with two variables). 
+The constraint satisfaction problem can be represented as a constraint multi-graph where the variables of the model are the 
+nodes of the graph and the constraints over the variables in the model are the edges connecting the apropriate nodes. 
+The edge $e(x,y)$ is consistent if for each value of $x$ there exists a value $y$ such
+that the constraint is satisfied. As we can see the constraint which is consistent
+in one direction does not have to be consistent in the second direction. 
+
+\begin{definition}The constraint satisfaction problem is {\bf arc consistent} if all
+of the edges in the constraint graph are consistent in the both directions.
+\end{definition}
+
+If the problem cannot be transformed to arc consistent state then it obviously does not
+have a solution; however, the arc consistency itself does not ensure that the problem 
+can be solved. As an example of such a problem let consider the following: 
+We have variables $X,Y,Z$ all with the domain $\{0,1\}$ with the constraints $X \neq Y$, 
+ $Y \neq Z$, $Z \neq X$ on them. The problem is arc consistent. If we examine all constraints
+ there exists for each possible value of first variable a value of second variable which satisfies 
+ the constraint and similary in the second direction. Even though the problem is arc consistent it cannot be solved because there does
+ not exists evaluation of all variables which satisfies the all constraints.
+
 \section{Constraint programming}
-\label{introduction-constraint-programming}
-The constraint programming indeed consists of more techniques but generally it works 
-just like the person solving Sudoku described in the previous paragraphs.
-All constraint satisfaction problems (CSP) can be transformed in such a way that
-it contains only binary constraints. Common representation of the CSP is the multigraph 
-where nodes are variables and the edges constraints on them. The value of a variable's domain
-is {\em supported} if there is not a constraint which collides with such a value.
-We can define {\em node consistency} if all values of domain of a node $x$ satisfies
-all constraints $c(x,x)$ (unary constraints). The problem is node consistent (NC) if all
-nodes in the problem are node consistent. Similary, the edge $e(x,y)$ is arc consistent if
-for all values in $D_x$ exists a value of $y$ such that the constraint is satisfied.
-This definition does not assure that if the edge $e(x,y)$ is arc consistent then the
-edge $e(y,x)$ is arc consistent too. CSP is arc consistent (AC) if all edges are arc consistent in both 
-directions. The arc consistency, however, does not guarantee that the problem has
-solution. If the problem is not arc consistent then it has no solution for sure.
-For example let have variables $X,Y,Z$ with domains $\{0,1\}$ and constraints $X \neq Y$,
- $Y \neq Z$ and $X \neq Z$. The problem is arc consistent but it has no solution.
+\label{introduction:constraint-programming}
  
-The general way of solving of the CSP is to transform the domains of variables to ensure
-the arc consistency of the problem. After the problem is in stable state (last iteration of arc 
-consistency algorithm have not changed any domain) we test if the problem is solved.
-The problem is solved if each value has one sized domain. If there is an empty domain after 
-the arc consistency algorithm we declare the problem as unsatisfiable. This part 
-of algorithm is called {\em propagation}. If we have not found the solution in propagation
-phase we continue with {\em distribution} phase. In distribution phase we add an additional
-constraint $c$ to the problem $P$ and rerun the propagation on two new problems, 
- $P \cup \{ c \}$ and $P \cup \{ \neg c \}$. If there exists a solution it has to be
- contained in at least one of the two new problems. For the usually used constraint
- we choose one variable $x$ and value $v$ from its current domain $D_x$. The constraint 
- $c$ then can be $x = v$ or $x < v$. The choosing algorithm of the proper variable
- $x$ is important. Often we pick the variable with the smallest domain because it leads 
- to possible failure more quickly. Usually the solver offers choices of the algorithm
- to suite all needs. This algorithm is called maintained arc consistency or MAC. Its
+We can use many algorithms to solve the constraint satisfaction problems.
+The most common algorithm consists of two phases which are repeated until the
+solution is found or we find that there is no solution. The first phase is filtering of
+the variable domain by eliminating as many as possible values of the domain. 
+We can achieve such filtering by transforming of the problem to the arc consistent state. 
+The filtration phase can end in three ways:
+
+\begin{itemize}
+ \item The domain of some variable is empty and therefore there is no solution for a given problem.
+ \item The domains of all variables have only one element. The algorithm found the solution.
+ \item The domains of some variables have more than one element while the problem is arc consistent.
+\end{itemize}
+
+If the problem $P$ is arc consistent but we still do not have the solution we perform
+the distribution phase. In the distribution phase we introduce a new constraint $c$. We create
+two new problems $P \cup \{c\}$ and $P \cup \{\neg c\}$. It is obvious that if there 
+exists a solution of the original problem then at least one of the new problems do have 
+to have the solution. After this phase we run the filtering phase again.
+
+To construct the constraint $c$ used the distribution phase we usualy pick a variable $x$
+and its value $v$. The constraint then can be $x = v$ or $x < v$ (but we can use any constraint). 
+By selecting of a proper variable and value we can affect the
+time needed to compute the solution. The most common way is to pick a variable with the
+smallest domain because we should  be able sooner find out that the variable cannot be evaluated. This strategy
+is sometimes called {\em first-fail} strategy. The solvers usualy allows the users to
+choose the strategy or implement their own.
+
+The described algorithm is called {\em maintained arc consistency} or MAC. Its
  schematic source code is in figure \ref{labelling-bartak}. The code is cited from 
  \cite{UI:Bartak}. More detailed explanations of algorithms used in CSP solving can be found in \cite{bartak:ogcp}. 
 
@@ -157,6 +174,12 @@ end
 \end{lstlisting}
 \end{figure}
 
+The optimalization problems can be solved by using of the {\em branch-and-bound} algorithm.
+First the algorithm solves the problem $P$ using the standard algorithms. After the problem
+is solved the value $f(P)$ of the objective function is computed. Then we derive from the problem 
+P a new problem $P'$ with the additional constraint $f(P') < f(P)$ and we run the algorithm on the
+new problem. The last found solution which could be satisfied is the expected best solution. 
+
 In reading previous paragraphs, a reader could think that the constraint programming is used 
 only as an academic toy for solving Sudoku and for other applications which are useless 
 in a real life. In fact the constraint programming is used in various applications. 
@@ -169,18 +192,21 @@ actions of a space vehicle while only general commands were sent to agent. Agent
 used a constraint solver for planning \cite{nasa:ds1-ara}.
 
 \section{Constraint solvers}
-A programmer who wants to solve problems using constraint programming can use in their 
-algorithms ideas described in the previous paragraphs or use specialized software, a 
+A programmer who wants to solve problems using constraint programming can encode the
+ideas described in the previous paragraphs or use specialized software, a 
 constraint solver. Constraint solver is a system which uses constraint programming 
 techniques to solve a given problem. There are many solvers available both commercial 
-and freeware. A short list of available systems can be found in table 
-\ref{constraints-solvers-list}. More detailed list is maintained by Roman Barták in 
+and freeware. A short list of available systems can be found in appendix 
+\ref{list-of-solvers}. A more detailed list is maintained by Roman Barták in 
 On-line guide to constraints programming at \cite{bartak:los}.
 
 \section{Related work}
+In this thesis we compare several constraint solvers. There exist papers and other work
+which cover the similar area. 
+
 There exists a paper "A Comparative Study of Eight Constraint Programming Languages 
 Over the Boolean and Finite Domains" by A. Fernandez and others \cite{fernandez00} 
-which covers a similar area; however, this paper does not focus on the user experience 
+which compares several solvers; however, this paper does not focus on the user experience 
 with the solvers. They compared solvers by their performance on various benchmarks 
 and discussed an implementation of self referential quiz in each solver. We are not 
 benchmarking the same sets of solvers and we do not use similar methodology which 
@@ -188,25 +214,25 @@ means this thesis conclusions cannot fully replace or update the results from \c
 
 M. Plachá in 2007 wrote the bachelor thesis \cite{placha} focused on the same topic as this thesis.
 The thesis compared SICStus Prolog,  ILOG Solver and Gecode/J. She compared the modelling
-capabilites of these solvers and showed ways to debug the models. Finally the speed 
-of solvers was measured on several benchmarks. In this thesis we study wider range of
+capabilites of these solvers and showed the ways to debug the models. Finally the speed 
+of solvers was measured on several benchmarks. In this thesis we study a wider range of
 solvers. We used the same criteria as the mentioned thesis by M. Plachá but additionally
 we compare the accessibility of the solvers for user. 
 
 Every year there is held the International Constraint Solver Competition where authors
 of solvers can compete. The solvers can be submitted in two categories -- complete 
-and incomplete. Complete solvers can prove that the instance of problem is satisfiable
+and incomplete. Complete solvers can prove that the instance of a problem is satisfiable
 or not (or find and prove the optimum). As stated in the rules \cite{csp-competition:rules} 
 for each solver there is a {\em Boolean capability vector}
 which indicates which constraints the solver can handle. Solvers with the same
 capability vector can be naturally compared. Solvers with different capabilities 
 can be compared on instances which belong to the intersection
 of their capabilities, provided it is non-empty. During the competition the solvers
-are run in the sandbox environment on a Linux cluster. The task is to compute solution
+are run in the sandbox environment on a Linux cluster. The task is to find a solution
 of as many benchmarks as possible in the smallest time amount.
 
 There exists a library \cite{csplib} of the constraint satisfaction problems which can be used in 
-benchmarking and comparing of solver capabilities. The library contains varying problems
+benchmarking and comparing of solver capabilities. The library contains various problems
 in several fields -- optimalisation problems, combinatioral problems and so on. We encourage
 the reader to try to implement several problems in the chosen solver as a part of learning of
 modelling in the solver.
@@ -215,9 +241,14 @@ modelling in the solver.
 We described our motivation for this thesis and listed some constraint solvers. 
 In the second chapter we define methodology used to examine some of the mentioned 
 solvers. The examination consists of two parts -- performance tests and usability 
-tests. In third chapter we will define benchmarks used to performance tests. 
+tests. In the third chapter we will define benchmarks used to performance tests. 
 The fourth chapter describes in details each solver, mentions a little from their 
 history but mainly focuses on usability and easiness of learning and using the solver. 
 In the fifth chapter we discuss the performance tests results and compare the solvers. 
-Finally, in the sixth chapter we state a conclusion of the whole examination process 
-and present a decision graph "which solver use in which situation".
+Finally, in the sixth chapter we state a conclusion of the whole examination process.
+
+Ther are four appendixes to this thesis. The content of the included CD is in the
+appendix \ref{cdcontents}. The short list of constraint solvers is in the appendix \ref{list-of-solvers}.
+The table of supported constraints is in the appendix \ref{constraints}. Finally the
+source codes of the benchmarks implemented in the compared solvers are in
+the appendix \ref{implementation}.

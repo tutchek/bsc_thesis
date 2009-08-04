@@ -9,26 +9,26 @@ products. The purpose of this thesis is to help new users with choosing of the r
 Therefore we study complexity of learning and using of each solver and their 
 performance and abilities. We test solvers which use various programming languages 
 and paradigms. The imperative paradigm is represented by a C++ library Gecode and a Java 
-library Choco. Users experienced in a logical programming might find interesting 
-SICStus Prolog or \eclipse. Mozart is implementation of Oz, a multi-paradigm 
+library Choco. Users experienced in logical programming might find interesting 
+SICStus Prolog or \eclipse. Mozart is an implementation of Oz, a multi-paradigm 
 programming language. With these solvers the users can use their current experience and 
 just learn an API of the constraint library. The other solvers are configured by 
 a solver-specific problem description language. This fact is both advantage and disadvantage. 
-As for disadvantage, we must accept that user cannot use their experience with 
-existing programming languages and has to learn new concepts; however, a specialized 
+As for disadvantage, we must accept that users cannot use their experience with 
+existing programming languages and have to learn new concepts; however, a specialized 
 language for describing constraint problems can be more accessible for users who 
 do not have any programming experiences but they need to solve the given problem.
 A general overview of the examination follows.
 
-First, we examine all solvers from a perspective of a user experienced in the given 
-programming language but inexperienced in using of the solver. In case of OPL 
-and Minion we expect that user has general computers knowledge and is able 
+First, we examine all solvers from the perspective of a user experienced in the given 
+programming language but inexperienced in using of the solver. In case of Minion 
+we expect that the user has general computers knowledge and is able 
 to describe a given problem in constraints. The first examination tries to answer 
 a question how difficult it is to learn to use the solver. We model problems 
 described in the third chapter and look for constraints which cannot be modelled 
 and we describe possible solutions. 
 
-Secondly, a quality of documentation is also important criterion. A solver can be 
+Secondly, a quality of documentation is also an important criterion. A solver can be 
 the best of all, but it is useless if the user cannot understand the usage. 
 The quality of documentation is perceived subjectively and cannot be measured 
 exactly. This means that any evaluation is only informational, although it should be 
@@ -38,24 +38,24 @@ forums or mailing lists is also an important part of learning of new systems. We
 mention a couple of existing solvers. 
 
 Last but not least, we aim for debugging. There are two areas which can be 
-debugged - correctness of program and correctness of model. The correctness of 
-program means that the program does what it should do, that it handles all inputs as a programmer expects and so on. 
-The correctness of model stands for an accurate describtion of given modely. User should be able to 
-inspect variables, visualise a decision tree of search and more other information. 
+debugged - correctness of the program and correctness of the model. The correctness of the
+program means that the program does what it should do, that it handles all inputs as the programmer expects and so on. 
+The correctness of model stands for an accurate description of a given problem. The user should be able to 
+inspect variables, visualise a decision tree of search and other information. 
 We discuss the ways how a solver informs about mistakes (and how much descriptive the 
-information is), the tools provided with solver to debug the program and similarly the 
-tools which can be used to debug model correctness.
+information is), the tools provided with the solver to debug the program and similarly the 
+tools which can be used to debug the model correctness.
 
-When user masters the solver and uses it to solve real problems, the time and space 
+When the user masters the solver and uses it to solve real problems, the time and space 
 efficiency of used algorithms matters. We neither examine source codes, nor analyze 
 time complexity of used algorithms. Instead we measure the time needed to 
 load and the time to solve the problem. If a solver cannot provide such information 
 we measure only a total time. We also measure an amount of consumed memory 
-during the program execution. All measurements is performed several times 
+during the program execution. All measurements are performed several times 
 and averaged to avoid randomness. A robustness test is also performed. 
-In the robustness test we set limit one hour and try to compute the longest magic 
-sequence (reader can find definition of a magic sequence in the section \ref{benchmarks:ms}) 
-in given time. We use the models created in the process described in the previous 
+In the robustness test we set limit ten minutes and try to determine the length of the longest magic 
+sequence (readers can find a definition of a magic sequence in the section \ref{benchmarks:ms}) 
+can be computed in the given time. We use the models created in the process described in the previous 
 paragraph. In \cite{fernandez00} authors have sent models to the solvers' authors and 
 have given them a chance to modify them to achieve the best performance of their solvers. 
 We focus on first-time users of a solver, so we use our own models which are 

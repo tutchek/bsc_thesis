@@ -4,46 +4,46 @@
 Minion is a constraint solver which works as a standalone application. Minion takes
 as an input the problem description and returns the solutions if there are any.
 Minion is open source and available at sourceforge.net. The problem description
-is contained in a file with special format. The file contains definitions of variables,
+is contained in a file with a special format. The file contains definitions of variables,
 their domains and constraints on them. The best description of the input format could
 be "the constraint assembly language". The constraints cannot use as their parameters 
-expressions. If we need to costrain the expression we have to introduce new variable
-to be equal to the expression and then constrain this variable. For example let assume 
+expressions. If we need to constrain the expression we have to introduce a new variable
+to be equal to the expression and then constrain this variable. For example let us assume 
 we can use constraints $X = |Y|$ and $X < Y$ and we need to use constraint $X < |Y|$.
 We have to introduce the auxiliary variable $a$ and post two constraints $a = |Y|$ and
  $X < a$. If we use many expressions in our problem it leads to enormous number of
  auxiliary variables. Moreover the language does not contain loops. Therefore we
- cannot post various number of constraints based on the size parameter of the model.
- We have to state all constraints for given problem instance. As a result the definition
- of 4-queens problem cannot be easily transformed to 8-queens problem. The set of constraint
+ a cannot post various number of constraints based on the size parameter of the model.
+ We have to state all constraints for a given problem instance. As a result the definition
+ of 4-queens problem cannot be easily transformed to 8-queens problem. The set of constraints
  is limited and cannot be extended. Moreover some basic constraints have to be used in unusual way.
- If we want to constrain $a = \sum{w_i x_i}$ we have to use pair of constraints
+ If we want to constrain $a = \sum{w_i x_i}$ we have to use a pair of constraints
  $a \leq \sum{w_i x_i}$, $a \geq \sum{w_i x_i}$ since the variant with equal sign
  is not in the system. The used variable can be boolean, bounded integers, discrete integers
  and sparse bounded integers. Bool variable is a variable with domain $\{0,1\}$.
- Bounded integer variable is integer variable where the solver stores only its bounds.
- Discrete itegers are generally the same as bounded integers except it can contain 
- holes in the intrval. Finally sparse bounded integers are variables which have small
- amount of non consecutive values specified in the file. During the computation
+ Bounded integer variable is an integer variable where the solver stores only its bounds.
+ Discrete integers are generally the same as bounded integers except they can contain 
+ holes in the interval. Finally sparse bounded integers are variables which have a small
+ number of non consecutive values specified in the file. During the computation
  only bounds of the spare bounded integers are updated.  
  
-The input format is not very human-friendly. Even form small problems the amount of
+The input format is not very human-friendly. Even for small problems the number of
 auxiliary variables grows over reasonable limits and the input is not easy to understand.
-It is a reasonable solution to use a generator to generate a minion input file.
-User can either write his own ad hoc generator for his problem or use tool like
+It is a reasonable solution to use a generator to generate a Minion input file.
+User can either write his own ad hoc generator for his problem or use a tool like
 Tailor which is described in the section \ref{tailor}.
 
 \subsection{Solver description}
-As stated in previous section Minion is a standalone executable which takes as a parameter
+As stated in the previous section Minion is a standalone executable which takes as a parameter
 filename of the input file or through the standard input the contents of input.
 It automaticaly starts computation and writes on the standard output or into the
-specified file solutions. It can handle only integers and therefore the problem have to
-be encoded in a such way. Format of the input file is not stable but uses an identifier
-which prevets from misinterpretation of the input. If the user feed the Minion with 
-an unsupported format of the file the solver informs about that and ends. Current version
-of the input file is 3, and user can recognize it by observing first line of the input, which
-has to contain only string \texttt{MINION 3}. After this identification line follows in any order
-with no limit on repeating the sections of the file. The file can contain the following sections:
+specified file solutions. It can handle only integers and therefore the problems have to
+be encoded in a such way. The format of the input file is not stable but uses an identifier
+which prevets from misinterpretation of the input. If the user feeds the Minion with 
+an unsupported format of the file the solver informs about that and ends. The current version
+of the input file is 3, and the user can recognize it by observing the first line of the input, which
+has to contain only string \texttt{MINION 3}. After identification line there follows the sections
+ot the file. The file can contain the following sections:
 
 \begin{itemize}
   \item Definition of the variables
@@ -52,23 +52,13 @@ with no limit on repeating the sections of the file. The file can contain the fo
   \item Definition of the search parameter
 \end{itemize}
 
-The list of supported variables can be found in the table \ref{podporovane-podminky}.
+The list of supported constraints can be found in the appendix \ref{constraints}.
 The search engine behavior can be adjusted either in the input file or at the command line
-by parameters. User can adjust the order of variables during the selection phase of search,
-whether solve all solutions or only one or how to format the output.
- 
-\subsection{Debugging support}
-Minion offers printing out the search tree where one can observe the solvers actions.
-However other tool than this printout is not available. Since the modelling in Minion
-is difficult user will probably use the Tailor tool. Tailor offers not only translation
-to the Minion format but direct invocation of the Minion, passing the input to it and
-show the solution. User then can directly modify the Essence source code and perform
-the invokation again if the results are not what he expected. 
+by parameters. The user can adjust the order of variables during the selection phase of search,
+decide whether to find all solutions or only one or how to format the output.
 
-\subsection{Benchmarks implementation}
-Due to the length of the Minion input files we include in this thesis only the implementation
-of the Magic Sequence problem of the length 5. The source code of the input file
-is in the section \ref{implementation:minion:ms}. As the reader can see the input file
+In the section \ref{implementation:minion} we included the implementation of the Magic
+Sequence benchmark of the lenght five. As the reader can see the input file
 is divided into several sections. The specification of the file format comes on the first line.
 Then follows the sections of the file denoted by the label \texttt{*** SECTION NAME ***}. These
 sections can be in the file in any order and repeated as many times as needed. The
@@ -83,17 +73,25 @@ Since the Minion have only the constraints $\sum{x} \leq a$ and $\sum{x} \geq a$
  \texttt{sumgeq}. Finally the \texttt{search} section defines the order of the variables.
  The variables will be searched in that order. The \texttt{SEARCH} section defines also the
  solution using the \texttt{PRINT} command. All variables marked for printing will
- be printed out as a solution. For the benchmars we used the Tailor tool which
+ be printed out as a solution. To generate the Minion input files we used the Tailor tool which
  compiled the Essence source code into the Minion input file; however, the large
- problems were problematic for this tool. Therefore we used ad-hoc generators. For the
- magic sequence we used the generator showed in the subsection {\em PHP generator}
- of the section \ref{implementation:minion:ms}.
+ model were problematic for this tool. Therefore we had to write for some benchmarks
+ the ad-hoc generators of the input file.
+ 
+\subsection{Debugging support}
+Minion offers printing out the search tree where one can observe the solvers actions.
+However other tool than this printout is not available. Since the modelling in Minion
+is difficult the user will probably use the Tailor tool. Tailor offers not only the translation
+to the Minion format but direct invocation of the Minion, passing the input to it and
+show the solution. The user then can directly modify the Essence source code and perform
+the invokation again if the results are not what he expected. 
 
 \subsection{Subjective description}
-%% TODO: Tohle by se asi hodilo lehce prepsat
-The largest problem of the solver is the input format. The problem can be resolved 
+The largest problem of the solver is the limited set of constraints. If the problem needs
+more sophisticated constraints then the problem cannot be represented in the Minion.
+The second large problem is the input format. The problem can be resolved 
 by using the Tailor tool; however, for the large problems the tool is not sufficient.
-As a standalone executable which can be called from command line it can bring the capability of 
+However as a standalone executable which can be called from the command line it can bring the capability of 
 the constraint solving to programs written in the languages like bash. The only
 thing which is needed is the capability to assemble the input file in the proper format. 
 There is available the reference guide with description of all constraints available and

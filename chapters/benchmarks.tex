@@ -16,28 +16,28 @@ the Essence  programming language. The basics of the language are described in t
 section.
 
 \section{Essence programming language}
-Essence  is a programming language for modelling of combinatorial problems. Is is 
+Essence is a programming language for modelling of combinatorial problems. Is is 
 easy enough to understand and so simple that even person who has never seen the
-language before can correctly guess what is the expected output of the program. Every program in Essence 
+language before can correctly guess what the expected output of the program is. Every program in Essence 
 consists of three parts. The first part defines the version of the language, the second
 part the used variables and finally, the third part presents the constraints used on the given 
 variables. These constrained variables can be integers, booleans and vectors or matrices.
 The language supports sums and loops over the variables; however, the bounds of the
 sum or loop have to be constant as they are in the process of compiling translated
 to a sequence of statements. The program itself can be split into the model definition
-and parameters definition parts. Examples in this chapters shows only the model 
-definition parts. Files containing the parameter definitions can be found on the included CD.
-Tailor tool is the compiler of choice in this case and this program mediates the translation from the Essence language to solver specific language. In the current version it can translate the Essence program to Minion 
+and parameters definition parts. Examples in this chapters show only the model 
+definition parts. The files containing the parameter definitions can be found on the included CD.
+The Tailor tool is the compiler of choice in this case and this program mediates the translation from the Essence language to solver specific language. In the current version it can translate the Essence program to Minion 
 input file, FlatZinc and C++ source code using Gecode library. Further description of
 the Tailor system is in section \ref{tailor}.
 
 \section{N-queens}
 This benchmark is based on a classic chess task. The player has to place eight queens
 on the chessboard in a way that none of the queens offends any other. The task
-can be scaled to a chessboard of any size. The goal is then place $n$ queens to
-onto table of size $n \times n$ in such way that no queen offends any other. A queen
+can be scaled to a chessboard of any size. The goal is then place $n$ queens 
+onto a table of size $n \times n$ in such way that no queen offends any other. A queen
 offends all pieces which are placed in the same row, column and diagonal on the chessboard.
-The problem is little bit easier if we find out that when we realize that in order to place $n$ queens
+The problem is a little bit easier if we find out that when we realize that in order to place $n$ queens
 on a chessboard with $n$ columns, there has to be one queen per column. Therefore 
 we only need to find out in which rows the queens are in each column. We model a
 solution of the problem as a vector $q_i$ where $i \in \{1,...,n\}$. To avoid
@@ -46,7 +46,7 @@ different. Finally we have to include the diagonals in the solution: two pieces 
 if the difference in the horizontal and vertical coordinates is equal. Therefore we 
 add the constraint $\left|Q(i) - Q(j)\right| \neq \left|i - j\right|$.
 Since both the chessboard and the modes of offence the queen can carry out are symmetric, the solutions are symmetric as well.
-We can decrease the number of solutions if we avoid such symmetries.
+We can decrease the number of solutions if we avoid such symmetries (see the next subsection).
 
 \subsection{Constraint problem model}
 \begin{itemize}
@@ -61,7 +61,7 @@ We can decrease the number of solutions if we avoid such symmetries.
 	   \item optional avoiding of the symmetry: $q_1 < q_n$
 	  \end{itemize}
 \end{itemize}
-The Essence implementation is in the figure \ref{benchmark-essence:nqueens}.
+The Essence implementation (without symmetry breaking) is in the figure \ref{benchmark-essence:nqueens}.
 
 \begin{figure}
 \caption{\label{benchmark-essence:nqueens}Implementation of N-Queens Problem in Essence}
@@ -116,11 +116,11 @@ Model for a magic sequence $m$ of length $k$:
 	\item Constraints:
 	 \begin{itemize}
       \item Value of $m_i$ is $i$ times in the sequence: $\forall i \in 
-      {0,...,k-1}: m_i = \sum_{m_j = 1}{1}$.
+      {0,...,k-1}: m_i = \sum_{m_j = i}{1}$.
     \end{itemize}
 \end{itemize}
   
-In case that solver does not support the constraint $m_i = \sum_{m_j = 1}{1}$, we 
+In case that solver does not support the constraint $m_i = \sum_{m_j = i}{1}$, we 
 can use an alternative model: 
 
 \begin{itemize}
@@ -131,7 +131,7 @@ can use an alternative model:
 	\end{itemize}
 	\item Constraints:
 	 \begin{itemize}
-    \item $\mathrm{aux}_{ij} = 1$ if and only if $m_j = 0$: $\forall i,j \in \left\{0, ..., k-1\right\}: 
+    \item $\mathrm{aux}_{ij} = 1$ if and only if $m_j = i$: $\forall i,j \in \left\{0, ..., k-1\right\}: 
           (\mathrm{aux}_{ij} = 1) \Leftrightarrow (m_j = i)$,
 	  \item the value of the items of the magic sequence corresponds to the sum of some auxiliary variables: 
           $\forall i \in \left\{0, ..., k-1\right\}: m_i = \sum_{j=0}^{k-1}{\mathrm{aux}_{ij}}$.
@@ -154,7 +154,7 @@ such that
 
 Self-referential quiz is a quiz where the answers to the questions depend on the answers
 to other questions in the same quiz. There is only one valid answer for each question.
-Typical question in such quiz can be: 
+A typical question in such a quiz can be: 
 
 \begin{enumerate}
   \item First question where the answer is $A$: \\
@@ -303,15 +303,15 @@ Quasigroup or latin square is a table of size $n \times n$ filled with numbers i
 range $1..n$ such as that all values in each row and in each column are unique. There
 can be also additional condition on the items of quasigroup, for example that the 
 items on the main diagonal have to be even. The task is to fully fill the 
-given partly filled quasigroup. The completed quasigroup have to satisfy all previously
-stated constraints. This problem is called {\em quasigroup completion problem} or QCP.
+given partly filled quasigroup. The completed quasigroup has to satisfy all previously
+stated constraints. This problem is called a {\em quasigroup completion problem} or QCP.
 Unfortunately, this benchmark does not provide a consistent result. Some partial fillings
 can be solved surprisingly easily while other can be extremely demanding; 
-some can even be impossible to solve. The crucial problem is that the determining whether the problem can
+some can even be impossible to solve. The crucial problem is that determining whether the problem can
 be solved or not is an NP-complete task \cite{Achlioptas00generatingsatisfiable}. Therefore we cannot determine with certainty whether the problem is only
 too hard for the solver or the solution does not exist at all and the solver has to search 
 through enormous space of the particular state. To avoid this uncertainty, we use a modification of
-QCP called {\em quasigroup with holes} or QWH. First we generate fully filled quasigroup
+QCP called {\em quasigroup with holes} or QWH. First we generate a fully filled quasigroup
 which satisfies the given conditions and then we exclude some of the values; this quasigroup
 with holes is the new assignment for QCP. We have a guarantee that the assignment is correct
 and that it can be solved. Generation of QWH assignments was studied by D. Achlioptas
@@ -326,10 +326,10 @@ The experiments \cite{Achlioptas00generatingsatisfiable} showed that this intere
 behaviour is somewhere near the $30 \%$.
 
 The quasigroups we use have no additional conditions. The used quasigroups are produced
-by generators {\em lsencode} created by Carla Gomez and {\em walksat} Henry Kautz. 
+by generators {\em lsencode} created by Carla Gomez and {\em walksat} by Henry Kautz. 
  
 \subsection{Constraint problem model}
-Model quasigroup of order $n$. Assignment values are in the vector $\mathrm{data}_{ij}$:
+Model for a quasigroup of order $n$. The assignment values are in the vector $\mathrm{data}_{ij}$:
 
 \begin{itemize}
 	\item Variables and domains: 
@@ -358,7 +358,7 @@ such that
 \end{figure}
 
 \section{Locating warehouses}
-Lets assume that we want to help a hypothetical business company with the decision which
+Let's assume that we want to help a hypothetical business company with the decision which
 warehouses should be built for their shops and which warehouses should supply which
 shop. The main criterion is in this case the cost of the solution. The cost has two components. The first one
 is payment of the constant cost for opening a new store. The second component is the price for the distribution of
@@ -382,18 +382,18 @@ translates as the cost of supplying the shop $j$ from warehouse $i$.
 	\begin{itemize}
   \item Variables and domains:
     \begin{itemize}
-      \item Total cost -- value of objective function: $\mathrm{totalCost} \in \mathbb{N} $,
-      \item number of opened shops: $\mathrm{numberOpen} \in \{0, W\}$,
-      \item indication whether the shop is open: $\mathrm{open}_1, ..., \mathrm{open}_{W} \in \{0, 1\}$,
+      \item Total cost -- the value of an objective function: $\mathrm{totalCost} \in \mathbb{N} $,
+      \item number of opened warehouses: $\mathrm{numberOpen} \in \{0, W\}$,
+      \item indication whether the warehouse is open: $\mathrm{open}_1, ..., \mathrm{open}_{W} \in \{0, 1\}$,
       \item indication which warehouse supplies which shop: $\mathrm{supplier}_1, ..., \mathrm{supplier}_{S} \in \{1, ..., W\}$,
-      \item indication the supply cost for given shop: $\mathrm{cost}_1, ..., \mathrm{cost}_{S} \in \mathbb{N}$,
+      \item the supply cost for given shop: $\mathrm{cost}_1, ..., \mathrm{cost}_{S} \in \mathbb{N}$,
       \item total supply cost: $\mathrm{costSum} \in \mathbb{N}$.
     \end{itemize} 
 	\item Constraints:
   	\begin{itemize}
   	 \item Objective function: $\mathrm{totalCost} = \mathrm{costSum} + \mathrm{numberOpen} \cdot \mathrm{openCost}$,
   	 \item total supply cost: $\mathrm{costSum} = \sum_i{\mathrm{cost}_i}$,
-  	 \item number of opened warehouses: $\mathrm{numberOpen} = \sum_i{\mathrm{open}_i}$,
+  	 \item the number of opened warehouses: $\mathrm{numberOpen} = \sum_i{\mathrm{open}_i}$,
   	 \item maximal capacity of each warehouse: $\forall i \in \{1,...,W\}: w_i \geq \sum_{\mathrm{supplier}_j = i}{1}$,
   	 \item the warehouse is open if it suppplies at least one shop: $\forall i \in \{1,...,W\}: \left(\mathrm{open}_i = 1\right) \Leftrightarrow \left(\left(\sum_{\mathrm{supplier}_j = i}{1}\right) > 0\right)$,
   	 \item supply cost computation: $\forall i \in {1,...,S}, \forall j \in \{1,...,W\}: \left(\mathrm{supplier}_i = j\right) \Rightarrow \left(\mathrm{cost}_i = \mathrm{supplyCost}_{ij} \right)$.

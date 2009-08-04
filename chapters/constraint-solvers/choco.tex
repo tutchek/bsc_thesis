@@ -2,62 +2,62 @@
 \verb= $Id$ =
 
 Choco is a constraint solver which is implemented as a library in Java programming language.
-It is distributed as a JAR package having a Javadoc documantation included. It is quite easy
+It is distributed as a JAR package having a Javadoc documentation included. It is quite easy
 to install it even for a beginners in Java and it lasts about five minutes in commonly used
 IDEs. Since the Java is used, the Choco solver is available for various platforms
-and operating systems. As far as it is not our goal to describe possibilities of host operating
-system, we are not about to further discuss the Java features. Choco is being developed
-at Ecole des Mines de Nantes in France and it is freely available for downloading from 
-SourceForge server. The main number of current version is 2. Choco divides the problem solution
+and operating systems. As far as it is not our goal to describe possibilities of the host environment, 
+we are not about to further discuss the Java features. Choco is being developed
+at Ecole des Mines de Nantes in France and it is freely available for download from 
+SourceForge server. The main number of the current version is 2. Choco divides the problem solution
 into two parts -- a model and a solver itself. The model contains variables and constraints given 
-in task. Afterwards, the solver is given the model as an input and it tries to find a solution. 
+in the problem. Afterwards, the solver is given the model as an input and it tries to find a solution. 
 Variables in the model can be integers, real numbers or sets. Then the solver is able to
 find a solution for the current model. A user can get information from the solver whether the 
 problem has a solution or it contains a conflict. There is an interface for resolving solutions themselves, 
 whereby one can ask for the first, the following or all existing solutions. If we define a variable
-equal to a value of an objective function, the solver can this variable either minimize, or maximize.
+equal to a value of an objective function, the solver can either minimize or maximize this variable .
 Furthermore, the solver allow us to choose a strategy which might perfectly fit the given problem.
-The variables of solver depends on the variables of the model and one can resolve values only through
+The variables of the solver depends on the variables of the model and one can resolve the values only through
 the variables of the solver.
 
 \subsection{Solver description}
-As it has been already mentioned in the previous section, the solving of problem is divided
+As it has been already mentioned in the previous section, the ptoblem solving is divided
 into two separated tasks -- to define a model and to deploy the model to a well-configured solver.
-The model as well as the solver are classes, both of which are instanced by a user into objects.
-First we describe the model and after that we look at the solver. 
+The model as well as the solver are the independent Java objects. First we describe the 
+model and after that we look at the solver. 
 
 \subsubsection{Model}
 The model is a instance of class CPModel. In Choco the variables of the model are represented
 as objects of the following types: IntegerVariable, RealVariable and SetVariable. Those 
 variables, generally, are not created using the keyword new, but in Choco there are
 factory methods for this purpose. One has to register those variables first by calling
-a function CPModel::addVariable, or CPModel::addVariables when adding an array of variables at once.
+a function \texttt{CPModel::addVariable}, or \texttt{CPModel::addVariables} when adding an array of variables at once.
 While registering variables into a model, we can set additional properties to the variables, 
 for example to set whether it is a decision variable, or a variable containing a result
 of an objective function. It is not necessary to set those properties every time; however,
-they might rapidly improve the computation. Alternatively, we can define those properties
+they might rapidly improve the computation time. Alternatively, we can define those properties
 in the solver, which way is described later in the following section.
 
 Once we have registered the variables, a definition of constraints follows. It is possible
 either to use a large number of build-in constraints, or to define our own constraints.
-The constraints which are available natively in the solver are listed in the table \ref{list-of-constraints}.
-Each of the constraint fits in one the following groups: basic constraints (true, false, relation operators),
+The constraints which are available natively in the solver are listed in the appendix \ref{constraints}.
+Each constraint fits in one of the following groups: basic constraints (true, false, relation operators),
 basic expressions (goniometric functions, powers, sums), other constraints (\texttt{abs}, \texttt{div}, \texttt{max}, ...),
 reified contraints (\texttt{and}, \texttt{or}, \texttt{ifOnlyIf}) and global constraints (\texttt{allDifferent}, 
 \texttt{occurenceMax}, ...). Furthermore, there are constraints available which might be used for modeling geometric constraints,
-scheduling constraints and constraints for a sequention of variables which is accepted by finite automaton.
+scheduling constraints and constraints for a sequence of variables which is accepted by finite automaton.
 
-Apart from the build-in constraints, is it possible to define our own constraints. The first way is to define 
+Apart from the build-in constraints, is it possible to define own constraints. The first step is to define 
 a constraint $p(x,y)$ as a set of compatible values $(a,b)$, where $p$ is satisfied
 if $x=a$ and $y=b$, or, eventually, as a set of incompatible values. In that case the
-set is define as a table of value. Besides, we define the constraint as a predicate, which has to
+set is defined as a table of value. Besides, we can define the constraint as a predicate, which has to
 be satisfied, whereby the constraint is an instance of a class derived from a class BinRelation
 with a method checkCouple having implemented. This function takes two values as params and 
 returns boolean value whether the condition was satisfied or not. Simirarly, we can define 
-constraints over tuples. For all such constraints (either binary or tuple) we can specify 
+constraints over tuples. For all such constraints (either binary or tuple) we can specify the 
 desired algorithm for arc consistence. There is AC3, AC2001, AC3rm and AC3 available for binary constraints and
- AC32, AC3rm, AC2001 and AC2008 tuple constraints. A description of each of the algorithm can be found
- in [najít citaci pro algoritmy AC].
+ AC32, AC3rm, AC2001 and AC2008 tuple constraints. These algorithms are the variants of
+ the original AC algorithm. Further description for some of them can be found in \ref{bartak:ogcp}.
 
 
 \subsubsection{Solver}
@@ -65,20 +65,20 @@ A solver is an instance of class CPSolver, which tries to find a solution accord
 from the previous section. The solver starts with reading the variables of the model and 
 converting them into variables of the solver (IntegerVariable into IntDomainVar, RealVariable into RealVar and SetVariable into SetVar).
 Afterwards, it reads the constraints of the model and creates constraints of the solver, which are based on previously read constraints.
-Then the solver uses a search strategy and search for solutions. Since the chosen strategy
+Then the solver uses a search strategy and searches for solutions. Since the chosen strategy
 is a key factor for the speed of solving, one can configure its various options.
 A user can specify a selector and an iterator. Where the selector specifies which variable
-is about to be taken in next solver's desicion and the iterator chooses each of available values
+is about to be taken in the next solver's decision and the iterator chooses each of available values
 and iterates over them. In a standard distribution of Choco there are basic selectors such as 
 {\em variable with minimum domain}, {\em variable with maximum domain} and so on. 
-Whilst the iterators can try values in ascendant or descendant order. An alternative to iterator
+The iterators can try values in ascendant or descendant order. An alternative to iterator
 is a value selector, which returns next available value when required. As for value selector,
-we can use, for example, minimal value in a domain, random value in a domain and so on. We can choose
-different user-defined strategies for various group of variables so as to follow the specified problem
+we can use, for example, the minimal value in a domain, a random value in a domain and so on. We can choose
+different user-defined strategies for various groups of variables so as to follow the specified problem
 in the best way. In that case we define the solver's behaviour through so-called goals. A goal
 contains a definition of a strategy, that means a selector for certain variables and an iterator over values.
 
-While solving large-scale problems, it might be enormously time demanding, take too much system resources and so on.
+Solving large-scale problems might be enormously time demanding, take too much system resources and so on.
 To avoid this we can define solver limits. In the solver we can set a time limit, a limit for a number of nodes, 
 a depth of backtracking, a number of fails or a limit for CPU time. Apart from that, a user can define their own limits. 
 
@@ -95,19 +95,12 @@ however, in Choco it is possible to print out a log of the solving process.
 One can configure several levels how detailed information is logged varying from
 nothing to a complete list of what the Choco does internally.
 
-\subsection{Benchmarks implementation}
-The implementation of the benchmarks in the Choco solver can be found in the section
-\ref{implementation:choco}. All benchmarks have the similar structure. First we define
-an object of type CPModel which represents the model. We did not have to use a different models
-of the problems than the models proposed in the chapter \ref{benchmarks}. The set of constraints available
-in the solver was sufficient to represent the problems. 
-
 \subsection{Subjective description}
-The system has a good documentation, although it is quite jumble. Even though an accurate reader
-finds virtually everything they look for. A documentation for developers is generated
+The system has a good documentation, although it is a little bit bad organised. Even though the careful readers
+find virtually everything they look for. A documentation for developers is generated
 by JavaDoc system. Due to that fact it is available as a hinting tool for many users of common Java IDEs, 
 that definetely helps for better understanding of the solver. Since the development of the solver is
 maintained at SourceForge server, it is quite easy to access source codes as well as a history of versions via
 revision control system Subversion. One can find there also a technical support forum, where the authors
-answers the users' questions. The reaction time is very low and the answers are of high
+answer the users' questions. The reaction time is very low and the answers are of high
 quality so most of the problems are quickly fixed.
