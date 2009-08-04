@@ -7,7 +7,7 @@ to install it even for a beginners in Java and it lasts about five minutes in co
 IDEs. Since the Java is used, the Choco solver is available for various platforms
 and operating systems. As far as it is not our goal to describe possibilities of host operating
 system, we are not about to further discuss the Java features. Choco is being developed
-at Ecole des Mines de Nantes ve Francii and it is freely available for downloading from 
+at Ecole des Mines de Nantes in France and it is freely available for downloading from 
 SourceForge server. The main number of current version is 2. Choco divides the problem solution
 into two parts -- a model and a solver itself. The model contains variables and constraints given 
 in task. Afterwards, the solver is given the model as an input and it tries to find a solution. 
@@ -43,7 +43,7 @@ either to use a large number of build-in constraints, or to define our own const
 The constraints which are available natively in the solver are listed in the table \ref{list-of-constraints}.
 Each of the constraint fits in one the following groups: basic constraints (true, false, relation operators),
 basic expressions (goniometric functions, powers, sums), other constraints (\texttt{abs}, \texttt{div}, \texttt{max}, ...),
-reified contraints ((\texttt{and}, \texttt{or}, \texttt{ifOnlyIf}) and global constraints (\texttt{allDifferent}, 
+reified contraints (\texttt{and}, \texttt{or}, \texttt{ifOnlyIf}) and global constraints (\texttt{allDifferent}, 
 \texttt{occurenceMax}, ...). Furthermore, there are constraints available which might be used for modeling geometric constraints,
 scheduling constraints and constraints for a sequention of variables which is accepted by finite automaton.
 
@@ -93,9 +93,14 @@ and returns a variable of a solver.
 Choco does not include any tools for graphic visualisation of search tree such as systems Mozart or Gecode do;
 however, in Choco it is possible to print out a log of the solving process.
 One can configure several levels how detailed information is logged varying from
-nothing to a complete list of what the Choco does internally. ***ZPRACUJVIS***
+nothing to a complete list of what the Choco does internally.
 
 \subsection{Benchmarks implementation}
+The implementation of the benchmarks in the Choco solver can be found in the section
+\ref{implementation:choco}. All benchmarks have the similar structure. First we define
+an object of type CPModel which represents the model. We did not have to use a different models
+of the problems than the models proposed in the chapter \ref{benchmarks}. The set of constraints available
+in the solver was sufficient to represent the problems. 
 
 \subsection{Subjective description}
 The system has a good documentation, although it is quite jumble. Even though an accurate reader

@@ -61,3 +61,39 @@ were used:
   \item {\em qwh20}
   \item {\em warehouses} -- Locating Warehouses, find the best solution with the initial setting as in the figure \ref{warehouses-setting} 
 \end{itemize}  
+
+\begin{table}
+\caption{\label{results:performance:runtime}The results of the performance test. Runtime (ms)}
+\begin{center}
+\begin{tabular}{lrrrrrr}
+\hline Solver & queens10 & queens100 & magic20 & srq & qwh20 & warehouses \\
+\hline 
+
+ Mozart/Oz &  &  & & & &  \\
+ Choco & 850.27 & 1005.02 & & & &  \\
+ Minion &  &  & & & &  \\
+ Gecode & 65.35 & 34.70 & & 25.89 & &  \\
+ \eclipse & 809.45  & $\times$ & & 691.13 & &  \\
+ SICStus Prolog & 327.53 & 15.40 & & 13.54 & & 14.41  \\
+\hline 
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}
+\caption{\label{results:performance:runtime}The results of the performance test. Memory peak (MB)}
+\begin{center}
+\begin{tabular}{lrrrrrr}
+\hline Solver & queens10 & queens100 & magic20 & srq & qwh20 & warehouses \\
+\hline 
+
+ Mozart/Oz &  &  & & & &  \\
+ Choco & 209.42 & 209.46 & & & &  \\
+ Minion &  &  & & & &  \\
+ Gecode & 8.58 & 6.71 & & 6.68 & &  \\
+ \eclipse & 1158.15  & $\times$ & & 1158.08 & &  \\
+ SICStus Prolog & 38.08 & 1.35 & & 0.94 & & 0.89  \\
+\hline 
+\end{tabular}
+\end{center}
+\end{table}

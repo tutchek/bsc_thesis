@@ -82,7 +82,26 @@ many values from the domain as possible. It can reveal that the problem does not
 solution (if there is a variable with an empty domain) before a backtracking. It 
 it is no surprise that in a user guide to Choco system, one of the available constraint
 solvers, it is stated "if you know Sudoku, 
-then you know the constraint programming."
+then you know the constraint programming." The formal definitions of the constraint satisfaction
+problem and the solution of the constraint satisfaction problem follows (the definitions 
+are cited from \cite{bartak:ogcp}).
+
+\begin{definition}The {\bf Constraint satisfaction problem} or {\bf CSP} consist of:
+\begin{itemize}
+	\item a set of variables $X=\{x_1, ..., x_n\}$,
+	\item for each variable $x_i$ a finite set $D_i$ of possible values (its {\bf domain}),
+	\item and a set of {\bf constraints} restricting the values that the variables can simultaneously take.
+\end{itemize} 
+\end{definition}
+
+\begin{definition}
+A {\bf solution} to a CSP is an assignment of a value from its domain to every variable, in such a way that every constraint is satisfied. We may want to find:
+\begin{itemize}
+	\item just one solution, with no preference as to which one,
+	\item all solutions,
+	\item an optimal, or at least a good solution, given some objective function defined in terms of some or all of the variables.
+\end{itemize}
+\end{definition}
 
 \section{Constraint programming}
 \label{introduction-constraint-programming}
@@ -119,8 +138,8 @@ constraint $c$ to the problem $P$ and rerun the propagation on two new problems,
  to possible failure more quickly. Usually the solver offers choices of the algorithm
  to suite all needs. This algorithm is called maintained arc consistency or MAC. Its
  schematic source code is in figure \ref{labelling-bartak}. The code is cited from 
- \cite{UI:Bartak}. More detailed explanations of algorithms used in CSP solving can be found in \cite{bartak:ogcp}.
- 
+ \cite{UI:Bartak}. More detailed explanations of algorithms used in CSP solving can be found in \cite{bartak:ogcp}. 
+
 \begin{figure}
 \caption{\label{labelling-bartak}The MAC algorithm}
 \begin{lstlisting}[language=Pascal]

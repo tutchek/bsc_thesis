@@ -1,2 +1,105 @@
 \section{Choco}
+\label{implementation:choco}
 \verb= $Id$ =
+
+\subsection{N-Queens}
+\begin{lstlisting}[language=Java]
+Model m = new CPModel();
+Solver s = new CPSolver();
+
+int n = 8;
+
+IntegerVariable[] queens = choco.Choco.makeIntVarArray("queens", n, 1, n);
+
+m.addVariables(queens);
+m.addConstraint( allDifferent(queens) );
+
+for (int i = 0; i < n; i++)
+{
+    for (int j = i+1; j < n; j++)
+    {
+        m.addConstraint(
+                    distanceNEQ(queens[i], queens[j], Math.abs(i- j))
+                  );
+    }
+}
+
+m.addConstraint( leq(queens[0], queens[n-1]) );
+
+s.read(m);
+Boolean some = s.solve();
+
+if (some)
+{
+    do {
+        for (int i = 0; i < queens.length; i++) {
+            int value = s.getVar(queens[i]).getVal();
+            System.out.print(value+" ");
+        }
+
+        System.out.println();
+    } while (s.nextSolution());
+}
+\end{lstlisting}
+
+\subsection{Magic Sequence}
+\begin{lstlisting}[language=Java]
+Model m = new CPModel();
+Solver s = new CPSolver();
+
+int n = 10;
+
+IntegerVariable[] sequence = makeIntVarArray("seq", n, 0, n);
+m.addVariables(sequence);
+IntegerVariable[] aux_number = makeIntVarArray("aux_number", n*n, 0, 1);
+m.addVariables(aux_number);
+for (int i = 0; i < n; i++)
+{
+    for (int j = 0; j < n; j++)
+    {
+        m.addConstraint( implies( eq(sequence[j], i) , eq(aux_number[j + i*n], 1) ) );
+        m.addConstraint( implies( neq(sequence[j], i) , eq(aux_number[j + i*n], 0) ) );
+    }
+}
+
+for (int i = 0; i < n; i++)
+{
+    IntegerVariable[] tmp = new IntegerVariable[n];
+    for (int j = 0; j < n; j++)
+    {
+        tmp[j] = aux_number[j + i*n];
+    }
+    m.addConstraint( eq( sum( tmp ), sequence[i] ) );
+}
+
+s.read(m);
+Boolean some = s.solve();
+if (some)
+{
+    do {
+        for (int i = 0; i < sequence.length; i++) {
+            int value = s.getVar(sequence[i]).getVal();
+            System.out.print(value+" ");
+        }
+
+        System.out.println();
+        
+    } while (s.nextSolution());
+}
+\end{lstlisting}
+
+\subsection{Self-refferential Quiz}
+\label{implementation:gecode:srq}
+\begin{lstlisting}[language=Java]
+
+\end{lstlisting}
+
+\subsection{Quasigroup With Holes}
+\begin{lstlisting}[language=Java]
+
+\end{lstlisting}
+
+\subsection{Locating warehouses}
+\begin{lstlisting}[language=Java]
+
+\end{lstlisting}
