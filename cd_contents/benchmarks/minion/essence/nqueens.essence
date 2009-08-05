@@ -1,7 +1,9 @@
 language ESSENCE' 1.b.a
+
 find queens: matrix indexed by [int(1..n)] of int(1..n)
 such that
 
-alldiff(queens),  
+alldiff(queens),
+queens[1] < queens[n],  
 forall i: int(1..n). forall j: int(i+1..n).
 | queens[i] - queens[j] | != | i - j |

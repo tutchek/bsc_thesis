@@ -1,12 +1,34 @@
 :- lib(ic).
 
-qwh(N, Sol) :-
+qwh(N, Assignment, Sol) :-
   NN is N*N,
   length(Matrix, NN),
-  Matrix :: [1..N],
+  N2 is N-1,
+  Matrix :: [0..N2],
   q_constraint(N, Matrix),
+  assign_constraint(Matrix, Assignment),
   labeling(Matrix),
   Sol = Matrix.
+  
+assign_constraint([], []).
+assign_constraint([_|T], [-1|TT]) 
+	:- assign_constraint(T, TT).
+
+assign_constraint([H|T], [HH|TT]) :- 
+	HH \= -1,
+	H #= HH,
+	assign_constraint(T, TT).
+  
+write_solution(N, Sol) :-
+  NN is N - 1, write_solution(N, NN, Sol, 0).
+
+write_solution(_, _, [], _).
+write_solution(N, NN, [H|T], A) :-
+  M is A mod N,
+  write(H),
+  (M = NN, write('\n') ; M \= NN, write(' ')),
+  AA is A + 1,
+  write_solution(N, NN, T, AA).
   
 select_column(N, ColId, Matrix, Col) :- 
   select_column(N, ColId, Matrix, Col, 0).

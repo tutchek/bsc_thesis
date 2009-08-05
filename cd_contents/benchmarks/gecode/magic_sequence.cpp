@@ -1,6 +1,5 @@
 #include <gecode/int.hh>
 #include <gecode/search.hh>
-#include <gecode/gist.hh>
 
 using namespace Gecode;
 
@@ -48,6 +47,7 @@ int main(int argc, char** argv)
 	{
 		s->print();
 		delete s;
+		break;
 	}
 	
 	return 0;

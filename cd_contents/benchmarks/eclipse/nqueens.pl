@@ -1,17 +1,16 @@
 :- lib(ic).
 
+all_queens(N, Out) :-
+  bagof(Sol, queens(N, Sol), Out).
+
 queens(N, Sol) :- 
   length(Queens, N),
   Queens :: [1..N],
-  viewable_create(queens, Queens),
   alldifferent(Queens),
   diagonals(Queens),
   labeling(Queens),
   Sol = Queens.
   
-create_list(0, []).
-create_list(N, [_|T]) :- N > 0, NN is N - 1, create_list(NN, T).
-
 diagonals([H|T]) :- diagonals([H|T], T).
 
 diagonals([], _).

@@ -79,7 +79,6 @@ public:
 		linear(*this, costArgs, costVariables, IRT_EQ, TotalCost);
 		
 		branch(*this, Supplier, INT_VAR_SIZE_MIN, INT_VAL_MIN);
-		branch(*this, Open, INT_VAR_SIZE_MIN, INT_VAL_MIN);
 	}
 
 	virtual IntVar cost() const {

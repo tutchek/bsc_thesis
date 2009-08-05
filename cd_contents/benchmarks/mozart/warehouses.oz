@@ -1,4 +1,12 @@
-declare
+functor
+import
+	FD
+	Space
+	Search
+	System
+	Application
+	Property
+define
 fun {Warehouses Data}
    
    fun {Regret X}
@@ -70,4 +78,10 @@ Data = company(
 
 in
 
-{Browse {SearchBest {Warehouses Data} Order}}
+	{Property.put 'print.width' 1000}
+	{Property.put 'print.depth' 1000}
+
+	{System.show {Search.base.best {Warehouses Data} Order}}
+	
+	{Application.exit 0}
+end
