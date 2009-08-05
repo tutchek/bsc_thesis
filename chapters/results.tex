@@ -54,7 +54,7 @@ the robustness test are in the table \ref{results:robustness}.
 \begin{tabular}{cccccc}
 \hline Mozart/Oz & Choco & Minion & Gecode & \eclipse & SICStus Prolog \\
 \hline
-   & 111 & 236 & 27 & 55 & 174 \\
+  94 & 111 & 236 & 27 & 55 & 174 \\
 \hline 
  
 \end{tabular}
@@ -80,15 +80,12 @@ were used:
 \caption{\label{results:performance:runtime}The results of the performance test. Runtime (ms)}
 \begin{center}
 \begin{tabular}{lrrrrrr}
-\hline Solver & queens10 & queens100 & magic20 & srq & qwh20 & warehouses \\
-\hline 
-
- Mozart/Oz &  &  & & & &  \\
- Choco & 850.27 & 1005.02 & & & &  \\
- Minion &  &  & & & &  \\
- Gecode & 65.35 & 34.70 & & 25.89 & &  \\
- \eclipse & 809.45  & $\times$ & & 691.13 & &  \\
- SICStus Prolog & 327.53 & 15.40 & & 13.54 & & 14.41  \\
+\hline Benchmark & Moz & Cho & Min & Gec & ECL & SiP \\
+\hline queens10 & 237.95 & 850.27 & 227.69 & 65.35 & 809.45 & 327.53 \\
+	queens100 & 184.19 & 1005.02 & $\times$ & 34.70 & $\times$ & 15.40 \\
+	magic20 & 11.48 & 1092.95 & 71.24 & 2926.86 & 4514.14 & 198.32 \\
+	srq & & 482.81 & & 25.89 & 691.13 & 13.54 \\
+	warehouses &  & 1500.83 & & 169.71 & 1808.29 & 14.41 \\  
 \hline 
 \end{tabular}
 \end{center}
@@ -98,16 +95,13 @@ were used:
 \caption{\label{results:performance:runtime}The results of the performance test. Memory peak (MB)}
 \begin{center}
 \begin{tabular}{lrrrrrr}
-\hline Solver & queens10 & queens100 & magic20 & srq & qwh20 & warehouses \\
-\hline 
-
- Mozart/Oz &  &  & & & &  \\
- Choco & 209.42 & 209.46 & & & &  \\
- Minion &  &  & & & &  \\
- Gecode & 8.58 & 6.71 & & 6.68 & &  \\
- \eclipse & 1158.15  & $\times$ & & 1158.08 & &  \\
- SICStus Prolog & 38.08 & 1.35 & & 0.94 & & 0.89  \\
-\hline 
+\hline Benchmark & Moz & Cho & Min & Gec & ECL & SiP \\
+\hline 	queens10 & 8.62 & 209.42 & 44.17 & 8.58 & 1158.15 & 38.08 \\
+				queens100 & 23.31 & 209.46 & $\times$ & 6.71 & $\times$ & 1.35 \\
+				magic20 & 2.32 & 1173.19 & 44.57 & 6.70 & 1157.99 & 39.30 \\
+				srq & & 209.35 & & 6.68 & 1158.08 & 0.94 \\
+				warehouses &  & 209.12 & & 7.00 & 1157.99 & 0.89 \\
+\hline
 \end{tabular}
 \end{center}
 \end{table}
