@@ -93,35 +93,6 @@ function Gist node statistics, which gives us more information about a specific 
 of the search tree, such as the depth of the node (according to a tree root), current height
 of the node's subtree and the number of successful/unsuccessful solutions in the subtree.
 In Gist there is also a tool Inspector, which works equally to the Inspector in Mozart/Oz.
-
-\subsection{Benchmarks implementation}
-All benchmarks are represented by the class derived from the base class Space except the
-Locating Warehouses problem which is derived from the MinimizeSpace. The non-auxiliary
- constraint variables are member variables of the class. The constraints are posted in the 
- constructor. In the constructor there is also the call to the \texttt{branch} function which
- is used to tell the constraint solver over which variables should be the labelling algorithm
- used. To model most of the constraints we used the {\em minimodel} extension. That means that we could {\em post} the expressions
-to the constraint store without having to explicitly set auxiliary variables and then
-constrain them. All benchmarks except the Magic Sequence were transformed to the 
-Gecode source very straightforward using the same structure of the constraint variables
-and constraints as proposed in the chapter \ref{benchmarks}. For the magic sequence 
-the solver offers the constraint \texttt{count} which itself representes the whole 
-problem and therefore we used it. The Self Refferential Quiz in the section \ref{implementation:gecode:srq} 
-was modelled using the boolean variables. The oly way how to constrain the boolean variables with
-the integer constraints is by the \texttt{channel} constraint. This constraint among
-the other possible actions can post a constraint $x = b$ where $x$ is an integer variable
-and b is a boolean variable. Then we can constrain the integer variables and effects of 
-these constraints applies on the boolean variables. This principle was used to ensure
-that there is only one answer to each question on the lines 12--23. A lot of the
-constraints in the SRQ problem have the form $(x \mand y \mand ... \mand \neg a \mand \neg b) \Leftrightarrow c$.
-The standard boolean relation constraints could be used for this purpose; however, we use 
-the \texttt{clause(space, rel, x,y,z)} constraint (line 37) which posts the constraint 
- $\bigvee {x_i} \vee \bigvee{\neg y_i} \Leftrightarrow z$, respectively, $\bigwedge {x_i} \wedge \bigwedge{\neg y_i} \Leftrightarrow z$.
- This constraint significantly reduces the number of the negation propagators.
- The optimalization problem need also call the \texttt{branch} function. Also the
- \texttt{cost} function has to be declared. Result of this function is used as a value of
- the objective function to find a better solution. The search engine for optimalization
- problems has to be \texttt{BAB} or \texttt{Restart}.
    
 
 \subsection{Subjective description}

@@ -1,9 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-package magicsequence;
+package benchmarks;
 
 import static choco.Choco.*;
 
@@ -15,20 +10,26 @@ import choco.kernel.model.constraints.Constraint;
 import choco.kernel.solver.Solver;
 import choco.cp.solver.CPSolver;
 
-/**
- *
- * @author Tutchek
- */
 public class Main {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
+	public static void main(String[] args) {
         Model m = new CPModel();
         Solver s = new CPSolver();
         
         int n = 10;
+        
+        if (args.length > 0)
+        {
+	        try
+	        {
+	            n = Integer.parseInt(args[0]);
+	        }
+	        catch (Exception e)
+	        {
+	            n = 10;
+	        }
+        }
+        
         IntegerVariable[] sequence = makeIntVarArray("seq", n, 0, n);
 
         m.addVariables(sequence);
@@ -58,27 +59,12 @@ public class Main {
         }
 
         s.read(m);
+        
         Boolean some = s.solve();
 
         if (some)
         {
             do {
-                
-                System.out.println("Solution: ");
-
-                for (int i = 0; i < aux_number.length; i++) {
-                    if ( i%n == 0)
-                    {
-                        System.out.println();
-                    }
-                    int value = s.getVar(aux_number[i]).getVal();
-                    System.out.print(value+" ");
-
-                }
-
-                System.out.println();
-                System.out.println();
-
                 for (int i = 0; i < sequence.length; i++) {
                     int value = s.getVar(sequence[i]).getVal();
                     System.out.print(value+" ");
@@ -86,14 +72,8 @@ public class Main {
 
                 System.out.println();
                 
-                //System.out.print("X");
             } while (s.nextSolution());
         }
-
-        if (!some) {
-            System.out.print("!");
-        }
-        System.out.println(".");
     }
 
 }

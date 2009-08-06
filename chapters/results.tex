@@ -37,6 +37,10 @@ The following versions of the solvers were used:
   \item SISCtus Prolog 4.0.7 -- linux, glibc 2.7
 \end{itemize}   
 
+In the performance test as well as in the robustness test we used the fist-fail search strategy for
+all of the implemented benchmarks. This strategy is the default strategy the all
+solvers.
+
 \section{The robustness test}
 In the robustness test we measure how long magic sequence the solver is able to compute in 
 ten minutes. As stated in previous paragraph the benchmarking tool uses for this 
@@ -47,44 +51,91 @@ it fails it changes the interval to $[a,v-1]$. Then the search continues in the 
 until the lower bound of the interval is larger than upper bound. The results of
 the robustness test are in the table \ref{results:robustness}.
 
+The results of the robustness test are in the table \ref{results:robustness} (the best result is bolded). As 
+we can see the most robust solver is the Minion solver folowed by the Gecode.
+At first we tried to implement the benchmark problem in the Gecode system by
+using of the constraint \texttt{count}. This constraint meaning is exactly the
+Magic Sequence problem; however, the longest magic sequence which we were able to compute
+had the length 27. If we compare this value with the current value 191 it is obvious
+that the implementation of this constraint is problematic.  
+
 \begin{table}
 \caption{\label{results:robustness}The results of the robustness test.}
 \begin{center}
 \begin{tabular}{cccccc}
 \hline Mozart/Oz & Choco & Minion & Gecode & \eclipse & SICStus Prolog \\
 \hline
-  94 & 111 & 236 & 27 & 55 & 174 \\
+  94 & 111 & {\bf 236} & 191 & 55 & 174 \\
 \hline 
- 
+ % Gecode puvodne 27
 \end{tabular}
 \end{center}
 \end{table}
 
 \section{The performance test}
 This test compares the solvers according to the two citerias. The first criterium is
-the time needed to solve given problem instances. The second criteria is the highest
+the time needed to solve given problem instances. The second criterium is the highest
 peak of used computer memory during the computation. We divided the instances of the benchmarks into two groups. 
-In the first group there are the instances of the Quasigoupr With Holes problem. In
-the second group there are the following instances of the benchmarks:
+In the first group there are the instances of the Quasigroup With Holes problem. 
+
+We generated 25 ballanced quasigroups of the 
+order $n = 16$ and removed approximately $1.6 n^{1.55}$ values. According to the 
+\cite{Achlioptas00generatingsatisfiable} the quasigroups with this number of the 
+holes are hard to solve compared to the other quasigroup of the same order. To 
+generate the quasigroups we used the {\em lsencode} combined with the {\em walksat}.
+ 
+This benchmark gives us a comparison of the \texttt{allDifferent} constraint. This 
+constraint is a global constraint. That means that the constraint is not binary but
+it constrain a set of variables. The allDifferent constraint is typically implemented
+using the matching in a bipartite graph \cite{hoeve:alldifferent}. The one group of nodes consists of the 
+variables and the second group consists of the possible values of these variables.
+The variable node and the value node are connected by the edge if and only if
+the value is in the variables' domain. 
+
+As we can see in the graph in the figure \ref{results:qwh1} (a version with logarithmic 
+scale is in the figure \ref{results:qwh2}) the best results were achieved with Gecode,
+Mozart and Minion. The performance of the SICStus Prolog and \eclipse compared to
+the others is worse than the order of the magnitude.
+  
+In the second group of benchmarks there are the following instances of the benchmarks:
 
 \begin{itemize}
-  \item {\em queens10} -- find all solutions of the 10 queens problem
+  \item {\em queens10} -- find all solutions of the 10 queens problem,
   \item {\em queens100} --find one solution of the 100 queens problem, 
   \item {\em magic20} -- find the Magic sequence of the length 20,
-  \item {\em srq} -- find the solution of the Self Refferential Quiz
-  \item {\em warehouses} -- find the best solution of the Locating Warehouses problem. The initial settings is in the table \ref{results:warehouses-setting} 
+  \item {\em srq} -- find the solution of the Self Refferential Quiz,
+  \item {\em warehouses} -- find the best solution of the Locating Warehouses problem.
 \end{itemize}
 
-We used the Quasigroup With Holes problem instances with the order $n = \{4,8,12,16\}$. For
-each order we generated 25 ballanced quasigroups and removed approximately
- $1.6 n^{1.55}$ values. According to the \cite{Achlioptas00generatingsatisfiable} the quasigroups with this
- number of the holes represents the most hard instances of the problem. To generate the quasigroups we used the
- {\em lsencode} combined with the {\em walksat}.
- 
-\section{Quasigroup With Holes results}
 
-\section{Other results}  
+\begin{figure}
+  \centering
+  \includegraphics[width=.5\textwidth, angle=270]{images/grafy/16.time.nolog.ps}
+  \caption{The QWH benchmark results}
+  \label{results:qwh1}
+\end{figure}
 
+\begin{figure}
+  \centering
+  \includegraphics[width=.5\textwidth, angle=270]{images/grafy/16.time.ps}
+  \caption{The QWH benchmark results, logarithmic scale}
+  \label{results:qwh2}
+\end{figure}
+
+As we can see in the tables \ref{results:performance:runtime} and \ref{results:performance:memory} (the best result of each benchmark is bolded) none 
+of the solvers is the ultimate winner; however, the three solvers -- SICStus Prolog, Gecode and 
+Mozart -- achieved the best results in some of the problem instances. \eclipse and
+Minion did not solve the 100 queens problem in the given time limit. Therefore we 
+consider them as unreliable. The \eclipse and Choco were unable to load the big problems
+to the memory so we changed the memory limit to one gigabyte. For \eclipse we changed it for all of the
+experiments and for Choco we used this large memory only for the magic sequence problem.
+The table \ref{results:performance:memory} indicates that the Java Virtual Mashine which
+is running the Choco as well as the \eclipse solver allocated the whole allowed
+amount of memory. We observer in the performance test the same problem with the \texttt{count}
+constraint in the Gecode system as in the robustness test. For a comparison the original
+results for the magic20 benchmark was 2926.86 miliseconds. The memory peak was nearly the same.
+
+% gecode puvodne 2926.86ms    
 \begin{table}
 \caption{\label{results:performance:runtime}The results of the performance test. Runtime (ms)}
 \begin{center}
@@ -92,7 +143,7 @@ each order we generated 25 ballanced quasigroups and removed approximately
 \hline Benchmark & Moz & Cho & Min & Gec & ECL & SiP \\
 \hline queens10 & 237.95 & 850.27 & 227.69 & {\bf 65.35} & 809.45 & 327.53 \\
 	queens100 & 184.19 & 1005.02 & $\times$ & 34.70 & $\times$ & {\bf 15.40} \\
-	magic20 & {\bf 11.48} & 1092.95 & 71.24 & 2926.86 & 4514.14 & 198.32 \\
+	magic20 & {\bf 11.48} & 1092.95 & 71.24 & 65.41 & 4514.14 & 198.32 \\
 	srq & {\bf 6.22} & 482.81 & 55.81 & 25.89 & 691.13 & 13.54 \\
 	warehouses & 68.28 & 1500.83 & 2338.45 & 169.71 & 1808.29 & {\bf 14.41} \\  
 \hline 
@@ -101,13 +152,13 @@ each order we generated 25 ballanced quasigroups and removed approximately
 \end{table}
 
 \begin{table}
-\caption{\label{results:performance:runtime}The results of the performance test. Memory peak (MB)}
+\caption{\label{results:performance:memory}The results of the performance test. Memory peak (MB)}
 \begin{center}
 \begin{tabular}{lrrrrrr}
 \hline Benchmark & Moz & Cho & Min & Gec & ECL & SiP \\
 \hline 	queens10 & 8.62 & 209.42 & 44.17 & {\bf 8.58} & 1158.15 & 38.08 \\
 				queens100 & 23.31 & 209.46 & $\times$ & 6.71 & $\times$ & {\bf 1.35} \\
-				magic20 & {\bf 2.32} & 1173.19 & 44.57 & 6.70 & 1157.99 & 39.30 \\
+				magic20 & {\bf 2.32} & 1173.19 & 44.57 & 7.26 & 1157.99 & 39.30 \\
 				srq & 63.36 & 209.35 & 44.56 & 6.68 & 1158.08 & {\bf 0.94} \\
 				warehouses & 6.79  & 209.12 & 44.30 & 7.00 & 1157.99 & {\bf 0.89} \\
 \hline

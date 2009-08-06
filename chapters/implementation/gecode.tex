@@ -1,8 +1,20 @@
 \section{Gecode}
 
-The locating warehouses benchmark implemented in the Gecode solver.
+The following code shows the implementation of the Locating Warehouses problem in the
+Gecode solver. The code is complete except the loading of the data from the external source.
 
 \begin{lstlisting}[language=C++]
+#include <gecode/int.hh>
+#include <gecode/search.hh>
+#include <gecode/minimodel.hh>
+
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <string>
+
+using namespace Gecode;
+
 class Warehouses : public MinimizeSpace {
 protected: 
 	IntVar TotalCost;
@@ -103,4 +115,37 @@ public:
 	}
 
 };
+
+int main(int argc, char** argv)
+{
+	std::vector<int> supplyCost;
+	std::vector<int> warehouseCapacity;
+
+	// There should be the loading of the data into the vectors. 
+	// We left it out in printout
+
+ 	Warehouses* w = new Warehouses( warehouseCapacity.size(), supplyCost.size()/warehouseCapacity.size(), supplyCost, warehouseCapacity);
+	
+	BAB<Warehouses> e(w);
+	delete w;
+
+	Warehouses* last = 0;
+	while (Warehouses* s = e.next())
+	{
+		if (last != 0)
+		{ 
+			delete last; 
+		}
+
+		last = s;
+	}
+
+	if (last)
+	{
+		last->print();
+		delete last;
+	}
+	
+	return 0;
+}
 \end{lstlisting}

@@ -1,9 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+package benchmarks;
 
-package locatingwarehouses;
+import java.io.*;
 
 import static choco.Choco.*;
 
@@ -14,56 +11,76 @@ import choco.kernel.model.variables.set.SetVariable;
 import choco.kernel.model.constraints.Constraint;
 import choco.kernel.solver.Solver;
 import choco.cp.solver.CPSolver;
-import choco.kernel.model.variables.real.RealVariable;
-import choco.kernel.solver.variables.real.RealVar;
 
-/**
- *
- * @author Tutchek
- */
+import java.util.*;
+
 public class Main {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        Model m     = new CPModel();
+	public static void main(String[] args) throws IOException {
+		Model m     = new CPModel();
         Solver s    = new CPSolver();
+        
+        
+        Reader r = new BufferedReader(new FileReader("warehouses.param"));
+        
+        Vector cappacities = new Vector();
+        Vector cost = new Vector();
+        int cost_build_warehouse = 0;
+        
+        Vector actual_list = null;
+        
+        StreamTokenizer stok = new StreamTokenizer(r);
+        stok.parseNumbers();
+        
+        stok.nextToken();
+        while (stok.ttype != StreamTokenizer.TT_EOF) {
+          if (stok.ttype == StreamTokenizer.TT_NUMBER)
+          {
+        	  if (actual_list != null)
+        	  {
+        		  if (stok.nval != -1)
+        		  {
+        			  actual_list.add( (int)stok.nval );
+        		  }
+        	  }
+          }
+          else
+          {
+        	if (stok.sval.equals( "cost" ))
+            {
+            	actual_list = cost;
+            } 
+        	else if (stok.sval.equals( "cappacities" ))
+            {
+            	actual_list = cappacities;
+            }
+        	else if (stok.sval.equals( "warehousecost" ))
+            {
+        		do
+        		{
+        			stok.nextToken();
+        		} while (stok.ttype != StreamTokenizer.TT_NUMBER);
+        		cost_build_warehouse = (int) stok.nval;
+            }
+          }
+          stok.nextToken();
+        }
 
-        int count_warehouses = 5;
-        int count_stores = 10;
-
-
-        int cost_build_warehouse = 50;
-
-        int[] capacity = new int[]{ 1, 4, 2, 1, 3 };
-
-        /*
-        int[] supply_cost = new int[]{
-            20, 24, 11, 25, 30,
-            28, 27, 82, 83, 74,
-            74, 97, 71, 96, 70,
-            2, 55, 73, 69, 61,
-            46, 96, 59, 83, 4,
-            42, 22, 29, 67, 59,
-            1, 5, 73, 59, 56,
-            10, 73, 13, 43, 96,
-            93, 35, 63, 85, 46,
-            47, 65, 55, 71, 95
-        };
-        */
-
-        int[] supply_cost = new int[]{
-            36, 42, 22, 44, 52,
-            49, 47, 134, 135, 121,
-            121, 158, 117, 156, 115,
-            8, 91, 120, 113, 101,
-            77, 156, 98, 135, 11,
-            71, 39, 50, 110, 98,
-            6, 12, 120, 98, 93,
-            20, 120, 25, 72, 156,
-            151, 60, 104, 139, 77,
-            79, 107, 91, 117, 154};
+        int count_warehouses = cappacities.size();
+        int count_stores = cost.size()/cappacities.size();
+        
+        int[] capacity = new int[count_warehouses]; 
+        
+        for (int i = 0; i < count_warehouses; ++i)
+        {
+        	capacity[i] = ((Integer) cappacities.get(i)).intValue();
+        }
+        
+        int[] supply_cost = new int[count_stores*count_warehouses];
+        for (int i = 0; i < count_stores*count_warehouses; ++i)
+        {
+        	supply_cost[i] = ((Integer)cost.get(i)).intValue();
+        }
 
         IntegerVariable[] open = makeIntVarArray("open", count_warehouses, 0, 1);
         m.addVariables(open);
@@ -108,36 +125,10 @@ public class Main {
 
         s.minimize( s.getVar(objective), false );
 
-        //Visu v = Visu.createVisu(
-        //v.addPanel(new VarChocoPanel("Grid", vars, GRID, null));
-
         if (s.isFeasible())
         {
             s.solve();
             do {
-                System.out.println("Solution: ");
-
-                for (int i = 0; i < suplies.length; i++) {
-                    if ( i%count_warehouses == 0)
-                    {
-                        System.out.println();
-                    }
-                    int value = s.getVar(suplies[i]).getVal();
-                    System.out.print(value+" ");
-
-                }
-                
-                System.out.println();
-                System.out.println();
-
-                for (int i = 0; i < open.length; i++) {
-                    int value = s.getVar(open[i]).getVal();
-                    System.out.print( (value == 1 ? "ANO" : "NE" )+" ");
-                }
-
-                System.out.println();
-                System.out.println();
-
                 for (int i = 0; i < suplier.length; i++) {
                     int value = s.getVar(suplier[i]).getVal();
                     System.out.print((value+1)+" ");
@@ -145,17 +136,9 @@ public class Main {
 
                 System.out.println();
                 int value = s.getVar(objective).getVal();
-                System.out.print("Cost: $" + value);
-
-                System.out.println();
-                System.out.println();
-
-                //System.out.print("X");
+                System.out.println("Cost: $" + value);
             } while (s.nextSolution());
-        } else  {
-            System.out.print("!");
         }
-        System.out.println(".");
-    }
+	}
 
 }

@@ -1,8 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package nqueens;
+package benchmarks;
 
 import static choco.Choco.*;
 
@@ -12,31 +8,34 @@ import choco.kernel.model.variables.integer.IntegerVariable;
 import choco.kernel.model.variables.set.SetVariable;
 import choco.kernel.model.constraints.Constraint;
 import choco.kernel.solver.Solver;
-import choco.cp.solver.CPSolver;
+import choco.cp.solver.CPSolver; 
 
-/**
- *
- * @author Michal Tulacek
- */
 public class Main {
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
-
-        Model m = new CPModel();
+	public static void main(String[] args) {
+		Model m = new CPModel();
         Solver s = new CPSolver();
         
-        int n;
-        try
+        Boolean all = false;
+        
+        int n = 8;
+        if (args.length > 0)
         {
-            n = Integer.parseInt(args[0]);
+	        try
+	        {
+	            n = Integer.parseInt(args[0]);
+	        }
+	        catch (Exception e)
+	        {
+	            n = 8;
+	        }
         }
-        catch (Exception e)
+        
+        if (args.length > 1)
         {
-            n = 8;
+        	if (args[1].trim().equals("all"))
+        	{
+        		all = true;
+        	}
         }
 
         IntegerVariable[] queens = choco.Choco.makeIntVarArray("queens", n, 1, n);
@@ -62,23 +61,14 @@ public class Main {
         if (some)
         {
             do {
-                /*
-                System.out.println("Solution: ");
-
                 for (int i = 0; i < queens.length; i++) {
                     int value = s.getVar(queens[i]).getVal();
                     System.out.print(value+" ");
                 }
 
                 System.out.println();
-                */
-                System.out.print("X");
-            } while (s.nextSolution());
+            } while (all && s.nextSolution());
         }
+	}
 
-        if (!some) {
-            System.out.print("!");
-        }
-        System.out.println(".");
-    }
 }

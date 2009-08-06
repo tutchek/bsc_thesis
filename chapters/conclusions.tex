@@ -3,12 +3,12 @@
 This thesis presented a survey of available constraint solvers and more detailed 
 described six of them. After reading of this thesis the reader should have a 
 basic idea about capabilities and performance of each of them. The solver capabilities 
-were measured on the benchmark problems which were implemented in all of them.
+were compared on the benchmark problems which were implemented in all of them.
 On these benchmarks we showed a different approach of each solver to represent
 the constraint problem model. 
 
 The reader is encouraged to try the solver which interested him affter reading of this thesis. 
-After the solver is choosed the following information in this thesis can be helpful. 
+After the solver is chosen the following information in this thesis can be helpful. 
 The description of the selected solver is in the chapter \ref{constraint-solvers}.
 Examples of the source codes of implemented models are in the appendix \ref{implementation}.
 The reader can use them to get an idea about the solver usage. Also it can 
@@ -18,19 +18,40 @@ for the selected solver in in the appendix \ref{constraints}. Finally the perfor
  on the given benchmarks is in the chapter \ref{results}.
  
 \section{Which solver to choose?}
-It is a hard question and there is no easy answer to it. Each solver has an area where
+It is a hard question and there is no simple answer to it. Each solver has an area where
 is the best choice of others. If we are forced to use a particular language the best choice
 would be the solver in that langauge. That means that for C++ projects we choose Gecode,
 for Java projects we use Choco, for Oz projects the Mozart/Oz and finally for Prolog
-project we can choose the \eclipse or SICStus Prolog. Since all solvers except SICStus Prolog are free
+project we can choose the \eclipse or SICStus Prolog. Since all the solvers except SICStus Prolog are free
 we can choose any of them if the main criterion is the budget. If we need to model 
 exotic constraints we cannot use the Minion system.On the other hand the Minion system
 is suitable as an extern solver for environments where is easy to generate an input
 file, run a process and then process its output. Example of such environment could
 be the bash script language. Last but not least criterion can be the readers conservatism and 
 will to learn new things. For example the Mozart/Oz is an interesting solver and language
-but if the reader do not want to get familiar with the functional programming paradign that solver would
+but if the reader do not want to get familiar with the functional programming paradigm that solver would
 not be suitable for him.
 
+Based on the experimental results the Choco and \eclipse can be labeled as "slow systems".
+\eclipse has also the limited set of constraint compared to the other solvers. The 
+set can be extended by the user but the other system offers wider set of the 
+constraints in the basic release. Minion has a limited set of constraints which 
+cannot be extended. Moreover it faild to compute one of the benchmarks. Mozart/Oz
+is quite fast system; however the set of available constraints is also limited and
+the system development seems stopped.
+
+This leaves us the SICStus Prolog and Gecode which can be recomended as the first
+choice. The SICStus Prolog was the best in most of the performance benchmarks and offers 
+many specialized constraints; however, it is not a free open source system and
+the price has to be considered. Also the results of the Quasigroup With Holes benchmark
+was one the worst compared to the other solvers. Gecode offers nearly as large set of constraints
+as SICStus Prolog. Moreover Gecode offers constraining over the set variables which
+is not available in the SICStus Prolog.
+
 \section{Future work}
-  
+We did not perform a deeper study of the search search strategies of
+the solvers. In the future work we should compare the other strategies which are shipped
+with the solver. In the solvers which offers ways to implement the own strategy we 
+should try to implement such a strategy and compare it with the shipped strategies.
+Also the comparison of the solver based on the Quasigroup With Holes problem can
+be performed on the quasigroups of the highed order (at least 30).

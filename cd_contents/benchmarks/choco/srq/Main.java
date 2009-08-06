@@ -1,0 +1,197 @@
+package benchmarks;
+
+import static choco.Choco.*;
+
+import choco.cp.model.CPModel;
+import choco.kernel.model.Model;
+import choco.kernel.model.variables.integer.IntegerVariable;
+import choco.kernel.model.variables.set.SetVariable;
+import choco.kernel.model.constraints.Constraint;
+import choco.kernel.solver.Solver;
+import choco.cp.solver.CPSolver;
+
+public class Main {
+
+	public static void main(String[] args) {
+		Model m = new CPModel();
+        Solver s = new CPSolver();
+        
+        IntegerVariable[][] questions = new IntegerVariable[10][];
+        
+        for (int i = 0; i < 10; i++)
+        {
+        	questions[i] = makeBooleanVarArray("questions_"+i, 5);
+        	
+        	m.addConstraint( eq( sum(questions[i]), 1));
+        	
+        	m.addVariables(questions[i]);
+        }
+        
+        // Question 1 A-D
+        for (int i = 0; i < 4; i++)
+        {
+        	Constraint c = eq(questions[4-i-1][0], 1);
+        	
+        	for (int j = 0; j < 4-i-1; j++)
+        	{
+        		c = and( c, eq(questions[j][0], 0) );
+        	}
+        	
+        	m.addConstraint( ifOnlyIf( eq(questions[0][i], 1), c ) );
+        }
+        
+        // Question 1 E
+        Constraint c1e = TRUE;
+        for (int i = 0; i < 4; i++)
+        {
+        	c1e = and( c1e, eq( questions[i][0], 0 ) );
+        }
+        m.addConstraint( ifOnlyIf( eq(questions[0][4], 1), c1e ) );
+        
+        // Question 2
+        for (int i = 0; i < 5; i++)
+        {
+        	Constraint c = TRUE;
+        	
+        	for (int j = 0; j < 5; j++)
+        	{
+        		c = and( c, eq( questions[2+i][j], questions[3+i][j] ) );
+        	}
+        	
+        	m.addConstraint( ifOnlyIf( eq(questions[1][i], 1), c ) );
+        }
+        
+        // Question 3
+        for (int i = 0; i < 5; i++)
+        {
+        	Constraint c = eq( questions[i+3][0] , 1 );
+        	
+        	for (int j = 0; j < i; j++)
+        	{
+        		c = and( c, eq( questions[j+3][0], 0 ) );
+        	}
+        	
+        	m.addConstraint( ifOnlyIf( eq(questions[2][i], 1), c ) );
+        }
+        
+        // Question 4
+        for (int i = 0; i < 5; i++)
+        {
+        	Constraint c = eq( questions[i*2+1][1] , 1 );
+        	
+        	for (int j = 0; j < i; j++)
+        	{
+        		c = and( c, eq( questions[j*2+1][1], 0 ) );
+        	}
+        	
+        	m.addConstraint( ifOnlyIf( eq(questions[3][i], 1), c ) );
+        }
+        
+        // Question 5
+        for (int i = 0; i < 5; i++)
+        {
+        	Constraint c = eq( questions[i*2][2] , 1 );
+        	
+        	for (int j = 0; j < 5; j++)
+        	{
+        		if (j != i)
+        		{
+        			c = and( c, eq( questions[j*2][2], 0 ) );
+        		}
+        	}
+        	
+        	m.addConstraint( ifOnlyIf( eq(questions[4][i], 1), c ) );
+        }
+        
+        // Question 6
+        IntegerVariable sumBefore = makeIntVar("question_6_sumBefore", 0, 10);
+        IntegerVariable sumAfter  = makeIntVar("question_6_sumAfter", 0, 10);
+        IntegerVariable[] before = new IntegerVariable[5];
+        IntegerVariable[] after = new IntegerVariable[4];
+        
+        for (int i = 0; i < 5; i++)
+        {
+        	before[i] = questions[i][3];
+        }
+        
+        for (int i = 0; i < 4; i++)
+        {
+        	after[i] = questions[6+i][3];
+        }
+        
+        m.addConstraint( eq(sum(before), sumBefore) );
+        m.addConstraint( eq(sum(after), sumAfter) );
+        
+        m.addConstraint( ifOnlyIf( eq(questions[5][0], 1), and( gt(sumBefore, 0), eq(sumAfter, 0) )) );
+        m.addConstraint( ifOnlyIf( eq(questions[5][1], 1), and( eq(sumBefore, 0), gt(sumAfter, 0) )) );
+        m.addConstraint( ifOnlyIf( eq(questions[5][2], 1), and( gt(sumBefore, 0), gt(sumAfter, 0) )) );
+        m.addConstraint( ifOnlyIf( eq(questions[5][3], 1), and( and(eq(questions[5][3], 0), eq(sumBefore, 0)), eq(sumAfter, 0) )) );
+        m.addConstraint( ifOnlyIf( eq(questions[5][4], 1), eq(questions[5][3], 1)) );
+        
+        // Question 7
+        for (int i = 0; i < 5; i++)
+        {
+        	Constraint c = eq( questions[i+4][4] , 1 );
+        	
+        	for (int j = i+4+1; j < 10; j++)
+        	{
+        		c = and( c, eq( questions[j][4], 0 ) );
+        	}
+        	
+        	m.addConstraint( ifOnlyIf( eq(questions[6][i], 1), c ) );
+        }
+        
+        
+        // Question 8
+        IntegerVariable sumConsonants = makeIntVar("question_8_sumConsonants", 0, 10);
+        IntegerVariable[] consonants = new IntegerVariable[3*10];
+        for (int i = 0; i < 10; i++)
+        {
+        	consonants[3*i]     = questions[i][1];
+        	consonants[3*i + 1] = questions[i][2];
+        	consonants[3*i + 2] = questions[i][3];
+        }
+        m.addConstraint( eq(sum(consonants), sumConsonants) );
+        
+        for (int i = 0; i < 5; i++)
+        {
+        	m.addConstraint( ifOnlyIf( eq(questions[7][i], 1), eq(sumConsonants, 7 - i) ) );
+        }
+        
+        
+        // Question 9
+        IntegerVariable sumVowels = makeIntVar("question_9_sumVowels", 0, 10);
+        IntegerVariable[] vowels = new IntegerVariable[2*10];
+        for (int i = 0; i < 10; i++)
+        {
+        	vowels[2*i]     = questions[i][0];
+        	vowels[2*i + 1] = questions[i][4];
+        }
+        m.addConstraint( eq(sum(vowels), sumVowels) );
+        
+        for (int i = 0; i < 5; i++)
+        {
+        	m.addConstraint( ifOnlyIf( eq(questions[8][i], 1), eq(sumVowels, i) ) );
+        }
+        
+        s.read(m);
+        
+        Boolean some = s.solve();
+
+        if (some)
+        {
+            do {
+                for (int i = 0; i < questions.length; i++) {
+                	
+                	for (int j = 0; j < questions[i].length; j++)
+                    {
+	                	int value = s.getVar(questions[i][j]).getVal();
+	                    System.out.print(value+" ");
+                    }
+                    System.out.println();
+                }
+            } while (s.nextSolution());
+        }
+	}
+
+}
