@@ -2,23 +2,23 @@
 
 Minion is a constraint solver which works as a standalone application. Minion takes
 as an input the problem description and returns the solutions if there are any.
-Minion is open source and available at sourceforge.net. The problem description
+Minion is open source and available at SourceForge. The problem description
 is contained in a file with a special format. The file contains definitions of variables,
 their domains and constraints on them. The best description of the input format could
-be "the constraint assembly language". The constraints cannot use as their parameters 
+be ``the constraint assembly language". The constraints cannot use as their parameters 
 expressions. If we need to constrain the expression we have to introduce a new variable
 to be equal to the expression and then constrain this variable. For example let us assume 
-we can use constraints $X = |Y|$ and $X < Y$ and we need to use constraint $X < |Y|$.
+we can use constraints $X = |Y|$ and $X < Y$ and we need to use the constraint $X < |Y|$.
 We have to introduce the auxiliary variable $a$ and post two constraints $a = |Y|$ and
- $X < a$. If we use many expressions in our problem it leads to enormous number of
+ $X < a$. Using of the many expressions in our problem leads to the enormous number of
  auxiliary variables. Moreover the language does not contain loops. Therefore we
- a cannot post various number of constraints based on the size parameter of the model.
+ cannot post a various number of constraints based on the size parameter of the model.
  We have to state all constraints for a given problem instance. As a result the definition
  of 4-queens problem cannot be easily transformed to 8-queens problem. The set of constraints
- is limited and cannot be extended. Moreover some basic constraints have to be used in unusual way.
+ is limited and cannot be extended. Moreover some basic constraints have to be used in an unusual way.
  If we want to constrain $a = \sum{w_i x_i}$ we have to use a pair of constraints
- $a \leq \sum{w_i x_i}$, $a \geq \sum{w_i x_i}$ since the variant with equal sign
- is not in the system. The used variable can be boolean, bounded integers, discrete integers
+ $a \leq \sum{w_i x_i}$ and $a \geq \sum{w_i x_i}$ since the variant with equal sign
+ is not in the system. The used variables can be booleans, bounded integers, discrete integers
  and sparse bounded integers. Bool variable is a variable with domain $\{0,1\}$.
  Bounded integer variable is an integer variable where the solver stores only its bounds.
  Discrete integers are generally the same as bounded integers except they can contain 
@@ -69,17 +69,17 @@ the \texttt{VARIABLES} section on lines 4 -- 30. Then the constraints are define
 \texttt{CONSTRAINTS} section. The implication is modeled using the reification constraint.
 Since the Minion have only the constraints $\sum{x} \leq a$ and $\sum{x} \geq a$ but
  does not have the constraint $\sum{x} = a$ we have to use the constraints \texttt{sumleq} and
- \texttt{sumgeq}. Finally the \texttt{search} section defines the order of the variables.
+ \texttt{sumgeq}. Finally the \texttt{SEARCH} section defines the order of the variables.
  The variables will be searched in that order. The \texttt{SEARCH} section defines also the
  solution using the \texttt{PRINT} command. All variables marked for printing will
  be printed out as a solution. To generate the Minion input files we used the Tailor tool which
  compiled the Essence source code into the Minion input file; however, the large
- model were problematic for this tool. Therefore we had to write for some benchmarks
+ models were problematic for this tool. Therefore we had to write for some benchmarks
  the ad-hoc generators of the input file.
  
 \subsection{Debugging support}
 Minion offers printing out the search tree where one can observe the solvers actions.
-However other tool than this printout is not available. Since the modeling in Minion
+However some other output than this printout is not available. Since the modeling in Minion
 is difficult the user will probably use the Tailor tool. Tailor offers not only the translation
 to the Minion format but direct invocation of the Minion, passing the input to it and
 show the solution. The user then can directly modify the Essence source code and perform
@@ -90,7 +90,7 @@ The largest problem of the solver is the limited set of constraints. If the prob
 more sophisticated constraints then we cannot represent it in the Minion.
 The second large problem is the input format. The problem can be resolved 
 by using the Tailor tool; however, for the large problems the tool is not sufficient.
-However as a standalone executable which can be called from the command line it can bring the capability of 
+Apart of that as a standalone executable which can be called from the command line it can bring the capability of 
 the constraint solving to programs written in the languages like bash. The only
 thing which is needed is the capability to assemble the input file in the proper format. 
 There is available the reference guide \cite{minion:manual} with description of all constraints available and

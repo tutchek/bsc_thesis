@@ -68,10 +68,10 @@ the possible memory.
 A solver is an instance of class CPSolver, which tries to find a solution according to the model
 from the previous section. The solver starts with reading the variables of the model and 
 converting them into variables of the solver (IntegerVariable into IntDomainVar, RealVariable into RealVar and SetVariable into SetVar).
-Afterwards, it reads the constraints of the model and creates constraints of the solver, which are based on previously read constraints.
+Afterwards, it reads the constraints of the model and creates constraints of the solver according to them.
 Then the solver uses a search strategy and searches for solutions. Since the chosen strategy
 is a key factor for the speed of solving, one can configure its various options.
-A user can specify a selector and an iterator. Where the selector specifies which variable
+A user can specify a selector and an iterator. The selector specifies which variable
 is about to be taken in the next solver's decision and the iterator chooses each of available values
 and iterates over them. In a standard distribution of Choco there are basic selectors such as 
 {\em variable with a minimum domain}, {\em variable with a maximum domain} and so on. 
@@ -84,7 +84,7 @@ contains a definition of a strategy, that means a selector for certain variables
 
 Solving large-scale problems might be enormously time demanding, take too much system resources and so on.
 To avoid this we can define solver limits. In the solver we can set a time limit, a limit for a number of nodes, 
-a depth of backtracking, a number of fails or a limit for CPU time. Apart from that, a user can define their own limits. 
+a depth of backtracking, a number of fails or a limit for CPU time. Apart from that, the users can define their own limits. 
 
 Once the solver has read the model and the strategies are defined, it starts solving the problem.
 The solver offers an interface for accessing either each solutions (solve, nextSolution), or to get

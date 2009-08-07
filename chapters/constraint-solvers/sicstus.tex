@@ -24,7 +24,7 @@ the relation constraints as well as constraints for the tautology and satisfiabi
 Finally the {\em clp(q,r)} library \cite{clpqr:opai} provides constraining over the 
 rational and real numbers. The constraint solver for set variables is not available.
 
-The standard set of constraints can be expanded by user defined constraints. As well as the
+The standard set of constraints can be expanded by the user defined constraints. As well as the
 \eclipse system the SICStus Prolog offers to add constraints using the Constraint Handling
 Rules language and FlatZinc language. User can also define his own constraints as the
 Prolog predicate. The user created constraint can be either a global constraint or
@@ -33,9 +33,7 @@ the SICStus Prolog manual.
 
 The constraint library clfpd is very similar to the \eclipse library ic. We used the 
 benchmarks already implemented in the \eclipse system and changed a very small amount
-of library-specific calls to get the SICStus Prolog source code. Therefore the
-code in the both solvers can be ported from the one system to the other with no 
-significant problems.    
+of library-specific calls to get the SICStus Prolog source code.
 
 \subsection{Debugging support}
 The SICStus Prolog offers the {\em Finite Domain Constraint Debugger} or {\em fdbg} library.

@@ -1,50 +1,45 @@
 \section{Gecode}
 
-Gecode is a C++ library for solving problems with constraints. It allows to
+Gecode is a C++ library for solving constraint problems. It allows to
 model a problem which contains integers, boolean variables and finite integer sets. Gecode
-is a free open source software as most of the mentioned solvers are. The library is
-distributed as source and for Windows OS there is also an installer with
-precompiled libraries. Optionally, a user needs a Qt library, which is used in 
+is a free open source software just like most of the mentioned solvers are. The library is
+distributed in the source codes and for the Microsoft Windows there is also an installer with
+precompiled libraries. Optionally, an user needs a Qt library, which is used in 
 a visualization graphic tool Gist. Apart from the basic constraints, Gecode has also 
 constraints for scheduling, finite automatons, graphs and so on. We describe those
-constraints further in the following section. Gecode often uses the feature of C++
-to overload functions and operators, which leads to a fact that many equal constraints for
-various data types have the same name. In addition, the overloading of operators
-helps to ease the work with expressions. A disadvantage might be a lack of explicit consciousness
-about a state of used operators, therefore a user cannot be sure if an operator that is used 
-for a variable is just a common operator, or a part of constraint. The key person behind the Gecode 
+constraints further in the following section. The key person behind the Gecode 
 solver is Christian Schulte, who also participated in a development of the system Mozart/Oz. 
 
 \subsection{Solver description}
-A problem is modeled as a class derived from a class Space. In this particular class
+A problem is modeled as a class inherited from a class Space. In this particular class
 there are defined variables and constraints. The variables are objects of one of the following types:
-IntVar for integers, BoolVar for boolean variables and SetVar for finite integer sets. 
-Compared to other solvers the boolean variables aren't just integers with a domain ${0,1}$.
+IntVar for integers, BoolVar for booleans and SetVar for finite integer sets. 
+Compared to the other solvers the boolean variables aren't just integers with a domain $\{0,1\}$.
 It is not even allowed to declare a constraint $b=i$ having a boolean variable $b$ and an integer $i$.
 When a relation between the boolean and integer variables is required, one can use either reified constraints
-($(i = 1) \Leftrightarrow (b = true)$), or channelling constraints $(b_j = 1) \Leftrightarrow (i = j)$ (such as $b = (0,0,0,1,0,0)$, $i = 3$).
-The constraints are global functions in a Gecode namespace, which have to be registered by a function \texttt{post}.
+ $(i = 1) \Leftrightarrow (b = true)$, or channelling constraints $(b_j = 1) \Leftrightarrow (i = j)$ (such as $b = (0,0,0,1,0,0)$, $i = 3$).
+The constraints are global functions in a Gecode namespace. To add a constraint to the model
+one has to use the \texttt{post} function which takes a constraint as a parameter.
 Due to the function overriding, most of the constraints are implemented in a way, 
 where there are more variants each available through the overriding; and the appropriate one is chosen.
-For example, one might want to use a constraint either with two variables or with one variable and 
-a vector of variables. If the users uses a so-called {\em minimodel}, they can use short expressions,
+If the users uses a so-called {\em minimodel}, they can use short expressions,
 for instance a constraint $a = x \cdot y$ can be written as \texttt{post(home, a == x*y )} instead of \texttt{mult(home,x,y,a)}; 
-however, the minimodel works just as a "syntactic sugar" and, therefore, it does not come up 
+however, the minimodel works only as a ``syntactic sugar" and, therefore, it does not come up 
 with any new constraints and it only ease a way how the current ones are written. 
 
 Apart from the standard arithmetic constraints and order constraints, Gecode offers
 wide range of specialized constraints. For SAT there is a constraint \texttt{clause(space,rel,x,y,z)},
 which is equal to a condition $\bigvee {x_i} \vee \bigvee{\neg y_i} = z$, respectively, $\bigwedge {x_i} \wedge \bigwedge{\neg y_i} = z$
 depending on a parameter {\em rel}. There is another interesting constraint {\em count}, which 
-guarantees that $\#\{i \in \{0, ..., |x|-1\}|x_i = j\} = y_j$ is satisfied. This brings us to a fact,
-that a benchmark Magic sequence can be modeled using one constraint \texttt{count(*this, x, x)}.
-Moreover, there are also available extensional constraints. Those are constraints, which are 
-defined using an extension, for example, a deterministic finite automaton. In such a case, the constraint
+guarantees that $\#\{i|x_i = j\} = y_j$ is satisfied. This brings us to the fact
+that the benchmark Magic sequence can be modeled and implemented by using only one constraint \texttt{count(*this, x, x)}.
+Moreover, there are also available the extensional constraints. Those are constraints defined 
+using of the extension, for example, a deterministic finite automaton. In such a case, the constraint
 has the following pattern:  {\em $x$ is a word, which is accepted by the automaton $A$}. As for graph constraints, 
 Gecode has a constraint {\em $x$ is a Hamiltonian cycle}. For an area of scheduling, there is available
 a constraint \texttt{cumulatives(home, resource, start, duration, end, height, limit, atmost)}, which
-guarantees, that in a set of tasks T (task $T_i = \langle \mathrm{machine}_i, \mathrm{start}_i,
-\mathrm{duration}_i, \mathrm{end}_i, \mathrm{height}_i \rangle$) will be performed on 
+gu\-arantees, that in a set of tasks T (task $T_i = \langle \mathrm{machine}_i, \mathrm{start}_i,
+\mathrm{duration}_i, \mathrm{end}_i,\\ \mathrm{height}_i \rangle$) will be performed on 
 the available machines. Each machine can handle at most $\mathrm{limit}_j$ tasks at
 one moment.
 
@@ -54,13 +49,13 @@ which guarantees, that a weighed sum of set has a given value. That means if we 
 a weight vector $w$ and the total should be $y$, the constraint has a pattern $\sum{x_i w_i} = y$. 
 Furthermore, there are two constraints available, both of which are related to convexity. A set is convexed, 
 if it contains a continual interval of numbers. A set $\{1,2,3\}$ is convex, but $\{1,3,4,5\}$ is not 
-convex, since it does not contain number 2. The convex hull is the least convex superset. A constraint
-\texttt{home,x} guarantees, that $x$ is convex and \texttt{home,x,y} means, that $y$ is a convex hull for $x$.
+convex, since it does not contain the number 2. The convex hull is the least convex superset. A constraint
+\texttt{convex(home,x)} guarantees, that $x$ is convex and \texttt{convex(home,x,y)} means, that $y$ is a convex hull for $x$.
 If one needs to model an optimization problem, the problem representing class is derived from a class MaximizeSpace (or MinimizeSpace)
 instead of a class Space. In the class there has to be implemented the \texttt{cost} function which returns
 the value of the objective function. 
 
-Searching is maintained by a function \texttt{branch(home,x,var,val)}, which set a search vector $x$. While distributing,
+Searching is maintained by a function \texttt{branch(home,x,var,val)}, which sets a search vector $x$. While distributing,
 a parameter $var$ defines an algorithm for choosing a variable and a parameter $val$ defines an algorithm
 for choosing of a value of variable on which depends the distribution. The following code shows the call interface
 for the application to invoke a search for the solution: 
@@ -78,8 +73,8 @@ while (Model* s = e.next())
 \end{verbatim}
 
 A model is a class derived from a class Space or, respectively, MaximizeScript, which
-represents a model of CSP. Instead of {\em SEARCH} it has to be given a specific search
-algorithm. There are several algorithms available: \texttt{DFS} -- the depth-first left-most search, \texttt{LDS} -- the limited discrepancy,
+represents a model of CSP. In the real application the \texttt{SEARCH} must be changed to one of the followings:
+\texttt{DFS} -- the depth-first left-most search, \texttt{LDS} -- the limited discrepancy,
 \texttt{BAB} -- the branch-and-bound algorithm and finally \texttt{Restart} -- the depth-first left-most
 restart search. Both algorithms \texttt{BAB} a \texttt{Restart} can be used when 
 searching an optimal solution. All of the algorithms can be used for a parallel computation.
@@ -89,20 +84,20 @@ Having a computer with more CPUs, one can reach much faster computation.
 In Gecode there is a tool Gist, which visualizes a search tree. It is a tool quite 
 similar to the tool Explorer in Mozart/Oz solver. The interface, graphic symbols and
 functions are the same as in Explorer. On the other hand, Gist gives us an additional 
-function Gist node statistics, which gives us more information about a specific node 
+function {\em Gist node statistics}, which gives us more information about a specific node 
 of the search tree, such as the depth of the node (according to a tree root), current height
 of the node's subtree and the number of successful/unsuccessful solutions in the subtree.
 In Gist there is also a tool Inspector, which works equally to the Inspector in Mozart/Oz.
    
 
 \subsection{Subjective description}
-Gecode is a typical example of a top software, which is not quite well usable due to
-an absence of a documentation. Before the version 3.0.0, which was released in March 2009, there
+Gecode is a typical example of a top software, which can be totally unusable due to
+the absence of a documentation. Before the version 3.0.0, which was released in March 2009, there
 was only a technical documentation generated by Doxygen. Furthermore, the example models were 
-sealed into a pattern class Example so as to be easier to run; however, it lacked any further 
+sealed into a pattern class Example to achieve a more simple call of the examples; however, it lacked any further 
 explanations how to implement the solver inside own project and it was necessary to deeply
-examine the source code of the solver. With the new version 3.0.0 being released, there is
-available also an e-book Modelling with Gecode \cite{gecode:modelling}, which has completely changed
+examine the source code of the solver. Since the version 3.0.0 being released, there is
+available an e-book Modelling with Gecode \cite{gecode:modelling}, which has completely changed
 the situation. The e-book is a tutorial, which step by step guides the reader from a basic 
 query -- from a given problem construct a model for the solver -- to wide range of possibilities
 of setting up the solver. Apart from the classical documentation, there is also an e-mail conference,
