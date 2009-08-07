@@ -35,18 +35,18 @@ Tailor which is described in the section \ref{tailor}.
 \subsection{Solver description}
 As stated in the previous section Minion is a standalone executable which takes as a parameter
 filename of the input file or through the standard input the contents of input.
-It automaticaly starts computation and writes on the standard output or into the
+It automatically starts computation and writes on the standard output or into the
 specified file solutions. It can handle only integers and therefore the problems have to
 be encoded in a such way. The format of the input file is not stable but uses an identifier
-which prevets from misinterpretation of the input. If the user feeds the Minion with 
+which prevents from misinterpretation of the input. If the user feeds the Minion with 
 an unsupported format of the file the solver informs about that and ends. The current version
 of the input file is 3, and the user can recognize it by observing the first line of the input, which
 has to contain only string \texttt{MINION 3}. After identification line there follows the sections
-ot the file. The file can contain the following sections:
+of the file. The file can contain the following sections:
 
 \begin{itemize}
   \item Definition of the variables
-  \item Definition of the tupples
+  \item Definition of the tuples
   \item Definition of the constraints
   \item Definition of the search parameter
 \end{itemize}
@@ -57,7 +57,7 @@ by parameters. The user can adjust the order of variables during the selection p
 decide whether to find all solutions or only one or how to format the output.
 
 In the section \ref{implementation:minion} we included the implementation of the Magic
-Sequence benchmark of the lenght five. As the reader can see the input file
+Sequence benchmark of the length five. As the reader can see the input file
 is divided into several sections. The specification of the file format comes on the first line.
 Then follows the sections of the file denoted by the label \texttt{*** SECTION NAME ***}. These
 sections can be in the file in any order and repeated as many times as needed. The
@@ -66,7 +66,7 @@ the file only once at the end of the file. We used the alternative model of the
 problem as described in the section \ref{benchmarks:ms}. Therefore we need five 
 variables for the sequence and twenty-five auxiliary variables. We define them in 
 the \texttt{VARIABLES} section on lines 4 -- 30. Then the constraints are defined in the 
-\texttt{CONSTRAINTS} section. The implication is modelled using the reification constraint.
+\texttt{CONSTRAINTS} section. The implication is modeled using the reification constraint.
 Since the Minion have only the constraints $\sum{x} \leq a$ and $\sum{x} \geq a$ but
  does not have the constraint $\sum{x} = a$ we have to use the constraints \texttt{sumleq} and
  \texttt{sumgeq}. Finally the \texttt{search} section defines the order of the variables.
@@ -79,11 +79,11 @@ Since the Minion have only the constraints $\sum{x} \leq a$ and $\sum{x} \geq a$
  
 \subsection{Debugging support}
 Minion offers printing out the search tree where one can observe the solvers actions.
-However other tool than this printout is not available. Since the modelling in Minion
+However other tool than this printout is not available. Since the modeling in Minion
 is difficult the user will probably use the Tailor tool. Tailor offers not only the translation
 to the Minion format but direct invocation of the Minion, passing the input to it and
 show the solution. The user then can directly modify the Essence source code and perform
-the invokation again if the results are not what he expected. 
+the invocation again if the results are not what he expected. 
 
 \subsection{Subjective description}
 The largest problem of the solver is the limited set of constraints. If the problem needs

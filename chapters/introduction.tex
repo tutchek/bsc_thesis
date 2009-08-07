@@ -39,7 +39,7 @@ adjusted by their number and placement.
 \end{sudoku}
 \end{figure}
 
-The way how to describe thr Sudoku puzzle in constraint programming is very 
+The way how to describe the Sudoku puzzle in constraint programming is very 
 straightforward. We define the following model:
 
 \begin{enumerate}
@@ -103,8 +103,8 @@ A {\bf solution} to a CSP is an assignment of a value from its domain to every v
 \end{definition}
 
 All of the constraint problem can be modeled only by using of the binary constraints (the constraints with two variables). 
-The constraint satisfaction problem can be represented as a constraint multi-graph where the variables of the model are the 
-nodes of the graph and the constraints over the variables in the model are the edges connecting the apropriate nodes. 
+The constraint satisfaction problem can be represented as a constraint multigraph where the variables of the model are the 
+nodes of the graph and the constraints over the variables in the model are the edges connecting the appropriate nodes. 
 The edge $e(x,y)$ is consistent if for each value of $x$ there exists a value $y$ such
 that the constraint is satisfied. As we can see the constraint which is consistent
 in one direction does not have to be consistent in the second direction. 
@@ -119,7 +119,7 @@ can be solved. As an example of such a problem let consider the following:
 We have variables $X,Y,Z$ all with the domain $\{0,1\}$ with the constraints $X \neq Y$, 
  $Y \neq Z$, $Z \neq X$ on them. The problem is arc consistent. If we examine all constraints
  there exists for each possible value of first variable a value of second variable which satisfies 
- the constraint and similary in the second direction. Even though the problem is arc consistent it cannot be solved because there does
+ the constraint and similarly in the second direction. Even though the problem is arc consistent it cannot be solved because there does
  not exists evaluation of all variables which satisfies the all constraints.
 
 \section{Constraint programming}
@@ -144,12 +144,12 @@ two new problems $P \cup \{c\}$ and $P \cup \{\neg c\}$. It is obvious that if t
 exists a solution of the original problem then at least one of the new problems do have 
 to have the solution. After this phase we run the filtering phase again.
 
-To construct the constraint $c$ used the distribution phase we usualy pick a variable $x$
+To construct the constraint $c$ used the distribution phase we usually pick a variable $x$
 and its value $v$. The constraint then can be $x = v$ or $x < v$ (but we can use any constraint). 
 By selecting of a proper variable and value we can affect the
 time needed to compute the solution. The most common way is to pick a variable with the
 smallest domain because we should  be able sooner find out that the variable cannot be evaluated. This strategy
-is sometimes called {\em first-fail} strategy. The solvers usualy allows the users to
+is sometimes called {\em first-fail} strategy. The solvers usually allows the users to
 choose the strategy or implement their own.
 
 The described algorithm is called {\em maintained arc consistency} or MAC. Its
@@ -173,7 +173,7 @@ end
 \end{lstlisting}
 \end{figure}
 
-The optimalization problems can be solved by using of the {\em branch-and-bound} algorithm.
+The optimization problems can be solved by using of the {\em branch-and-bound} algorithm.
 First the algorithm solves the problem $P$ using the standard algorithms. After the problem
 is solved the value $f(P)$ of the objective function is computed. Then we derive from the problem 
 P a new problem $P'$ with the additional constraint $f(P') < f(P)$ and we run the algorithm on the
@@ -183,7 +183,7 @@ In reading previous paragraphs, a reader could think that the constraint program
 only as an academic toy for solving Sudoku and for other applications which are useless 
 in a real life. In fact the constraint programming is used in various applications. 
 A few examples of many contain scheduling, an image recognition, financial modeling, 
-planning, vehicle routing, a configuration, computer networks and bioinformatics. 
+planning, vehicle routing, a configuration, computer networks and bio-informatics. 
 The constraint programming was also successfully used at NASA in Deep Space 1 experiment. 
 Deep Space 1 was a space probe using 12 cutting-edge technologies which were never 
 tested in space before. One of these technologies was a remote agent used to plan 
@@ -212,8 +212,8 @@ benchmarking the same sets of solvers and we do not use similar methodology whic
 means this thesis conclusions cannot fully replace or update the results from \cite{fernandez00}.
 
 M. Plachá in 2007 wrote the bachelor thesis \cite{placha} focused on the same topic as this thesis.
-The thesis compared SICStus Prolog,  ILOG Solver and Gecode/J. She compared the modelling
-capabilites of these solvers and showed the ways to debug the models. Finally the speed 
+The thesis compared SICStus Prolog,  ILOG Solver and Gecode/J. She compared the modeling
+capabilities of these solvers and showed the ways to debug the models. Finally the speed 
 of solvers was measured on several benchmarks. In this thesis we study a wider range of
 solvers. We used the same criteria as the mentioned thesis by M. Plachá but additionally
 we compare the accessibility of the solvers for user. 
@@ -232,9 +232,9 @@ of as many benchmarks as possible in the smallest time amount.
 
 There exists a library \cite{csplib} of the constraint satisfaction problems which can be used in 
 benchmarking and comparing of solver capabilities. The library contains various problems
-in several fields -- optimalisation problems, combinatioral problems and so on. We encourage
+in several fields -- optimization problems, combinatorial problems and so on. We encourage
 the reader to try to implement several problems in the chosen solver as a part of learning of
-modelling in the solver.
+modeling in the solver.
 
 \section{Outline of the thesis}
 We described our motivation for this thesis and listed some constraint solvers. 
@@ -246,7 +246,7 @@ history but mainly focuses on usability and easiness of learning and using the s
 In the fifth chapter we discuss the performance tests results and compare the solvers. 
 Finally, in the sixth chapter we state a conclusion of the whole examination process.
 
-Ther are four appendixes to this thesis. The content of the included CD is in the
+There are four appendixes to this thesis. The content of the included CD is in the
 appendix \ref{cdcontents}. The short list of constraint solvers is in the appendix \ref{list-of-solvers}.
 The table of supported constraints is in the appendix \ref{constraints}. Finally the
 source codes of the benchmarks implemented in the compared solvers are in

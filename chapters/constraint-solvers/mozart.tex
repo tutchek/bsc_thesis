@@ -1,6 +1,6 @@
 \section{Mozart/Oz}
 
-Mozart is an implementation of the multiparadigmatic language Oz. Oz is a functional
+Mozart is an implementation of the multi-paradigmatic language Oz. Oz is a functional
 language with built-in support for threaded applications and paralelisation. It also
 contains support for constraint solving. It also supported to run subroutines on computers
 connected to the cluster. Since it is a multi-paradigmatic language the user
@@ -36,7 +36,7 @@ are constraints in the form $x=n$ or $x \in D$. For example the constraint store
 contain the constraint $x = 6 \mand y \in \{1, ..., 12\} \mand z = y$. Propagators contain
 other constraints, for example $x>y$ or $a^2 + b^2 = c^2$. Propagator for a constraint
  $c$ is an independent agent who tries to shrink the domain of variables constrained
- by $c$. A solution is such  anassignment of values to variables which satisfies all the conditions
+ by $c$. A solution is such  assignment of values to variables which satisfies all the conditions
  in propagators.
  
 \begin{example} Let us have variables $X$ and $Y$ and the following constraints: $X \in \{0..9\}$, $Y \in \{0..9\}$, 
@@ -45,8 +45,8 @@ other constraints, for example $x>y$ or $a^2 + b^2 = c^2$. Propagator for a cons
   \item The constraint store contains: $X \in \{0..9\}$, $Y \in \{0..9\}$. Propagators: $X+Y = 9$ a $2X + 4Y = 24$.
   \item	The first propagator cannot do anything but the second changes the constraint store to $X \in \{0..8\}, Y \in \{2..6\}$.
   \item	The first propagator changes the constraint store to $X \in \{3..7\}$, $Y \in \{2..6\}$.
-  \item	The second propagator changes the constraint strore to $X \in \{4..6\}$, $Y \in 3..4$.
-  \item	The sirst propagator changes the constraint store to $X \in \{5..6\}$, $Y \in \{3..4\}$
+  \item	The second propagator changes the constraint store to $X \in \{4..6\}$, $Y \in 3..4$.
+  \item	The first propagator changes the constraint store to $X \in \{5..6\}$, $Y \in \{3..4\}$
   \item	The second propagator finally changes the constraint store to $X = 6$, $Y = 3$.
 \end{enumerate}
 \end{example}
@@ -64,11 +64,11 @@ the distribution phase begins. Mozart choose a variable $x$ and value $v$ from d
  solution if all its spaces have failed.
 
 We can choose from several distribution strategies. Choosing of the proper strategy 
-noticable affects the computation time.  For most problems the first-fail strategy is
+noticeable affects the computation time.  For most problems the first-fail strategy is
 the most suitable. However the user can implement his own distribution strategies to fully
 suit his needs.
 
-Two techniques can be used in the solving of the optimalisation problems. The na\"{i}ve 
+Two techniques can be used in the solving of the optimization problems. The na\"{i}ve 
 technique introduces auxiliary variable $o$ and adds the constraint $o = f(P)$ where $f$ is the
 objective function. Then the variable $o$ is increased until the the solution is found. The second possible
 technique is the branch-and-bound algorithm which is described in the section \ref{introduction:constraint-programming}.
@@ -81,7 +81,7 @@ interactive mode and choose the subtrees of the search tree to be expanded.
  denotes the choice nodes of the tree, the diamonds means the solution of
  the problem and finally the squares are the branches with no solution. The lighter color
  denotes the nodes which can be expanded. On the figure there is one solution, two 
- unsuccesful branches and five choice nodes. Three of the choice nodes can be still expanded.
+ unsuccessful branches and five choice nodes. Three of the choice nodes can be still expanded.
  The Explorer tool offers also exporting off the tree diagram to PostScript.
 
 \begin{figure}

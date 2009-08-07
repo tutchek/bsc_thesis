@@ -9,15 +9,15 @@ which is needed to find a solution to the problem and the consumed memory. We us
 for this purpose designed tool. The tool runs the solver executable with given parameters.
 While the solver process is running the benchmarking tool periodically checks the \texttt{/proc/(pid)/stat} file
 and saves the current state. If the elapsed time is larger than the given limit the 
-\texttt{SIGINT} signal is sent to the process. The proces have one second to end
+\texttt{SIGINT} signal is sent to the process. The process have one second to end
 and produce some output. If the process is still running one second after the 
 \texttt{SIGINT} signal the \texttt{SIGKILL} signal is sent and process is killed. 
-In the robustness test the tool tries to estimate the size of the tast using the
+In the robustness test the tool tries to estimate the size of the task using the
 binary search.
 
 All of the benchmarks were performed on a single dedicated computer Pentium IV, 3GHz (single core 
 with hyper threading),
-1GB RAM running the Debian linux with linux kernel 2.6.18. Except the Mozart/Oz 
+1GB RAM running the Debian Linux with Linux kernel 2.6.18. Except the Mozart/Oz 
 solver and SICStus Prolog all solvers were compiled on the target machine. The 
 precompiled binaries distribution was used for the Mozart/Oz solver because the
 source distribution contained in the time of writing of this thesis error which
@@ -34,7 +34,7 @@ The following versions of the solvers were used:
   \item Minion 0.8.1
   \item Gecode 3.1.0
   \item \eclipse 6.0\_96
-  \item SISCtus Prolog 4.0.7 -- linux, glibc 2.7
+  \item SICStus Prolog 4.0.7 -- Linux, glibc 2.7
 \end{itemize}   
 
 In the performance test as well as in the robustness test we used the fist-fail search strategy for
@@ -52,7 +52,7 @@ until the lower bound of the interval is larger than upper bound. The results of
 the robustness test are in the table \ref{results:robustness}.
 
 The results of the robustness test are in the table \ref{results:robustness} (the best result is bolded). As 
-we can see the most robust solver is the Minion solver folowed by the Gecode.
+we can see the most robust solver is the Minion solver followed by the Gecode.
 At first we tried to implement the benchmark problem in the Gecode system by
 using of the constraint \texttt{count}. This constraint meaning is exactly the
 Magic Sequence problem; however, the longest magic sequence which we were able to compute
@@ -73,12 +73,12 @@ that the implementation of this constraint is problematic.
 \end{table}
 
 \section{The performance test}
-This test compares the solvers according to the two citerias. The first criterium is
-the time needed to solve given problem instances. The second criterium is the highest
+This test compares the solvers according to the two criteria. The first criterion is
+the time needed to solve given problem instances. The second criterion is the highest
 peak of used computer memory during the computation. We divided the instances of the benchmarks into two groups. 
 In the first group there are the instances of the Quasigroup With Holes problem. 
 
-We generated 25 ballanced quasigroups of the 
+We generated 25 balanced quasigroups of the 
 order $n = 16$ and removed approximately $1.6 n^{1.55}$ values. According to the 
 \cite{Achlioptas00generatingsatisfiable} the quasigroups with this number of the 
 holes are hard to solve compared to the other quasigroup of the same order. To 
@@ -103,7 +103,7 @@ In the second group of benchmarks there are the following instances of the bench
   \item {\em queens10} -- find all solutions of the 10 queens problem,
   \item {\em queens100} --find one solution of the 100 queens problem, 
   \item {\em magic20} -- find the Magic sequence of the length 20,
-  \item {\em srq} -- find the solution of the Self Refferential Quiz,
+  \item {\em srq} -- find the solution of the Self Referential Quiz,
   \item {\em warehouses} -- find the best solution of the Locating Warehouses problem.
 \end{itemize}
 
@@ -129,11 +129,11 @@ Minion did not solve the 100 queens problem in the given time limit. Therefore w
 consider them as unreliable. The \eclipse and Choco were unable to load the big problems
 to the memory so we changed the memory limit to one gigabyte. For \eclipse we changed it for all of the
 experiments and for Choco we used this large memory only for the magic sequence problem.
-The table \ref{results:performance:memory} indicates that the Java Virtual Mashine which
+The table \ref{results:performance:memory} indicates that the Java Virtual Machine which
 is running the Choco as well as the \eclipse solver allocated the whole allowed
 amount of memory. We observer in the performance test the same problem with the \texttt{count}
 constraint in the Gecode system as in the robustness test. For a comparison the original
-results for the magic20 benchmark was 2926.86 miliseconds. The memory peak was nearly the same.
+results for the magic20 benchmark was 2926.86 milliseconds. The memory peak was nearly the same.
 
 % gecode puvodne 2926.86ms    
 \begin{table}

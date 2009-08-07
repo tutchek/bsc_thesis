@@ -1,13 +1,13 @@
 \chapter{Benchmarks}
 \label{benchmarks}
 
-In this chapter we shall define benchmarks which will later be used to examine the properties of each solver. We will be dealing with five different cases which are well known and documented: N-queens problem, magic sequence problem, self referential quiz, quasigroup with holes problem and locating warehouses problem. In this chapter, we will show on these benchmarks the different ways of modelling the problem with solvers.
+In this chapter we shall define benchmarks which will later be used to examine the properties of each solver. We will be dealing with five different cases which are well known and documented: N-queens problem, magic sequence problem, self referential quiz, quasigroup with holes problem and locating warehouses problem. In this chapter, we will show on these benchmarks the different ways of modeling the problem with solvers.
 We will also measure time and the amount of memory needed to compute the solutions to the benchmarking 
 problems. Except for the self referential quiz all of the presented problems can be scaled up or down
 and can be therefore used to test the robustness of the solver. We shall test the robustness on the 
 magic sequence problem; we define the robustness of the solver as the length of
 the longest magic sequence which can be computed in the selected solver in a given 
-time. The last benchmarking problem -- locating warehouses -- is an optimalisation
+time. The last benchmarking problem -- locating warehouses -- is an optimization
 problem. The solver not only has to find correct solutions but also has to evaluate the best of the
 solutions based on the value of an objective function. For each benchmark 
 a general description is presented as is the formal model of the constraint problem and an implementation in
@@ -15,7 +15,7 @@ the Essence  programming language. The basics of the language are described in t
 section.
 
 \section{Essence programming language}
-Essence is a programming language for modelling of combinatorial problems. Is is 
+Essence is a programming language for modeling of combinatorial problems. Is is 
 easy enough to understand and so simple that even person who has never seen the
 language before can correctly guess what the expected output of the program is. Every program in Essence 
 consists of three parts. The first part defines the version of the language, the second
@@ -44,7 +44,7 @@ placing the queens in the same row we simply add constraint that all $q_i$ are
 different. Finally we have to include the diagonals in the solution: two pieces are on the same diagonal, 
 if the difference in the horizontal and vertical coordinates is equal. Therefore we 
 add the constraint $\left|Q(i) - Q(j)\right| \neq \left|i - j\right|$.
-Since both the chessboard and the modes of offence the queen can carry out are symmetric, the solutions are symmetric as well.
+Since both the chessboard and the modes of offense the queen can carry out are symmetric, the solutions are symmetric as well.
 We can decrease the number of solutions if we avoid such symmetries (see the next subsection).
 
 \subsection{Constraint problem model}
@@ -162,7 +162,7 @@ A typical question in such a quiz can be:
     (A) A (B) B (C) C (D) D (E) E
 \end{enumerate}
 
-These quizzes are best modelled using reified constraints. Reified constraint is a constraint
+These quizzes are best modeled using reified constraints. Reified constraint is a constraint
 in the form $(C \Leftrightarrow x) \& x \in \left\{0,1\right\}$. The ways how to construct
 such quizzes are described in the article by Maja Bubalo \cite{jios:bubalo}.
 The quiz assignment follows:
@@ -320,9 +320,9 @@ of positions in the quasigroup which have the same value in all solutions.
 If the size of the backbone is close to $0 \%$, there are many different solutions and
 the solver can find some "by accident". On the other, hand if the backbone is close
 to $100 \%$, there is only one solution and all constraints lead towards it.
-We can therefore expect interesting behaviour for the backbone of the size $50 \%$,
+We can therefore expect interesting behavior for the backbone of the size $50 \%$,
 The experiments \cite{Achlioptas00generatingsatisfiable} showed that this interesting 
-behaviour is somewhere near the $30 \%$.
+behavior is somewhere near the $30 \%$.
 
 The quasigroups we use have no additional conditions. The used quasigroups are produced
 by generators {\em lsencode} created by Carla Gomez and {\em walksat} by Henry Kautz. 
@@ -335,11 +335,11 @@ Model for a quasigroup of order $n$. The assignment values are in the vector $\m
     \begin{itemize}
       \item Quasigroup items: $q_{11}, ..., q_{nn} \in \left\{1, ..., n\right\}$.
     \end{itemize}
-	\item Podmínky:
+	\item Constraints:
 	 \begin{itemize}
     	\item All items in one row are unique: $\forall i \in \left\{1, ..., n\right\}: \forall j,k \in \left\{1, ..., n\right\}: q_{ij} \neq q_{ik}$, 
     	\item all items in one column are unique: $\forall i \in {1, ..., n}: \forall j,k \in {1, ..., n}: q_{ji} \neq q_{ki}$ 
-    	\item some items of the quasigroup are preassigned: $\mathrm{data}_{ij} \textnormal{ definováno } \Leftrightarrow (q_{ij} = \mathrm{data}_{ij})$
+    	\item some items of the quasigroup are preassigned: $\mathrm{data}_{ij} \textnormal{ defined } \Leftrightarrow (q_{ij} = \mathrm{data}_{ij})$
 	 \end{itemize}
 \end{itemize}
 The Essence implementation is in the figure \ref{benchmark-essence:qwh}.
@@ -394,7 +394,7 @@ translates as the cost of supplying the shop $j$ from warehouse $i$.
   	 \item total supply cost: $\mathrm{costSum} = \sum_i{\mathrm{cost}_i}$,
   	 \item the number of opened warehouses: $\mathrm{numberOpen} = \sum_i{\mathrm{open}_i}$,
   	 \item maximal capacity of each warehouse: $\forall i \in \{1,...,W\}: w_i \geq \sum_{\mathrm{supplier}_j = i}{1}$,
-  	 \item the warehouse is open if it suppplies at least one shop: $\forall i \in \{1,...,W\}: \left(\mathrm{open}_i = 1\right) \Leftrightarrow \left(\left(\sum_{\mathrm{supplier}_j = i}{1}\right) > 0\right)$,
+  	 \item the warehouse is open if it supplies at least one shop: $\forall i \in \{1,...,W\}: \left(\mathrm{open}_i = 1\right) \Leftrightarrow \left(\left(\sum_{\mathrm{supplier}_j = i}{1}\right) > 0\right)$,
   	 \item supply cost computation: $\forall i \in {1,...,S}, \forall j \in \{1,...,W\}: \left(\mathrm{supplier}_i = j\right) \Rightarrow \left(\mathrm{cost}_i = \mathrm{supplyCost}_{ij} \right)$.
      
      %$ \sum_{w \textnormal{ is open}}\left(c+\sum_{s \textnormal{ is suplied by } w} \mathrm{SC}(s,w) \right)$

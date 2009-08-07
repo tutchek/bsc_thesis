@@ -1,7 +1,7 @@
 \section{Choco}
 
 Choco is a constraint solver which is implemented as a library in Java programming language.
-It is distributed as a JAR package having a Javadoc documentation included. It is quite easy
+It is distributed as a JAR package having a JavaDoc documentation included. It is quite easy
 to install it even for a beginners in Java and it lasts about five minutes in commonly used
 IDEs. Since the Java is used, the Choco solver is available for various platforms
 and operating systems. As far as it is not our goal to describe possibilities of the host environment, 
@@ -20,7 +20,7 @@ The variables of the solver depends on the variables of the model and one can re
 the variables of the solver.
 
 \subsection{Solver description}
-As it has been already mentioned in the previous section, the ptoblem solving is divided
+As it has been already mentioned in the previous section, the problem solving is divided
 into two separated tasks -- to define a model and to deploy the model to a well-configured solver.
 The model as well as the solver are the independent Java objects. First we describe the 
 model and after that we look at the solver. 
@@ -42,7 +42,7 @@ either to use a large number of build-in constraints, or to define our own const
 The constraints which are available natively in the solver are listed in the appendix \ref{constraints}.
 Each constraint fits in one of the following groups: basic constraints (true, false, relation operators),
 basic expressions (goniometric functions, powers, sums), other constraints (\texttt{abs}, \texttt{div}, \texttt{max}, ...),
-reified contraints (\texttt{and}, \texttt{or}, \texttt{ifOnlyIf}) and global constraints (\texttt{allDifferent}, 
+reified constraints (\texttt{and}, \texttt{or}, \texttt{ifOnlyIf}) and global constraints (\texttt{allDifferent}, 
 \texttt{occurenceMax}, ...). Furthermore, there are constraints available which might be used for modeling geometric constraints,
 scheduling constraints and constraints for a sequence of variables which is accepted by finite automaton.
 
@@ -51,14 +51,14 @@ a constraint $p(x,y)$ as a set of compatible values $(a,b)$, where $p$ is satisf
 if $x=a$ and $y=b$, or, eventually, as a set of incompatible values. In that case the
 set is defined as a table of value. Besides, we can define the constraint as a predicate, which has to
 be satisfied, whereby the constraint is an instance of a class derived from a class BinRelation
-with a method checkCouple having implemented. This function takes two values as params and 
-returns boolean value whether the condition was satisfied or not. Simirarly, we can define 
+with a method checkCouple having implemented. This function takes two values as parameters and 
+returns boolean value whether the condition was satisfied or not. Similarly, we can define 
 constraints over tuples. For all such constraints (either binary or tuple) we can specify the 
 desired algorithm for arc consistence. There is AC3, AC2001, AC3rm and AC3 available for binary constraints and
  AC32, AC3rm, AC2001 and AC2008 tuple constraints. These algorithms are the variants of
  the original AC algorithm. Further description for some of them can be found in \cite{bartak:ogcp}.
  
-As we find out while implementing of the Self Refferential Quiz the \texttt{ifOnlyIf} constraint
+As we find out while implementing of the Self Referential Quiz the \texttt{ifOnlyIf} constraint
 is implemented as an extensional constraint (the table of compatible values is computed).
 If the the constrained variable has a large domain then the table is larger than
 the possible memory.
@@ -78,7 +78,7 @@ The iterators can try values in ascendant or descendant order. An alternative to
 is a value selector, which returns next available value when required. As for value selector,
 we can use, for example, the minimal value in a domain, a random value in a domain and so on. We can choose
 different user-defined strategies for various groups of variables so as to follow the specified problem
-in the best way. In that case we define the solver's behaviour through so-called goals. A goal
+in the best way. In that case we define the solver's behavior through so-called goals. A goal
 contains a definition of a strategy, that means a selector for certain variables and an iterator over values.
 
 Solving large-scale problems might be enormously time demanding, take too much system resources and so on.
@@ -93,16 +93,16 @@ it is required to resolve the solver's variables by calling a function CPSolver:
 and returns a variable of a solver.
 
 \subsection{Debugging support}
-Choco does not include any tools for the graphic visualisation of the search tree such as the systems Mozart or Gecode do;
+Choco does not include any tools for the graphic visualization of the search tree such as the systems Mozart or Gecode do;
 however, in Choco it is possible to print out a log of the solving process.
 One can configure several levels how detailed information is logged varying from
 nothing to a complete list of what the Choco does internally.
 
 \subsection{Subjective description}
-The system has a good documentation \cite{choco:documentation}, although it is a little bit bad organised. Even though the careful readers
+The system has a good documentation \cite{choco:documentation}, although it is a little bit bad organized. Even though the careful readers
 find virtually everything they look for. A documentation for developers is generated
 by JavaDoc system. Due to that fact it is available as a hinting tool for many users of common Java IDEs, 
-that definetely helps for better understanding of the solver. Since the development of the solver is
+that definitely helps for better understanding of the solver. Since the development of the solver is
 maintained at SourceForge server, it is quite easy to access source codes as well as a history of versions via
 revision control system Subversion. One can find there also a technical support forum, where the authors
 answer the users' questions. The reaction time is very low and the answers are of high
