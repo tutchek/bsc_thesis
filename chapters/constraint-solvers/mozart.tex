@@ -30,7 +30,7 @@ As stated in the previous section the language has integrated a constraint solve
 can solve problems with variables whose domains are finite sets. A finite domain
 set can contain the natural numbers including zero. The maximal value of variable is limited and is smaller 
 than the maximal integer. The computation model for constraint propagation is called 
-a Space. The space consists of several propagators connected to a constraint store.
+a {\em space}. The space consists of several propagators connected to a constraint store.
 The constraint store contains conjunction of ground constraints. Ground constraints
 are constraints in the form $x=n$ or $x \in D$. For example the constraint store could
 contain the constraint $x = 6 \mand y \in \{1, ..., 12\} \mand z = y$. Propagators contain
