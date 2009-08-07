@@ -2,7 +2,7 @@
 
 Mozart is an implementation of the multi-paradigmatic language Oz. Oz is a functional
 language with built-in support for threaded applications and paralelisation. It also
-contains support for constraint solving. It also supported to run subroutines on computers
+contains support for constraint solving. Mozart/Oz can run the subroutines on computers
 connected to the cluster. Since it is a multi-paradigmatic language the user
 can write imperative as well as Prolog-like programs. The language also offers classes
 including inheritance and creating the objects. The language was designed for the
@@ -10,8 +10,8 @@ highest variability of usage because the programmer can use all the features of 
 functional, logic, object-oriented and other paradigms in one program. In the standard distribution
 it is shipped as a standalone compiler which compiles into native executable code.
 Moreover it can run in the interactive mode. The programmer can feed the compiler with
-a single line, buffer or whole program and the compiler immediately responds. As an IDE
-Mozart standardly uses EMACS system.
+a single line, buffer or a whole program and the compiler immediately responds. As an IDE
+Mozart standardly uses the EMACS system.
 
 Just like in any other functional language the programmer can assign to the variable 
 only once per its lifetime. Therefore all variables holds also its state. In case that
@@ -35,18 +35,18 @@ The constraint store contains conjunction of ground constraints. Ground constrai
 are constraints in the form $x=n$ or $x \in D$. For example the constraint store could
 contain the constraint $x = 6 \mand y \in \{1, ..., 12\} \mand z = y$. Propagators contain
 other constraints, for example $x>y$ or $a^2 + b^2 = c^2$. Propagator for a constraint
- $c$ is an independent agent who tries to shrink the domain of variables constrained
+ $c$ is an independent agent which tries to shrink the domain of variables constrained
  by $c$. A solution is such  assignment of values to variables which satisfies all the conditions
  in propagators.
  
 \begin{example} Let us have variables $X$ and $Y$ and the following constraints: $X \in \{0..9\}$, $Y \in \{0..9\}$, 
   $X+Y = 9$, $2X + 4Y = 24$. 
 \begin{enumerate}
-  \item The constraint store contains: $X \in \{0..9\}$, $Y \in \{0..9\}$. Propagators: $X+Y = 9$ a $2X + 4Y = 24$.
-  \item	The first propagator cannot do anything but the second changes the constraint store to $X \in \{0..8\}, Y \in \{2..6\}$.
-  \item	The first propagator changes the constraint store to $X \in \{3..7\}$, $Y \in \{2..6\}$.
-  \item	The second propagator changes the constraint store to $X \in \{4..6\}$, $Y \in 3..4$.
-  \item	The first propagator changes the constraint store to $X \in \{5..6\}$, $Y \in \{3..4\}$
+  \item The constraint store contains: $X \in \{0,...,9\}$, $Y \in \{0,...,9\}$. Propagators: $X+Y = 9$ a $2X + 4Y = 24$.
+  \item	The first propagator cannot do anything but the second changes the constraint store to $X \in \{0,...,8\}, Y \in \{2,...,6\}$.
+  \item	The first propagator changes the constraint store to $X \in \{3,...,7\}$,\\ $Y \in \{2,...,6\}$.
+  \item	The second propagator changes the constraint store to $X \in \{4,...,6\}$, $Y \in \{3,...,4\}$.
+  \item	The first propagator changes the constraint store to $X \in \{5,...,6\}$,\\ $Y \in \{3,...,4\}$
   \item	The second propagator finally changes the constraint store to $X = 6$, $Y = 3$.
 \end{enumerate}
 \end{example}
@@ -82,7 +82,7 @@ interactive mode and choose the subtrees of the search tree to be expanded.
  the problem and finally the squares are the branches with no solution. The lighter color
  denotes the nodes which can be expanded. On the figure there is one solution, two 
  unsuccessful branches and five choice nodes. Three of the choice nodes can be still expanded.
- The Explorer tool offers also exporting off the tree diagram to PostScript.
+ The Explorer tool offers also exporting of the tree diagram to PostScript.
 
 \begin{figure}
 \caption{\label{mozart:explorer}The Explorer tool}
@@ -98,7 +98,7 @@ can find the documentation for the whole system. The difficulty level of the doc
 varies from the tutorials and basic documentation to the advanced topics. The Oz language 
 was new for the author of this thesis but the documentation was sufficient 
 to understand the programs written in Oz and to be able to write new programs by
-himself. The development of the system seems stopped. The last version was released
-a year ago. The release contained a bug which results in a problems while the compiling
-of the Mozart. There has been nothing done about it even though the authors statement
+himself. The development of the system seems to be stopped now. The last version was released
+a year ago. The release contains a bug which results in a problems while the compiling
+of the Mozart. There has been nothing done about it even though the authors stated
 that the bug will be corrected.

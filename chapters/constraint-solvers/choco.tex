@@ -7,7 +7,7 @@ IDEs. Since the Java is used, the Choco solver is available for various platform
 and operating systems. As far as it is not our goal to describe possibilities of the host environment, 
 we are not about to further discuss the Java features. Choco is being developed
 at Ecole des Mines de Nantes in France and it is freely available for download from 
-SourceForge server. The main number of the current version is 2. Choco divides the problem solution
+the SourceForge. The main number of the current version is 2. Choco divides the problem solution
 into two parts -- a model and a solver itself. The model contains variables and constraints given 
 in the problem. Afterwards, the solver is given the model as an input and it tries to find a solution. 
 Variables in the model can be integers, real numbers or sets. Then the solver is able to
@@ -15,7 +15,7 @@ find a solution for the current model. A user can get information from the solve
 problem has a solution or it contains a conflict. There is an interface for resolving solutions themselves, 
 whereby one can ask for the first, the following or all existing solutions. If we define a variable
 equal to a value of an objective function, the solver can either minimize or maximize this variable .
-Furthermore, the solver allow us to choose a strategy which might perfectly fit the given problem.
+Furthermore, the solver allows us to choose a strategy which might perfectly fit the given problem.
 The variables of the solver depends on the variables of the model and one can resolve the values only through
 the variables of the solver.
 
@@ -26,7 +26,7 @@ The model as well as the solver are the independent Java objects. First we descr
 model and after that we look at the solver. 
 
 \subsubsection{Model}
-The model is a instance of class CPModel. In Choco the variables of the model are represented
+The model is an instance of the class CPModel. In Choco the variables of the model are represented
 as objects of the following types: IntegerVariable, RealVariable and SetVariable. Those 
 variables, generally, are not created using the keyword new, but in the Choco there are
 factory methods for this purpose. One has to register those variables first by calling
@@ -39,7 +39,7 @@ in the solver, which way is described later in the following section.
 
 Once we have registered the variables, a definition of constraints follows. It is possible
 either to use a large number of build-in constraints, or to define our own constraints.
-The constraints which are available natively in the solver are listed in the appendix \ref{constraints}.
+Some of the constraints which are available natively in the solver are listed in the appendix \ref{constraints}.
 Each constraint fits in one of the following groups: basic constraints (true, false, relation operators),
 basic expressions (goniometric functions, powers, sums), other constraints (\texttt{abs}, \texttt{div}, \texttt{max}, ...),
 reified constraints (\texttt{and}, \texttt{or}, \texttt{ifOnlyIf}) and global constraints (\texttt{allDifferent}, 
@@ -47,20 +47,21 @@ reified constraints (\texttt{and}, \texttt{or}, \texttt{ifOnlyIf}) and global co
 scheduling constraints and constraints for a sequence of variables which is accepted by a finite automaton.
 
 Apart from the build-in constraints, is it possible to define own constraints. The first step is to define 
-a constraint $p(x,y)$ as a set of compatible values $(a,b)$, where $p$ is satisfied
-if $x=a$ and $y=b$, or, eventually, as a set of incompatible values. In that case the
-set is defined as a table of value. Besides, we can define the constraint as a predicate, which has to
+a constraint $p(x,y)$ as a set of the compatible values $(a,b)$, where $p$ is satisfied
+if $x=a$ and $y=b$, or, eventually, as a set of the incompatible values. In that case the
+set is defined as a table of the values. Besides, we can define the constraint as a predicate, which has to
 be satisfied, whereby the constraint is an instance of a class derived from a class BinRelation
 with a method checkCouple having implemented. This function takes two values as parameters and 
 returns boolean value whether the condition was satisfied or not. Similarly, we can define 
 constraints over tuples. For all such constraints (either binary or tuple) we can specify the 
-desired algorithm for arc consistence. There is AC3, AC2001, AC3rm and AC3 available for binary constraints and
- AC32, AC3rm, AC2001 and AC2008 tuple constraints. These algorithms are the variants of
- the original AC algorithm. Further description for some of them can be found in \cite{bartak:ogcp}.
+desired algorithm for arc consistence. There are AC3, AC2001, AC3rm and AC3 algorithms available 
+for the binary constraints and AC32, AC3rm, AC2001 and AC2008 algorithms for the tuple constraints. 
+These algorithms are the variants of the original AC algorithm. Further description for some of 
+them can be found in \cite{bartak:ogcp}.
  
-As we find out while implementing of the Self Referential Quiz the \texttt{ifOnlyIf} constraint
+As we found out while implementing of the Self Referential Quiz the \texttt{ifOnlyIf} constraint
 is implemented as an extensional constraint (the table of compatible values is computed).
-If the constrained variable has a large domain then the table is larger than
+If the constrained variable has a large domain then the table could be larger than
 the possible memory.
 
 \subsubsection{Solver}
