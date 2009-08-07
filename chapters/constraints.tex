@@ -1,96 +1,127 @@
 \chapter{List of the constraints}
 \label{constraints}
 
-In this appendix we provide a list of supported constraints foe each of studied 
-constraint solvers. The constraints of the same type have often different names
-in the system. Therefore we use a symbolic expression which describes the constraint.
-The following convention is used: the integer or real variables are typed as 
-text in the latin small alphabet, $x$, $y$, $a$ for example. 
-Boolean variables are denoted by the monospace font, for example \texttt{b}, \texttt{x}. 
-If more variables have  The constants which are not to be 
-constrained are typed as the small greek letters, for example $\alpha$, $\epsilon$. The set
-variables are denoted by the capital latin letters, for example $S$, $X$, $P$. Vector
-of variables is denoted by the square brackets. For example a vector of the set variables would
-be typed $[X,Y,S]$. The subscript index after the ending bracket of the vector means specification
-of the element of the vector. To denote second item of vector $[x,y,x]$ we write $[x,y,z]_2$.
-All standard mathematical symbols do have their standard meaning. 
-If the constraint cannot be described by the mathematical expression the standard
-name is used. The definition of such constraint follows at the end of the appropriate section.  
-
-The symbol \ano means that the constraint is fully supported in the constraint solver.
-The symbol \trochu means partial support of the constraint. The explanation follows under
-the table. The symbol \vubec means that this constraint is not supported by the standard
-version of the solver. We use following abbreviations for the constraint solver names:
+In this appendix we present the comparison of modelling capabilites of the solvers 
+based on the constraints which are supported. We used the manuals of the systems \cite{choco:documentation, mozart:documentation, gecode:reference, sicstus:manual, eclipse:cspmanual, eclipse:tutorial, minion:manual, gecode:modelling} as
+the source of the data. We do not want to provide a full
+list of the supported constraints. Our goal is
+to show the most important constraints or the constraints which defines the differences 
+between the solvers. For each group of the constraint we present a comparison table. The used symbols have the following meaning:
+The constraint variables are denoted by the emphatised small latin letters ($x$, $y$, $a$).
+The constants are symbolised by the greek small letters ($\alpha$, $\beta$, $\gamma$).
+The vectors of the constraint variables or the constants are in bold ($\mathbf{x}$, $\mathbf{a}$, $\bm{\alpha}$).
+As usual in programming languages by square brackets applied on the vector we 
+denote the element of a vector ($\mathbf{x}[y]$). Finally the boolean variables are denoted by
+the monospace font ($\mathtt{x}, \mathtt{b}$). The symbol tilde ($\sim$) means a relation
+operator (any of the $=$, $\neq$, $>$, $<$, $\leq$, $\geq$). The other symbols have their usual meaning.
+If it is not possible to describe the constraint with the mathematical expression
+we use a symbolic name instead. If the solver fully supports the constraint the \ano symbol
+is used. If the constraint is supported only partial the symbol \trochu is used. 
+If the solver does not support the constraint at all we use the symbol \vubec. 
+We say that the solver supports a constraint only if the constraints is available
+as a single constraint which can be directly used or it there exists an expression 
+similar to the constraint. In the other case even if the constraint effect can be achieved
+by the combination of some other constraints we consider that constraint as unsupported. 
+We use the following abbreviations for the constraint solvers:
 Moz means Mozart/Oz, Cho means Choco, Min means Minion, ECL means \eclipse and finally
 SiP means SICStus Prolog.
 
-\section{Domain constraints}
+\begin{table}
+\caption{\label{constraints:relation}Relation and arithmetic constraints}
 \begin{center}
-\begin{tabular}{|l||c|c|c|c|c|c|}
-\hline Constraint & Moz & Cho & Min & Gec & ECL & SiP \\
-\hline 
-\hline $x = n$ & ? & ? & ? & \ano & ? & ? \\
-\hline $x \in \{\alpha, ..., \beta\}$ & ? & ? & ? & \ano & ? & ? \\
-\hline $x \in S$ & ? & ? & ? & \ano & ? & ? \\
-\hline $(x = n) \Leftrightarrow \mathtt{b}$ & ? & ? & ? & \ano & ? & ? \\
-\hline $(x \in \{\alpha ... \beta\}) \Leftrightarrow \mathtt{b}$ & ? & ? & ? & \ano & ? & ? \\
-\hline $(x \in S) \Leftrightarrow \mathtt{b}$ & ? & ? & ? & \ano & ? & ? \\
-\hline 
-\end{tabular}
-\end{center}
-
-\section{Relation constraints}
-\begin{center}
-\begin{tabular}{|l||c|c|c|c|c|c|}
+\begin{tabular}{|p{5cm}||c|c|c|c|c|c|}
 \hline Constraint & Moz & Cho & Min & Gec & ECL & SiP \\
 \hline 
 
-\hline $x > y$ & ? & ? & ? & \ano & ? & ? \\
-\hline $x \geq y$ & ? & ? & ? & \ano & ? & ? \\
-\hline $x = y$ & ? & ? & ? & \ano & ? & ? \\
-\hline $x \leq y$ & ? & ? & ? & \ano & ? & ? \\
-\hline $x < y$ & ? & ? & ? & \ano & ? & ? \\
-\hline $x \neq y$ & ? & ? & ? & \ano & ? & ? \\
+\hline $x \sim y$ 																												& \ano & \ano & \trochu & \ano & \ano & \ano \\
+\hline $\sum_i{\mathbf{x}_i} \sim y$   																		& \ano & \ano & \trochu & \ano & \ano & \ano \\
+\hline $\sum_i{\left(\mathbf{x}_i\mathbf{w}_i\right)} \sim y$      				& \ano & \ano & \trochu & \ano & \vubec & \ano \\
+\hline $\sum_i{\left(\mathbf{x}_i\prod_j\mathbf{w}_{ij}\right)} \sim y$   & \ano & \vubec & \vubec & \vubec & \vubec & \vubec \\
 
-\hline $\sum{[x_0,...,x_\alpha]} > y$      & ? & ? & \vubec & \ano & ? & ? \\
-\hline $\sum{[x_0,...,x_\alpha]} \geq y$   & ? & ? & \ano & \ano & ? & ? \\
-\hline $\sum{[x_0,...,x_\alpha]} = y$      & ? & ? & \vubec & \ano & ? & ? \\
-\hline $\sum{[x_0,...,x_\alpha]} \leq y$   & ? & ? & \ano & \ano & ? & ? \\
-\hline $\sum{[x_0,...,x_\alpha]} < y$      & ? & ? & \vubec & \ano & ? & ? \\
-\hline $\sum{[x_0,...,x_\alpha]} \neq y$   & ? & ? & \vubec & \ano & ? & ? \\
+\hline $\bigwedge_i {\mathtt{x}_i} \wedge \bigwedge_i{\neg \mathtt{y}_i} = \mathtt{b}$   & \vubec & \vubec & \vubec & \ano & \vubec & \vubec \\
+\hline $\bigvee_i {\mathtt{x}_i} \vee \bigvee_i{\neg \mathtt{y}_i} = \mathtt{b}$   			 & \vubec & \vubec & \vubec & \ano & \vubec & \vubec \\
 
-\hline $\bigwedge {\mathtt{x}_i} \wedge \bigwedge{\neg \mathtt{y}_i} = \mathtt{b}$   & ? & ? & ? & \ano & ? & ? \\
-\hline $\bigvee {\mathtt{x}_i} \vee \bigvee{\neg \mathtt{y}_i} = \mathtt{b}$   & ? & ? & ? & \ano & ? & ? \\
-\hline 
-\end{tabular}
-\end{center}
-
-\section{Element constraints}
-\begin{center}
-\begin{tabular}{|l||c|c|c|c|c|c|}
-\hline Constraint & Moz & Cho & Min & Gec & ECL & SiP \\
-\hline 
-
-\hline $[\alpha_1, ..., \alpha_\beta]_x = \gamma$ & ? & ? & ? & \ano & ? & ? \\
-\hline $[\alpha_1, ..., \alpha_\beta]_x = y$ & ? & ? & ? & \ano & ? & ? \\
-\hline $[x_1, ..., x_\alpha]_y = \beta$ & ? & ? & ? & \ano & ? & ? \\
-\hline $[x_1, ..., x_\alpha]_y = z$ & ? & ? & ? & \ano & ? & ? \\
+\hline $|x| = y$ 										& \ano & \ano & \ano & \ano & \ano & \ano \\
+\hline $|x-y| \sim z$ 							& \ano & \vubec & \trochu & \vubec & \vubec & \ano \\
+\hline $x \, \mathrm{mod} \, y = z$ & \ano & \ano & \ano & \ano & \ano & \ano \\
 
 \hline 
 \end{tabular}
 \end{center}
+\end{table}
 
-\section{Global constraints}
+We divide the constraints into four groups -- {\em relation and arithmetic}, {\em global}, {\em scheduling} and {\em other} constraints.
+The most of the relation and arithmetic constraints (see the table \ref{constraints:relation}) are 
+supported in the all solvers. As we can see the Minion system has for some of the
+constraints only the partial support. For the sums it means that Minion supports
+only the $\leq$ and $\geq$ operators. The partialy supported constraint $x \sim y$ on the other hand
+means that it supports only the $=$ and $\neq$ operators and finally for the $|x-y| \sim z$ constraint
+only the operator $=$ is supported. The global constraints (see the table \ref{constraints:global})
+are the constraints which constrain the vectors of variables. The basic global constraint
+is {\em alldifferent} which constrains the given vector $\mathbf{x}$ such that each
+variable contained in the vector has a different value. The {\em hamming} constraints
+ensures that the hamming distance of the two given vectors is at least $c$.
+The scheduling constraints as the name suggest offers the support for modelling
+of the scheduling problems. The {\em cummulative} constraint is used if we need to
+schedule the tasks on the given machines. The {\em overlaps} and the {\em disjunctive}
+are used to constrain the relative order of the taks. Finally in the fourth group
+there are the other constraints. By using the {\em extensional} constraint we can 
+constrain the complex relations of the variables by specifying the set of compatible 
+values. The constraint then constrain the variables such that they have only the 
+compatible values. The {DFA} stands for the deterministic fiinite automaton. The
+constraint enforces that the given vector of variables is the word which is accepted
+by the solver. Finally the {hamiltonian circle} ensures that the given vector of variables 
+is a hamiltonian circle in the graph. In the \eclipse we can define the extensional 
+constraint by using of the Propia library. We define the predicate with the compatible
+values and the use the Propia library tools on that predicate.  
+
+
+
+\begin{table}
+\caption{\label{constraints:global}Global constraints}
 \begin{center}
-\begin{tabular}{|l||c|c|c|c|c|c|}
+\begin{tabular}{|p{5cm}||c|c|c|c|c|c|}
 \hline Constraint & Moz & Cho & Min & Gec & ECL & SiP \\
 \hline 
 
-\hline $\mathrm{alldifferent}([x_1, ..., x_\alpha])$ & \ano & \ano & \ano & \ano & \ano & \ano \\
-\hline $[x_1, ..., x_\alpha]_i = j \Leftrightarrow [y_1, ..., y_\beta]_j = i$ & ? & ? & ? & \ano & ? & ? \\
+\hline $\mathrm{alldifferent}(\mathbf{x})$ 										& \ano & \ano & \ano & \ano & \ano & \ano \\
+\hline $\mathbf{x}[i] = j \Leftrightarrow \mathbf{y}[j] = i$ 	& \vubec & \ano & \vubec & \ano & \vubec & \ano \\
+\hline $\mathrm{hamming}(\mathbf{x},\mathbf{y}) \geq c$ 			& \vubec & \vubec & \ano & \vubec & \vubec & \vubec \\
+\hline $\mathbf{x}[y] = z$ 																		& \ano & \ano & \ano & \ano & \ano & \ano \\
 
 \hline 
 \end{tabular}
 \end{center}
+\end{table}
 
-The alldifferent constraint ensures that all values in a given vector are distinct.
+\begin{table}
+\caption{\label{constraints:scheduling}Sheduling constraints}
+\begin{center}
+\begin{tabular}{|p{5cm}||c|c|c|c|c|c|}
+\hline Constraint & Moz & Cho & Min & Gec & ECL & SiP \\
+\hline 
+
+\hline cummulative & \vubec & \ano & \vubec & \ano & \ano & \ano \\
+\hline overlaps & \ano & \vubec & \vubec & \vubec & \vubec & \vubec \\
+\hline disjunctive & \ano & \ano & \vubec & \vubec & \ano & \ano \\
+
+\hline 
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}
+\caption{\label{constraints:extensional}Other constraints}
+\begin{center}
+\begin{tabular}{|p{5cm}||c|c|c|c|c|c|}
+\hline Constraint & Moz & Cho & Min & Gec & ECL & SiP \\
+\hline 
+
+\hline extensional 	& \vubec & \ano & \ano & \ano & \trochu & \ano \\
+\hline DFA 					& \vubec & \ano & \vubec & \ano & \vubec & \ano \\
+\hline hamiltonian circle 	& \vubec & \vubec & \vubec & \ano & \vubec & \ano \\
+
+\hline 
+\end{tabular}
+\end{center}
+\end{table}
