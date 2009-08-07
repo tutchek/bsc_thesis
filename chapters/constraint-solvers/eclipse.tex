@@ -43,7 +43,7 @@ into Prolog predicate and then include it. The constraint then can be used as an
 constraint shipped with the system.
 The second way to introduce new constraint is to use the Propia system. Propia takes 
 any Prolog predicate and convert it to the proper constraint.
-The calling convention is \texttt{Goal infers most}. The library infers as many information about {\em Goal} 
+The calling convention is \texttt{Goal infers most}. The library infers as much information about {\em Goal} 
 as possible based on the loaded constraint solver libraries. The level of inference can be adjusted.
 Propia offers an approximate generalized propagation. The {\em most} inference can be expensive 
 to compute and may not be necessary. The alternatives are predicates \texttt{Goal infers ic}, 
@@ -58,7 +58,7 @@ as if we used only shipped constraints; however, the $>$ operator cannot handle 
 variables. And even if it could, it is not what we need. The standard behavior is to 
 determine if $X$ is greater than $Y$ in the time of calling of the operator predicate and
 that is all. We need the operator to keep track on the variables and enforce the constraints
-as the domain updates due to the other constraints propagation. This is the point when the Propia
+as the domain updates due to the other constraint propagation. This is the point when the Propia
 comes. Once we mark the predicate as \texttt{infers most}, it is normal
 constraint just like any other.
 
@@ -83,8 +83,8 @@ the visualization client using several types of viewlets.
 
 \subsection{Subjective description}
 The \eclipse system has an exhaustive documentation \cite{eclipse:tutorial} which covers both the Prolog language
-as well as the available libraries. The constraint library itself is more deeply documented
-int the constraint library manual \cite{eclipse:cspmanual}. The set of constraints which the solver offers
+and the available libraries. The constraint library itself is more deeply documented
+in the constraint library manual \cite{eclipse:cspmanual}. The set of constraints which the solver offers
 is quite limited compared to the other solvers; however, the set of constraints can be extended 
 either by using the external libraries or by implementing of the own constraints.
 

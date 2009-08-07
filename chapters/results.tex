@@ -9,7 +9,7 @@ which is needed to find a solution to the problem and the consumed memory. We us
 for this purpose designed tool. The tool runs the solver executable with given parameters.
 While the solver process is running the benchmarking tool periodically checks the \texttt{/proc/(pid)/stat} file
 and saves the current state. If the elapsed time is larger than the given limit the 
-\texttt{SIGINT} signal is sent to the process. The process have one second to end
+\texttt{SIGINT} signal is sent to the process. The process has one second to end
 and produce some output. If the process is still running one second after the 
 \texttt{SIGINT} signal the \texttt{SIGKILL} signal is sent and process is killed. 
 In the robustness test the tool tries to estimate the size of the task using the
@@ -43,8 +43,8 @@ solvers.
 
 \section{The robustness test}
 In the robustness test we measure how long magic sequence the solver is able to compute in 
-ten minutes. As stated in previous paragraph the benchmarking tool uses for this 
-purpose the binary search. The tool have an interval $[a,b]$ of values on which the search 
+ten minutes. As stated in the previous paragraph the benchmarking tool uses for this 
+purpose the binary search. The tool has an interval $[a,b]$ of values on which the search 
 is performed. It picks a value $v$ in the middle of the interval and tries to compute
 the solution of that length. If it success it changes the interval to $[v+1,b]$, if 
 it fails it changes the interval to $[a,v-1]$. Then the search continues in the same way
@@ -127,8 +127,8 @@ of the solvers is the ultimate winner; however, the three solvers -- SICStus Pro
 Mozart -- achieved the best results in some of the problem instances. \eclipse and
 Minion did not solve the 100 queens problem in the given time limit. Therefore we 
 consider them as unreliable. The \eclipse and Choco were unable to load the big problems
-to the memory so we changed the memory limit to one gigabyte. For \eclipse we changed it for all of the
-experiments and for Choco we used this large memory only for the magic sequence problem.
+to the memory so we changed the memory limit to one gigabyte. For the \eclipse we changed it for all of the
+experiments and for the Choco we used this large memory only for the magic sequence problem.
 The table \ref{results:performance:memory} indicates that the Java Virtual Machine which
 is running the Choco as well as the \eclipse solver allocated the whole allowed
 amount of memory. We observer in the performance test the same problem with the \texttt{count}

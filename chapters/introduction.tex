@@ -53,7 +53,7 @@ straightforward. We define the following model:
 \item	For each square the following condition is true: For all $k$, $l$ such that $k$, $l$ 
       are indexes defining the square all values of 
       $s_{kl}$ are different (values in each square are different)
-\item	For all prefilled values: $q_{mn} = V$ if and only if the field in column 
+\item	For all prefilled values: $q_{mn} = V$ if and only if the field in the column 
       $n$ and row $m$ is prefilled and contains $V$.
 \end{enumerate}
 
@@ -79,7 +79,7 @@ way. For each variable it remembers the range of possible values (we will call i
 a domain). Before the program starts searching for a solution it tries to eliminate as 
 many values from the domain as possible. It can reveal that the problem does not have a 
 solution (if there is a variable with an empty domain) before a backtracking. It 
-it is no surprise that in a user guide to Choco system, one of the available constraint
+is no surprise that in a user guide to Choco system, one of the available constraint
 solvers, it is stated "if you know Sudoku, 
 then you know constraint programming." The formal definitions of the constraint satisfaction
 problem and the solution of the constraint satisfaction problem follows (the definitions 
@@ -120,7 +120,7 @@ We have variables $X,Y,Z$ all with the domain $\{0,1\}$ with the constraints $X 
  $Y \neq Z$, $Z \neq X$ on them. The problem is arc consistent. If we examine all constraints
  there exists for each possible value of first variable a value of second variable which satisfies 
  the constraint and similarly in the second direction. Even though the problem is arc consistent it cannot be solved because there does
- not exists evaluation of all variables which satisfies the all constraints.
+ not exist evaluation of all variables which satisfies the all constraints.
 
 \section{Constraint programming}
 \label{introduction:constraint-programming}
@@ -153,7 +153,7 @@ is sometimes called {\em first-fail} strategy. The solvers usually allows the us
 choose the strategy or implement their own.
 
 The described algorithm is called {\em maintained arc consistency} or MAC. Its
- schematic source code is in figure \ref{labelling-bartak}. The code is cited from 
+ schematic source code is in the figure \ref{labelling-bartak}. The code is cited from 
  \cite{UI:Bartak}. More detailed explanations of algorithms used in CSP solving can be found in \cite{bartak:ogcp}. 
 
 \begin{figure}
@@ -195,8 +195,8 @@ A programmer who wants to solve problems using constraint programming can encode
 ideas described in the previous paragraphs or use specialized software, a 
 constraint solver. Constraint solver is a system which uses constraint programming 
 techniques to solve a given problem. There are many solvers available both commercial 
-and freeware. A short list of available systems can be found in appendix 
-\ref{list-of-solvers}. A more detailed list is maintained by Roman Barták in 
+and freeware. A short list of available systems can be found in the appendix 
+\ref{list-of-solvers}. A more detailed list is maintained by Roman Barták in the 
 On-line guide to constraints programming at \cite{bartak:los}.
 
 \section{Related work}

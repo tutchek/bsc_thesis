@@ -57,7 +57,7 @@ The domain propagation is on the first sight better technique but is more comple
 than the interval propagation. Therefore the interval propagation is more frequently used.
 
 After propagation if the system is in a stable state and still the solution was not found
-the distribution phase begins. Mozart choose a variable $x$ and value $v$ from domain
+the distribution phase begins. Mozart choose a variable $x$ and value $v$ from the domain
  $D_v$ and create two new spaces $S \cup \{x = v\}$ and $S \cup \{x \neq v\}$.
  The computation then continues with the propagation phase in the new spaces.
  If the propagation phase ends with a failure the space also fails. The problem has no
@@ -70,7 +70,7 @@ suit his needs.
 
 Two techniques can be used in the solving of the optimization problems. The na\"{i}ve 
 technique introduces auxiliary variable $o$ and adds the constraint $o = f(P)$ where $f$ is the
-objective function. Then the variable $o$ is increased until the the solution is found. The second possible
+objective function. Then the variable $o$ is increased until the solution is found. The second possible
 technique is the branch-and-bound algorithm which is described in the section \ref{introduction:constraint-programming}.
 
 \subsection{Debugging support}
@@ -78,7 +78,7 @@ Mozart/Oz offers to the user the interactive tool Explorer. The Explorer can be 
 the search tree including the choice nodes. The user can use the Explorer in the 
 interactive mode and choose the subtrees of the search tree to be expanded. 
  The Explorer tool screenshot is in the figure \ref{mozart:explorer}. The circles 
- denotes the choice nodes of the tree, the diamonds means the solution of
+ denote the choice nodes of the tree, the diamonds mean the solution of
  the problem and finally the squares are the branches with no solution. The lighter color
  denotes the nodes which can be expanded. On the figure there is one solution, two 
  unsuccessful branches and five choice nodes. Three of the choice nodes can be still expanded.

@@ -2,7 +2,7 @@
 
 Choco is a constraint solver which is implemented as a library in Java programming language.
 It is distributed as a JAR package having a JavaDoc documentation included. It is quite easy
-to install it even for a beginners in Java and it lasts about five minutes in commonly used
+to install it even for beginners in Java and it lasts about five minutes in commonly used
 IDEs. Since the Java is used, the Choco solver is available for various platforms
 and operating systems. As far as it is not our goal to describe possibilities of the host environment, 
 we are not about to further discuss the Java features. Choco is being developed
@@ -28,7 +28,7 @@ model and after that we look at the solver.
 \subsubsection{Model}
 The model is a instance of class CPModel. In Choco the variables of the model are represented
 as objects of the following types: IntegerVariable, RealVariable and SetVariable. Those 
-variables, generally, are not created using the keyword new, but in Choco there are
+variables, generally, are not created using the keyword new, but in the Choco there are
 factory methods for this purpose. One has to register those variables first by calling
 a function \texttt{CPModel::addVariable}, or \texttt{CPModel::addVariables} when adding an array of variables at once.
 While registering variables into a model, we can set additional properties to the variables, 
@@ -44,7 +44,7 @@ Each constraint fits in one of the following groups: basic constraints (true, fa
 basic expressions (goniometric functions, powers, sums), other constraints (\texttt{abs}, \texttt{div}, \texttt{max}, ...),
 reified constraints (\texttt{and}, \texttt{or}, \texttt{ifOnlyIf}) and global constraints (\texttt{allDifferent}, 
 \texttt{occurenceMax}, ...). Furthermore, there are constraints available which might be used for modeling geometric constraints,
-scheduling constraints and constraints for a sequence of variables which is accepted by finite automaton.
+scheduling constraints and constraints for a sequence of variables which is accepted by a finite automaton.
 
 Apart from the build-in constraints, is it possible to define own constraints. The first step is to define 
 a constraint $p(x,y)$ as a set of compatible values $(a,b)$, where $p$ is satisfied
@@ -60,7 +60,7 @@ desired algorithm for arc consistence. There is AC3, AC2001, AC3rm and AC3 avail
  
 As we find out while implementing of the Self Referential Quiz the \texttt{ifOnlyIf} constraint
 is implemented as an extensional constraint (the table of compatible values is computed).
-If the the constrained variable has a large domain then the table is larger than
+If the constrained variable has a large domain then the table is larger than
 the possible memory.
 
 \subsubsection{Solver}
@@ -73,7 +73,7 @@ is a key factor for the speed of solving, one can configure its various options.
 A user can specify a selector and an iterator. Where the selector specifies which variable
 is about to be taken in the next solver's decision and the iterator chooses each of available values
 and iterates over them. In a standard distribution of Choco there are basic selectors such as 
-{\em variable with minimum domain}, {\em variable with maximum domain} and so on. 
+{\em variable with a minimum domain}, {\em variable with a maximum domain} and so on. 
 The iterators can try values in ascendant or descendant order. An alternative to iterator
 is a value selector, which returns next available value when required. As for value selector,
 we can use, for example, the minimal value in a domain, a random value in a domain and so on. We can choose
@@ -94,7 +94,7 @@ and returns a variable of a solver.
 
 \subsection{Debugging support}
 Choco does not include any tools for the graphic visualization of the search tree such as the systems Mozart or Gecode do;
-however, in Choco it is possible to print out a log of the solving process.
+however, in the Choco it is possible to print out a log of the solving process.
 One can configure several levels how detailed information is logged varying from
 nothing to a complete list of what the Choco does internally.
 

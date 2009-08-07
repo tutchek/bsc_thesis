@@ -15,7 +15,7 @@ the Essence  programming language. The basics of the language are described in t
 section.
 
 \section{Essence programming language}
-Essence is a programming language for modeling of combinatorial problems. Is is 
+Essence is a programming language for modeling of combinatorial problems. It is 
 easy enough to understand and so simple that even person who has never seen the
 language before can correctly guess what the expected output of the program is. Every program in Essence 
 consists of three parts. The first part defines the version of the language, the second
@@ -28,7 +28,7 @@ and parameters definition parts. Examples in this chapters show only the model
 definition parts. The files containing the parameter definitions can be found on the included CD.
 The Tailor tool is the compiler of choice in this case and this program mediates the translation from the Essence language to solver specific language. In the current version it can translate the Essence program to Minion 
 input file, FlatZinc and C++ source code using Gecode library. Further description of
-the Tailor system is in section \ref{tailor}.
+the Tailor system is in the section \ref{tailor}.
 
 \section{N-queens}
 This benchmark is based on a classic chess task. The player has to place eight queens
@@ -136,7 +136,7 @@ can use an alternative model:
           $\forall i \in \left\{0, ..., k-1\right\}: m_i = \sum_{j=0}^{k-1}{\mathrm{aux}_{ij}}$.
     \end{itemize}
 \end{itemize}
-The Essence implementation is in figure \ref{benchmark-essence:mseq}.
+The Essence implementation is in the figure \ref{benchmark-essence:mseq}.
 
 \begin{figure}
 \caption{\label{benchmark-essence:mseq}Implementation of Magic Sequence Problem in Essence}
@@ -151,7 +151,7 @@ such that
 
 \section{Self-referential quiz}
 
-Self-referential quiz is a quiz where the answers to the questions depend on the answers
+The self-referential quiz is a quiz where the answers to the questions depend on the answers
 to other questions in the same quiz. There is only one valid answer for each question.
 A typical question in such a quiz can be: 
 
@@ -174,9 +174,9 @@ The quiz assignment follows:
 		(A) 3 and 4 (B) 4 and 5 (C) 5 and 6 (D) 6 and 7 (E) 7 and 8
 	\item The next question with answer A: \\
 		(A) 4 (B) 5 (C) 6 (D) 7 (E) 8
-	\item The first even numbered question with answer B: \\
+	\item The first even numbered question with the answer B: \\
 		(A) 2 (B) 4 (C) 6 (D) 8 (E) 10 
-	\item The only odd numbered question with answer C: \\
+	\item The only odd numbered question with the answer C: \\
 		(A) 1 (B) 3 (C) 5 (D) 7 (E) 9
 	\item A question with answer D: \\
 		(A) comes before this one, but not after this one (B) comes after this one, but not before this one (C) comes before and after this one (D) does not occur at all (E) none of the above
@@ -221,7 +221,7 @@ only one {\em true}. The test has only one solution which is showed in the figur
 	\begin{itemize}
   \item Variables and domains: 
     \begin{itemize}
-      \item Answer to the questions: $s_{1|1}, s_{1|2}, ..., s_{10|4}, s_{10|5} \in \{0, 1\}$.
+      \item The answers to the questions: $s_{1|1}, s_{1|2}, ..., s_{10|4}, s_{10|5} \in \{0, 1\}$.
     \end{itemize}
 	\item Constraints:
 	 \begin{itemize}
@@ -376,7 +376,7 @@ stored in the parameter $\mathrm{openCost}$. We also have $S$ shops. The maximum
 of warehouses is given by vector $w$, where $w_i$ is the maximum number of shops which
 can be supplied by the warehouse $i$, $i \in \{1,...,W\}$.
 Finally, we have a matrix of supply costs $\mathrm{supplyCost}$ where $\mathrm{supplyCost}_{ij}$ 
-translates as the cost of supplying the shop $j$ from warehouse $i$.
+translates as the cost of supplying the shop $j$ from the warehouse $i$.
 
 	\begin{itemize}
   \item Variables and domains:
@@ -400,7 +400,7 @@ translates as the cost of supplying the shop $j$ from warehouse $i$.
      %$ \sum_{w \textnormal{ is open}}\left(c+\sum_{s \textnormal{ is suplied by } w} \mathrm{SC}(s,w) \right)$
     \end{itemize}
   \end{itemize} 
-The Essence implementation is in figure \ref{benchmark-essence:lw}.
+The Essence implementation is in the figure \ref{benchmark-essence:lw}.
 
 \begin{figure}
 \caption{\label{benchmark-essence:lw}Implementation of Locating Warehouses Problem in Essence}
